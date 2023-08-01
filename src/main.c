@@ -16,12 +16,12 @@
 
 #define LOADING_TIME	3000
 
-static void initGrid();
+static void displayGrid();
 
 int main(bool hard) {
 
 	// default resolution
-	VDP_setScreenWidth256();
+	VDP_setScreenWidth320();
 	VDP_setScreenHeight224();
 
 	initPrinter();
@@ -29,18 +29,16 @@ int main(bool hard) {
 	if (hard) {
 
 		// zona0 file
-		VDP_setScreenWidth320();
 		printDisclaimer();
 		JOY_waitPress(JOY_1, BUTTON_BTN);
 		clearDisclaimer();
-		VDP_setScreenWidth256();
 
 		waitMs(50);
 	}
 
 	resetTileMemory();
 
-	initGrid();
+	displayGrid();
 
 	while (1) {
 
@@ -53,7 +51,7 @@ int main(bool hard) {
 
 
 
-static void initGrid() {
+static void displayGrid() {
 
 	PAL_setPalette(PAL2, palette_grid.data, DMA);
 
@@ -66,6 +64,6 @@ static void initGrid() {
 	Map *bg;
 	bg = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
-	MAP_scrollTo(bg, 0, 0);
+	MAP_scrollTo(bg, 4, 4);
 }
 
