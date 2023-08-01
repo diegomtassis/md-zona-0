@@ -1,10 +1,6 @@
 # Sega Mega Drive Zona 0
 
-<<<<<<< HEAD
 ### Zona 0
-=======
-### JetPac
->>>>>>> 678e9161b6789b649ab6f7b848c57682a77ca422
 
 [Zona 0](https://computeremuzone.com/ficha/171/zona-0) was created originally in 1991 by [TopoSoft](https://en.wikipedia.org/wiki/Topo_Soft).
 
@@ -15,11 +11,7 @@ Sega Mega Drive / Genesis port written by diegomtassis using SGDK.
 
 It's currently work in progress.
 
-<<<<<<< HEAD
 Zona 0 was a TopoSoft property. TopoSoft dissolved in 1994, hence it is not clear to me who is the owner of the Zona 0 rights. In any case, it's not me, and I assume Zona 0 rights belong to someone. The same applies to all the artwork in this port, which has been extracted directly from the original game. This port is free and is been built without TopoSoft permission.
-=======
-Zona 0 is a TopoSoft property. The same applies to all the artwork in this port, which has been extracted directly from the original game. This port is free and is been built without TopoSoft permission.
->>>>>>> 678e9161b6789b649ab6f7b848c57682a77ca422
 
 https://github.com/diegomtassis/md-zona0
 
