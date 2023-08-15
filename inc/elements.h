@@ -26,9 +26,9 @@ struct Config {
 };
 
 struct Player {
-    u8 id;
     u8 lives;
     u16 score;
+    u8 joystick;
 };
 
 struct Game {
@@ -42,12 +42,10 @@ struct GameResult {
 
 struct LightCycle {
     Object_f16 object;
-    u8 id;
-    u8 joystick;
-    Player* player;
-    V2s16 order;
     u8 health;
     u8 finished;
+    u8 direction;
+    bool boost;
     bool airborne;
     bool immunity;
     Sprite* sprite;

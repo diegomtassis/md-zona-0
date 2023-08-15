@@ -31,36 +31,46 @@
 
 #define UP			0x01
 #define DOWN		0x02
-#define RIGHT		0x04
-#define LEFT		0x10
-#define BOOST		0x20
+#define LEFT		0x04
+#define RIGHT		0x08
+#define BOOST		0x10
 
 #define PLAYER_HEIGHT 24
 #define PLAYER_WIDTH 24
 
-struct LightCycle lightCycle;
+Player player;
+
+LightCycle lightCycle;
 
 bool joy_pushed;
-bool joy_flank;
-u16 direction = 0;
+u8 turn = 0;
 
 static void handleInputPlayer();
 static void moveLightCycle();
 static void drawLightCycle();
 
+static void calculateNextMovement();
+static void updatePosition();
+
 void initPlayer() {
 
+    lightCycle.health = ALIVE;
+    lightCycle.finished = FALSE;
+    lightCycle.direction = DOWN;
+    lightCycle.object.pos.x = FIX16(64);
+    lightCycle.object.pos.y = FIX16(15);
+    lightCycle.object.size.x = 24;
+    lightCycle.object.size.y = 24;
+
+    // sprite
     PAL_setPalette(PAL1, palette_sprites.data, DMA);
 
     SPR_init();
 
-    Sprite* p1_cycle = SPR_addSprite(&flynn_sprite, 64, 15,
-        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+    Sprite* p1_cycle = SPR_addSprite(&flynn_sprite, fix16ToInt(lightCycle.object.pos.x), fix16ToInt(lightCycle.object.pos.y), TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     SPR_setAnim(p1_cycle, ANIM_DOWN);
 
-    lightCycle.health = ALIVE;
-    lightCycle.finished = FALSE;
     lightCycle.sprite = p1_cycle;
 
     SPR_update();
@@ -76,20 +86,19 @@ void playerActs() {
     moveLightCycle();
 
     drawLightCycle();
+
+    // reset turn
+    turn = 0;
 }
 
 static void handleInputPlayer() {
 
-    u8 joy = JOY_1;
-    u16 value = JOY_readJoypad(joy);
-
+    u16 value = JOY_readJoypad(player.joystick);
     if (value & BUTTON_DIR) {
         if (!joy_pushed) {
-            // detect flank
-            joy_flank = TRUE;
+            turn = value;
         }
         joy_pushed = TRUE;
-        direction = value;
 
     } else {
         joy_pushed = FALSE;
@@ -98,27 +107,60 @@ static void handleInputPlayer() {
 
 static void moveLightCycle() {
 
+    calculateNextMovement();
+    updatePosition();
+    SPR_setPosition(lightCycle.sprite, fix16ToInt(lightCycle.object.pos.x), fix16ToInt(lightCycle.object.pos.y));
+}
 
-};
+static void calculateNextMovement() {
+
+    if (turn) {
+        lightCycle.direction = turn;
+    }
+
+    if (lightCycle.direction & DOWN) {
+        lightCycle.object.mov.x = -SPEED_H_SLOW;
+        lightCycle.object.mov.y = SPEED_V_SLOW;
+
+    } else if (lightCycle.direction & UP) {
+        lightCycle.object.mov.x = SPEED_H_SLOW;
+        lightCycle.object.mov.y = -SPEED_V_SLOW;
+
+    } else if (lightCycle.direction & LEFT) {
+        lightCycle.object.mov.x = -SPEED_H_SLOW;
+        lightCycle.object.mov.y = -SPEED_V_SLOW;
+
+    } else if (lightCycle.direction & RIGHT) {
+        lightCycle.object.mov.x = SPEED_H_SLOW;
+        lightCycle.object.mov.y = SPEED_V_SLOW;
+    }
+}
+
+static void updatePosition() {
+
+    lightCycle.object.pos.x += lightCycle.object.mov.x;
+    lightCycle.object.pos.y += lightCycle.object.mov.y;
+
+    // update box
+    updateBox(&lightCycle.object);
+}
 
 static void drawLightCycle() {
 
-    if (joy_flank) {
-        joy_flank = FALSE;
-
-        if (direction & BUTTON_DOWN) {
+    if (turn) {
+        if (turn & BUTTON_DOWN) {
             SPR_setAnim(lightCycle.sprite, ANIM_DOWN);
             SPR_setHFlip(lightCycle.sprite, ANIM_DOWN_FLIP_H);
 
-        } else if (direction & BUTTON_UP) {
+        } else if (turn & BUTTON_UP) {
             SPR_setAnim(lightCycle.sprite, ANIM_UP);
             SPR_setHFlip(lightCycle.sprite, ANIM_UP_FLIP_H);
 
-        } else if (direction & BUTTON_LEFT) {
+        } else if (turn & BUTTON_LEFT) {
             SPR_setAnim(lightCycle.sprite, ANIM_LEFT);
             SPR_setHFlip(lightCycle.sprite, ANIM_LEFT_FLIP_H);
 
-        } else if (direction & BUTTON_RIGHT) {
+        } else if (turn & BUTTON_RIGHT) {
             SPR_setAnim(lightCycle.sprite, ANIM_RIGHT);
             SPR_setHFlip(lightCycle.sprite, ANIM_RIGHT_FLIP_H);
         }

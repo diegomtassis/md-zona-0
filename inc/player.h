@@ -6,7 +6,7 @@
 
 #include "elements.h"
 
-extern struct LightCycle lightCycle;
+extern Player player;
 
 void initPlayer();
 
