@@ -8,8 +8,8 @@
 
 #include <genesis.h>
 
-#include "../inc/fwk/commons.h"
-#include "../inc/elements.h"
+#include "fwk/commons.h"
+#include "elements.h"
 
 static void setUpDefaults();
 

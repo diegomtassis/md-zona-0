@@ -1,8 +1,7 @@
 /*
  * main.c
- *
- *  Created on: Aug 01, 2023
- *      Author: diegomtassis
+ * Created: Aug 01, 2023
+ * Author: diegomtassis
  */
 
 #include <genesis.h>
@@ -14,8 +13,6 @@
 #include "elements.h"
 #include "game.h"
 #include "config.h"
-
- //#include "../inc/fwk/logger.h"
 
 #define LOADING_TIME	3000
 

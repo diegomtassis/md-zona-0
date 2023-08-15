@@ -4,12 +4,10 @@
  * Author: diegomtassis
  */
 
-#include <genesis.h>
-
-
 #include "game.h"
 
-#include "../inc/zona0_file.h"
+#include <genesis.h>
+
 #include "../res/grid.h"
 #include "../res/sprites.h"
 
