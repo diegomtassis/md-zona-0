@@ -8,4 +8,6 @@
 
 extern struct LightCycle lightCycle;
 
+void initPlayer();
+
 void playerActs();

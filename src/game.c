@@ -34,7 +34,6 @@ volatile bool paused = FALSE;
 static bool runGrid();
 
 static void displayGrid();
-static void displayFlynn();
 
 GameResult runGame(const Config config[static 1]) {
 
@@ -46,7 +45,7 @@ GameResult runGame(const Config config[static 1]) {
 
     while (!game_over) {
 
-      game_over = !runGrid();
+        game_over = !runGrid();
     }
 
     SPR_end();
@@ -92,7 +91,7 @@ static bool runGrid() {
     bool mission_accomplished = FALSE;
 
     displayGrid();
-    displayFlynn();
+    initPlayer();
 
     while (!game_over && !mission_accomplished) {
         if (!paused) {
@@ -122,18 +121,4 @@ static void displayGrid() {
     bg = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
     MAP_scrollTo(bg, 400, 0);
-}
-
-static void displayFlynn() {
-
-    PAL_setPalette(PAL1, palette_sprites.data, DMA);
-
-    SPR_init();
-
-    Sprite* p1_cycle = SPR_addSprite(&flynn_sprite, 64, 15,
-        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
-
-    SPR_setAnim(p1_cycle, 0);
-
-    SPR_update();
 }
