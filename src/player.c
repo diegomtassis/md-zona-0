@@ -4,6 +4,10 @@
  * Author: diegomtassis
  */
 
+#include "player.h"
+
+#include <genesis.h>
+
 #define ANIM_LEFT		    1
 #define ANIM_LEFT_FLIP_H	1
 
@@ -30,3 +34,27 @@
 
 #define PLAYER_HEIGHT 24
 #define PLAYER_WIDTH 24
+
+struct LightCycle lightCycle;
+
+static void handleInputPlayer();
+static void moveLightCycle();
+static void drawLightCycle();
+
+void playerActs() {
+
+    if (!(lightCycle.health & ALIVE) || lightCycle.finished) {
+        return;
+    }
+
+    handleInputPlayer();
+    moveLightCycle();
+
+    drawLightCycle();
+}
+
+static void handleInputPlayer() {};
+
+static void moveLightCycle() {};
+
+static void drawLightCycle() {};

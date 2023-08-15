@@ -5,13 +5,13 @@
  *      Author: diegomtassis
  */
 
-#include "../../inc/fwk/printer.h"
+#include "fwk/printer.h"
 
 #include <genesis.h>
 
-#include "../../inc/fwk/blinker.h"
-#include "../../inc/fwk/commons.h"
-#include "../../res/printer.h"
+#include "fwk/blinker.h"
+#include "fwk/commons.h"
+#include "printer.h"
 
 static void printChar(const char* text, u16 pos, int is_last, V2u16* offset);
 

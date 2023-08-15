@@ -4,3 +4,8 @@
  * Author: diegomtassis
  */
 
+#include "elements.h"
+
+extern struct LightCycle lightCycle;
+
+void playerActs();

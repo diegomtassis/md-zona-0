@@ -8,14 +8,14 @@
 
 #include <genesis.h>
 
-#include "../res/grid.h"
-#include "../res/sprites.h"
+#include "grid.h"
+#include "player.h"
+#include "sprites.h"
 
-#include "../inc/config.h"
+#include "config.h"
 
-#include "../inc/fwk/commons.h"
-#include "../inc/fwk/vdp_utils.h"
-
+#include "fwk/commons.h"
+#include "fwk/vdp_utils.h"
 
 #define DEFAULT_FLASH_WAIT 2000
 
@@ -23,6 +23,15 @@ static Game* createGame(const Config config[static 1]);
 static void releaseGame(Game *game);
 
 static Game *current_game;
+
+volatile bool paused = FALSE;
+
+/**
+ * @brief run a grid.
+ *
+ * @return goal accomplished
+ */
+static bool runGrid();
 
 static void displayGrid();
 static void displayFlynn();
@@ -35,14 +44,9 @@ GameResult runGame(const Config config[static 1]) {
 
     bool game_over = FALSE;
 
-    displayGrid();
-    displayFlynn();
-
     while (!game_over) {
 
-        //	log_memory();
-        SPR_update();
-        SYS_doVBlankProcess();
+      game_over = !runGrid();
     }
 
     SPR_end();
@@ -83,6 +87,26 @@ static void releaseGame(Game *game) {
     MEM_free(game);
 }
 
+static bool runGrid() {
+    bool game_over = FALSE;
+    bool mission_accomplished = FALSE;
+
+    displayGrid();
+    displayFlynn();
+
+    while (!game_over && !mission_accomplished) {
+        if (!paused) {
+            playerActs();
+            SPR_update();
+        }
+
+        VDP_showFPS(FALSE);
+        VDP_showCPULoad();
+        SYS_doVBlankProcess();
+    }
+
+    return game_over;
+}
 
 static void displayGrid() {
 

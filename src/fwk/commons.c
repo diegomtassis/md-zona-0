@@ -5,7 +5,7 @@
  *      Author: diegomtassis
  */
 
-#include "../../inc/fwk/commons.h"
+#include "fwk/commons.h"
 
 #include <genesis.h>
 

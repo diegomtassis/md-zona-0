@@ -5,7 +5,7 @@
  *      Author: diegomtassis
  */
 
-#include "../inc/fwk/logger.h"
+#include "fwk/logger.h"
 
 #include <genesis.h>
 

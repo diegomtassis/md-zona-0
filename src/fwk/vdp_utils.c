@@ -5,7 +5,7 @@
  *      Author: diegomtassis
  */
 
-#include "../../inc/fwk/vdp_utils.h"
+#include "fwk/vdp_utils.h"
 
 #include <genesis.h>
 

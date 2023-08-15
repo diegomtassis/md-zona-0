@@ -5,7 +5,7 @@
  *      Author: diegomtassis
  */
 
-#include "../../inc/fwk/blinker.h"
+#include "fwk/blinker.h"
 
 #include <genesis.h>
 
