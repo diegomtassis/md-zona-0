@@ -7,12 +7,13 @@
 #include "game.h"
 
 #include <genesis.h>
-
-#include "grid.h"
-#include "player.h"
-#include "sprites.h"
-
 #include "config.h"
+
+#include "gfx_grid.h"
+#include "gfx_lightcycles.h""
+
+#include "player.h"
+
 
 #include "fwk/commons.h"
 #include "fwk/vdp_utils.h"

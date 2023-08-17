@@ -11,7 +11,7 @@
 
 #include "fwk/blinker.h"
 #include "fwk/commons.h"
-#include "printer.h"
+#include "gfx_printer.h"
 
 static void printChar(const char* text, u16 pos, int is_last, V2u16* offset);
 

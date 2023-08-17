@@ -8,7 +8,7 @@
 
 #include <genesis.h>
 
-#include "sprites.h"
+#include "gfx_lightcycles.h"
 
 
 #define ANIM_LEFT		    1
@@ -24,10 +24,10 @@
 #define ANIM_DOWN_FLIP_H	0
 
 #define SPEED_ZERO			FIX16_0
-#define SPEED_H_SLOW		FIX16(0.5)
-#define SPEED_H_FAST		FIX16(1)
-#define SPEED_V_SLOW		FIX16(0.25)
-#define SPEED_V_FAST    	FIX16(0.5)
+#define SPEED_H_SLOW		FIX16(1)
+#define SPEED_H_FAST		FIX16(2)
+#define SPEED_V_SLOW		FIX16(0.5)
+#define SPEED_V_FAST    	FIX16(1)
 
 #define UP			0x01
 #define DOWN		0x02

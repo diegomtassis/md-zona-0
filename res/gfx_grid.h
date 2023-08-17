@@ -1,8 +1,8 @@
-#ifndef _RES_GRID_H_
-#define _RES_GRID_H_
+#ifndef _RES_GFX_GRID_H_
+#define _RES_GFX_GRID_H_
 
 extern const Palette palette_grid;
 extern const TileSet tileset_grid;
 extern const MapDefinition map_zona0_zona14;
 
-#endif // _RES_GRID_H_
+#endif // _RES_GFX_GRID_H_
