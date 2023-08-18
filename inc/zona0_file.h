@@ -5,10 +5,10 @@
  *      Author: diegomtassis
  */
 
-#ifndef INC_JETPAC_FILE_H_
-#define INC_JETPAC_FILE_H_
+#ifndef INC_ZONA0_FILE_H_
+#define INC_ZONA0_FILE_H_
 
 void printDisclaimer();
 void clearDisclaimer();
 
-#endif /* INC_JETPAC_FILE_H_ */
+#endif /* INC_ZONA0_FILE_H_ */
