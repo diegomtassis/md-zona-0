@@ -7,43 +7,6 @@
 
 #include "fwk/physics.h"
 
-void updateBox(Object_f16* object) {
-
-	object->box.min.x = fix16ToInt(object->pos.x);
-	object->box.min.y = fix16ToInt(object->pos.y);
-	updateBoxMax(&object->box);
-}
-
-Box_s16 targetBox(const Object_f16* object) {
-
-	Box_s16 box = { .w = object->size.x, .h = object->size.y };
-	box.min.x = fix16ToInt(fix16Add(object->pos.x, object->mov.x));
-	box.min.y = fix16ToInt(fix16Add(object->pos.y, object->mov.y));
-	updateBoxMax(&box);
-
-	return box;
-}
-
-Box_s16 targetHBox(const Object_f16* object) {
-
-	Box_s16 box = { .w = object->size.x, .h = object->size.y };
-	box.min.x = fix16ToInt(fix16Add(object->pos.x, object->mov.x));
-	box.min.y = fix16ToInt(object->pos.y);
-	updateBoxMax(&box);
-
-	return box;
-}
-
-Box_s16 targetVBox(const Object_f16* object) {
-
-	Box_s16 box = { .w = object->size.x, .h = object->size.y };
-	box.min.x = fix16ToInt(object->pos.x);
-	box.min.y = fix16ToInt(fix16Add(object->pos.y, object->mov.y));
-	updateBoxMax(&box);
-
-	return box;
-}
-
 void updateBoxMax(Box_s16* box) {
 
 	box->max.x = box->min.x + box->w - 1;

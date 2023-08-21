@@ -9,16 +9,32 @@
 
 #include <genesis.h>
 
+#include <fwk/physics.h>
+
 typedef struct {
+
 	V2f16 pos;
 	V2u16 size;
-	V2f16 mov;
 	Box_s16 box;
 
-	V2s16 position;
-	V2s16 globalPosition;
 	V2u16 centerOffset;
+	V2u16 viewPosition;
 
-} Object_f16;
+} GridObject;
+
+typedef struct {
+	GridObject object;
+	V2f16 mov;
+	u8 direction;
+	V2u16 nextCrossing;
+
+} GridMovable;
+
+void updateBox(GridMovable* movable);
+
+
+Box_s16 targetBox(const GridMovable* subject);
+Box_s16 targetHBox(const GridMovable* subject);
+Box_s16 targetVBox(const GridMovable* subject);
 
 #endif /* INC_GRID_PHYSICS_H_ */

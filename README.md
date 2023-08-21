@@ -1,4 +1,4 @@
-# Sega Mega Drive Zona 0
+# Zona 0 MD - a port of Zona 0 for Sega Megadrive
 
 ### Zona 0
 

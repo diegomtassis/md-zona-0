@@ -18,7 +18,6 @@ typedef struct Config Config;
 typedef struct Player Player;
 typedef struct Game Game;
 typedef struct GameResult GameResult;
-typedef struct LightCycle LightCycle;
 
 struct Config {
     u8 difficulty;
@@ -33,22 +32,12 @@ struct Player {
 
 struct Game {
     const Config* config;
-    Player* p1;
 };
 
 struct GameResult {
     u16 p1_score;
 };
 
-struct LightCycle {
-    Object_f16 object;
-    u8 health;
-    u8 finished;
-    u8 direction;
-    bool boost;
-    bool airborne;
-    bool immunity;
-    Sprite* sprite;
-};
+extern Player player;
 
 #endif /* INC_ELEMENTS_H_ */

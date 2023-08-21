@@ -10,7 +10,7 @@
 #include "config.h"
 
 #include "gfx_grid.h"
-#include "gfx_lightcycles.h""
+#include "gfx_lightcycles.h"
 
 #include "player.h"
 
@@ -53,7 +53,7 @@ GameResult runGame(const Config config[static 1]) {
 
     GameResult result = {
         //
-        .p1_score = current_game->p1->score,  //
+        .p1_score = player.score,  //
     };
 
     releaseGame(current_game);
@@ -67,9 +67,8 @@ static Game *createGame(const Config config[static 1]) {
 
     game->config = config;
 
-    game->p1 = MEM_calloc(sizeof(*game->p1));
-    game->p1->lives = config->lives;
-    game->p1->score = 0;
+    player.lives = config->lives;
+    player.score = 0;
 
     return game;
 }
@@ -78,12 +77,7 @@ static void releaseGame(Game *game) {
     if (!game) {
         return;
     }
-
-    if (game->p1) {
-        MEM_free(game->p1);
-        game->p1 = 0;
-    }
-
+    
     MEM_free(game);
 }
 

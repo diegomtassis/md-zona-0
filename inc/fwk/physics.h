@@ -34,19 +34,7 @@ typedef struct {
 	u16 h;
 } Box_s16;
 
-typedef struct {
-	V2f16 pos;
-	V2u16 size;
-	V2f16 mov;
-	Box_s16 box;
-} Object_f16;
-
-void updateBox(Object_f16* object);
 void updateBoxMax(Box_s16* box);
-
-Box_s16 targetBox(const Object_f16* subject);
-Box_s16 targetHBox(const Object_f16* subject);
-Box_s16 targetVBox(const Object_f16* subject);
 
 bool contained(V2s16 subject_pos, const Box_s16* object_box);
 bool overlap(const Box_s16* subject_box, const Box_s16* object_box);

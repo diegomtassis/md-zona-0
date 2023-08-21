@@ -7,6 +7,7 @@
 #include "player.h"
 
 #include <genesis.h>
+#include <lightcycle.h>
 
 #include "gfx_lightcycles.h"
 
@@ -56,18 +57,18 @@ void initPlayer() {
 
     lightCycle.health = ALIVE;
     lightCycle.finished = FALSE;
-    lightCycle.direction = DOWN;
-    lightCycle.object.pos.x = FIX16(64);
-    lightCycle.object.pos.y = FIX16(15);
-    lightCycle.object.size.x = 24;
-    lightCycle.object.size.y = 24;
+    lightCycle.gridMovable.direction = DOWN;
+    lightCycle.gridMovable.object.pos.x = FIX16(64);
+    lightCycle.gridMovable.object.pos.y = FIX16(15);
+    lightCycle.gridMovable.object.size.x = 24;
+    lightCycle.gridMovable.object.size.y = 24;
 
     // sprite
     PAL_setPalette(PAL1, palette_sprites.data, DMA);
 
     SPR_init();
 
-    Sprite* p1_cycle = SPR_addSprite(&flynn_sprite, fix16ToInt(lightCycle.object.pos.x), fix16ToInt(lightCycle.object.pos.y), TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+    Sprite* p1_cycle = SPR_addSprite(&flynn_sprite, fix16ToInt(lightCycle.gridMovable.object.pos.x), fix16ToInt(lightCycle.gridMovable.object.pos.y), TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     SPR_setAnim(p1_cycle, ANIM_DOWN);
 
@@ -109,40 +110,40 @@ static void moveLightCycle() {
 
     calculateNextMovement();
     updatePosition();
-    SPR_setPosition(lightCycle.sprite, fix16ToInt(lightCycle.object.pos.x), fix16ToInt(lightCycle.object.pos.y));
+    SPR_setPosition(lightCycle.sprite, fix16ToInt(lightCycle.gridMovable.object.pos.x), fix16ToInt(lightCycle.gridMovable.object.pos.y));
 }
 
 static void calculateNextMovement() {
 
     if (turn) {
-        lightCycle.direction = turn;
+        lightCycle.gridMovable.direction = turn;
     }
 
-    if (lightCycle.direction & DOWN) {
-        lightCycle.object.mov.x = -SPEED_H_SLOW;
-        lightCycle.object.mov.y = SPEED_V_SLOW;
+    if (lightCycle.gridMovable.direction & DOWN) {
+        lightCycle.gridMovable.mov.x = -SPEED_H_SLOW;
+        lightCycle.gridMovable.mov.y = SPEED_V_SLOW;
 
-    } else if (lightCycle.direction & UP) {
-        lightCycle.object.mov.x = SPEED_H_SLOW;
-        lightCycle.object.mov.y = -SPEED_V_SLOW;
+    } else if (lightCycle.gridMovable.direction & UP) {
+        lightCycle.gridMovable.mov.x = SPEED_H_SLOW;
+        lightCycle.gridMovable.mov.y = -SPEED_V_SLOW;
 
-    } else if (lightCycle.direction & LEFT) {
-        lightCycle.object.mov.x = -SPEED_H_SLOW;
-        lightCycle.object.mov.y = -SPEED_V_SLOW;
+    } else if (lightCycle.gridMovable.direction & LEFT) {
+        lightCycle.gridMovable.mov.x = -SPEED_H_SLOW;
+        lightCycle.gridMovable.mov.y = -SPEED_V_SLOW;
 
-    } else if (lightCycle.direction & RIGHT) {
-        lightCycle.object.mov.x = SPEED_H_SLOW;
-        lightCycle.object.mov.y = SPEED_V_SLOW;
+    } else if (lightCycle.gridMovable.direction & RIGHT) {
+        lightCycle.gridMovable.mov.x = SPEED_H_SLOW;
+        lightCycle.gridMovable.mov.y = SPEED_V_SLOW;
     }
 }
 
 static void updatePosition() {
 
-    lightCycle.object.pos.x += lightCycle.object.mov.x;
-    lightCycle.object.pos.y += lightCycle.object.mov.y;
+    lightCycle.gridMovable.object.pos.x += lightCycle.gridMovable.mov.x;
+    lightCycle.gridMovable.object.pos.y += lightCycle.gridMovable.mov.y;
 
     // update box
-    updateBox(&lightCycle.object);
+    updateBox(&lightCycle.gridMovable.object);
 }
 
 static void drawLightCycle() {

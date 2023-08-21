@@ -1,6 +1,6 @@
 /*
  * Filename: grid.c
- * Created Date: August 17th 2023
+ * Created: August 17th 2023
  * Author: diegomtassis
  */
 
