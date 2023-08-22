@@ -11,6 +11,11 @@
 
 #include <fwk/physics.h>
 
+#define UP			0x01
+#define DOWN		0x02
+#define LEFT		0x04
+#define RIGHT		0x08
+
 typedef struct {
 
 	V2f16 pos;
@@ -26,12 +31,16 @@ typedef struct {
 	GridObject object;
 	V2f16 mov;
 	u8 direction;
-	V2u16 nextCrossing;
+	u8 turn;
+	bool justTurned;
+	V2s16 nextCrossing;
 
 } GridMovable;
 
-void updateBox(GridMovable* movable);
+void updatePosition(GridMovable* movable);
+void handleCrossing(GridMovable* movable);
 
+void updateBox(GridMovable* movable);
 
 Box_s16 targetBox(const GridMovable* subject);
 Box_s16 targetHBox(const GridMovable* subject);

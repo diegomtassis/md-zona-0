@@ -16,7 +16,7 @@
 typedef struct LightCycle LightCycle;
 
 struct LightCycle {
-    GridMovable gridMovable;
+    GridMovable movable;
     Sprite* sprite;
     u8 health;
     u8 finished;
@@ -24,5 +24,11 @@ struct LightCycle {
     bool airborne;
     bool immunity;
 };
+
+void initLightCycle(LightCycle* lightCycle);
+
+void moveLightCycle(LightCycle* lightCycle);
+
+void drawLightCycle(LightCycle* lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */

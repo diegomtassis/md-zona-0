@@ -35,6 +35,7 @@ volatile bool paused = FALSE;
 static bool runGrid();
 
 static void displayGrid();
+static void initVehicles();
 
 GameResult runGame(const Config config[static 1]) {
 
@@ -63,6 +64,7 @@ GameResult runGame(const Config config[static 1]) {
 }
 
 static Game *createGame(const Config config[static 1]) {
+
     Game *game = MEM_calloc(sizeof * game);
 
     game->config = config;
@@ -74,19 +76,23 @@ static Game *createGame(const Config config[static 1]) {
 }
 
 static void releaseGame(Game *game) {
+
     if (!game) {
         return;
     }
-    
+
     MEM_free(game);
 }
 
 static bool runGrid() {
+
     bool game_over = FALSE;
     bool mission_accomplished = FALSE;
 
     displayGrid();
-    initPlayer();
+
+    initVehicles();
+    SPR_update();
 
     while (!game_over && !mission_accomplished) {
         if (!paused) {
@@ -116,4 +122,11 @@ static void displayGrid() {
     bg = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
     MAP_scrollTo(bg, 400, 0);
+}
+
+static void initVehicles() {
+
+    PAL_setPalette(PAL1, palette_sprites.data, DMA);
+
+    initPlayer();
 }
