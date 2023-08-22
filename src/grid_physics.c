@@ -29,22 +29,22 @@ void handleCrossing(GridMovable* movable) {
 
     if (movable->direction & DOWN) {
         // has the movable reached the next crossing?
-        if (movable->object.box.max.x < movable->nextCrossing.x) {
+        if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & UP) {
-        if (movable->object.box.min.x > movable->nextCrossing.x) {
+        if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & LEFT) {
-        if (movable->object.box.max.x < movable->nextCrossing.x) {
+        if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & RIGHT) {
-        if (movable->object.box.min.x > movable->nextCrossing.x) {
+        if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
             handleCrossingCrossed(movable);
         }
     }
@@ -115,40 +115,21 @@ static bool turnIfRequested(GridMovable* movable) {
         movable->justTurned = TRUE;
 
         if (newDirection & UP) {
-            if (previousDirection & LEFT) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
-            } else if (previousDirection & RIGHT) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
-            }
-        } else if (newDirection & DOWN) {
-            if (previousDirection & LEFT) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y);
-            } else if (previousDirection & RIGHT) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y);
-            }
-        } else if (newDirection & LEFT) {
-            if (previousDirection & UP) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
-            } else if (previousDirection & DOWN) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
-            }
-        } else if (newDirection & RIGHT) {
-            if (previousDirection & UP) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y);
-            } else if (previousDirection & DOWN) {
-                movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-                movable->object.pos.y = intToFix16(movable->nextCrossing.y);
-            }
-        }
+            movable->object.pos.x = intToFix16(movable->nextCrossing.x);
+            movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
 
-        KLog_S2("Turn in crossing - x:", movable->nextCrossing.x, ", y:", movable->nextCrossing.y);
+        } else if (newDirection & DOWN) {
+            movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
+            movable->object.pos.y = intToFix16(movable->nextCrossing.y - 12);
+
+        } else if (newDirection & LEFT) {
+            movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x + 8);
+            movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y + 4);
+
+        } else if (newDirection & RIGHT) {
+            movable->object.pos.x = intToFix16(movable->nextCrossing.x);
+            movable->object.pos.y = intToFix16(movable->nextCrossing.y - 12);
+        }
 
         return TRUE;
     }
@@ -157,9 +138,6 @@ static bool turnIfRequested(GridMovable* movable) {
 }
 
 static void updateNextCrossing(GridMovable* movable) {
-
-    KLog_S2("Movable position - box min - x:", movable->object.box.min.x, ", y:", movable->object.box.min.y);
-    KLog_S2("Movable position - box max - x:", movable->object.box.max.x, ", y:", movable->object.box.max.y);
 
     if (movable->direction & DOWN) {
         movable->nextCrossing.x += -16;
@@ -177,6 +155,4 @@ static void updateNextCrossing(GridMovable* movable) {
         movable->nextCrossing.x += 16;
         movable->nextCrossing.y += 8;
     }
-
-    KLog_S2("Updated next crossing - x:", movable->nextCrossing.x, ", y:", movable->nextCrossing.y);
 }

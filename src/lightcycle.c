@@ -23,10 +23,10 @@
 #define ANIM_DOWN_FLIP_H	0
 
 #define SPEED_ZERO			FIX16_0
-#define SPEED_H_SLOW		FIX16(0.2)
-#define SPEED_H_FAST		FIX16(0.4)
-#define SPEED_V_SLOW		FIX16(0.1)
-#define SPEED_V_FAST    	FIX16(0.2)
+#define SPEED_H_SLOW		FIX16(1)
+#define SPEED_H_FAST		FIX16(2)
+#define SPEED_V_SLOW		FIX16(0.5)
+#define SPEED_V_FAST    	FIX16(1)
 
 #define BOOST		0x10
 
@@ -41,17 +41,14 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->finished = FALSE;
 
     // position
-    lightCycle->movable.object.pos.x = FIX16(64);
-    lightCycle->movable.object.pos.y = FIX16(15);
+    lightCycle->movable.object.pos.x = FIX16(104);
+    lightCycle->movable.object.pos.y = FIX16(12);
     lightCycle->movable.object.size.x = 24;
     lightCycle->movable.object.size.y = 24;
     lightCycle->movable.object.box.w = lightCycle->movable.object.size.x;
     lightCycle->movable.object.box.h = lightCycle->movable.object.size.y;
 
     updateBox(&lightCycle->movable);
-
-    KLog_S2("Movable position - box min - x:", lightCycle->movable.object.box.min.x, ", y:", lightCycle->movable.object.box.min.y);
-    KLog_S2("Movable position - box max - x:", lightCycle->movable.object.box.max.x, ", y:", lightCycle->movable.object.box.max.y);
 
     // movement
     lightCycle->movable.direction = DOWN;
@@ -64,9 +61,8 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.turn = 0;
 
     // next crossing
-    lightCycle->movable.nextCrossing.x = 64 - 16; // min.x
-    lightCycle->movable.nextCrossing.y = 38 + 15; // max.y
-    KLog_U2("Init next crossing - x:", lightCycle->movable.nextCrossing.x, ", y:", lightCycle->movable.nextCrossing.y);
+    lightCycle->movable.nextCrossing.x = 104; // min.x
+    lightCycle->movable.nextCrossing.y = 32; // max.y
 
     lightCycle->sprite = SPR_addSprite(&flynn_sprite, fix16ToInt(lightCycle->movable.object.pos.x), fix16ToInt(lightCycle->movable.object.pos.y), TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
