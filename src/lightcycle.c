@@ -8,6 +8,8 @@
 
 #include <kdebug.h>
 
+#include "camera.h"
+
 #include "gfx_lightcycles.h"
 
 #define ANIM_LEFT		    1
@@ -23,32 +25,34 @@
 #define ANIM_DOWN_FLIP_H	0
 
 #define SPEED_ZERO			FIX16_0
-#define SPEED_H_SLOW		FIX16(1)
-#define SPEED_H_FAST		FIX16(2)
-#define SPEED_V_SLOW		FIX16(0.5)
-#define SPEED_V_FAST    	FIX16(1)
+#define SPEED_H_SLOW		FIX16(0.2)
+#define SPEED_H_FAST		FIX16(0.4)
+#define SPEED_V_SLOW		FIX16(0.1)
+#define SPEED_V_FAST    	FIX16(0.2)
 
 #define BOOST		0x10
 
-#define PLAYER_HEIGHT 24
-#define PLAYER_WIDTH 24
+#define LIGHTCYCLE_WIDTH 24
+#define LIGHTCYCLE_HEIGHT 24
 
 static void calculateNextMovement(LightCycle* lightCycle);
 
 void initLightCycle(LightCycle* lightCycle) {
 
+    KLog("Init lightcycle");
+
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
 
     // position
-    lightCycle->movable.object.pos.x = FIX16(104);
+    lightCycle->movable.object.pos.x = FIX16(504);
     lightCycle->movable.object.pos.y = FIX16(12);
-    lightCycle->movable.object.size.x = 24;
-    lightCycle->movable.object.size.y = 24;
+    lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
+    lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
     lightCycle->movable.object.box.w = lightCycle->movable.object.size.x;
     lightCycle->movable.object.box.h = lightCycle->movable.object.size.y;
 
-    updateBox(&lightCycle->movable);
+    updateMovableBox(&lightCycle->movable);
 
     // movement
     lightCycle->movable.direction = DOWN;
@@ -61,10 +65,15 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.turn = 0;
 
     // next crossing
-    lightCycle->movable.nextCrossing.x = 104; // min.x
-    lightCycle->movable.nextCrossing.y = 32; // max.y
+    lightCycle->movable.nextCrossing.x = 504;
+    lightCycle->movable.nextCrossing.y = 32;
 
-    lightCycle->sprite = SPR_addSprite(&flynn_sprite, fix16ToInt(lightCycle->movable.object.pos.x), fix16ToInt(lightCycle->movable.object.pos.y), TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+    V2u16 relativePos = cordsInView(&lightCycle->movable.object.box);
+
+    lightCycle->sprite = SPR_addSprite(&flynn_sprite, //
+        fix16ToInt(relativePos.x), //
+        fix16ToInt(relativePos.y), //
+        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
 
@@ -72,7 +81,10 @@ void moveLightCycle(LightCycle* lightCycle) {
 
     calculateNextMovement(lightCycle);
     updatePosition(&lightCycle->movable);
-    SPR_setPosition(lightCycle->sprite, fix16ToInt(lightCycle->movable.object.pos.x), fix16ToInt(lightCycle->movable.object.pos.y));
+
+    V2u16 relativePos = cordsInView(&lightCycle->movable.object.box);
+
+    SPR_setPosition(lightCycle->sprite, relativePos.x, relativePos.y);
 }
 
 static void calculateNextMovement(LightCycle* lightCycle) {

@@ -6,20 +6,19 @@
 
 #include <genesis.h>
 
-#include "../inc/fwk/printer.h"
-#include "../inc/fwk/vdp_utils.h"
-
+#include "fwk/printer.h"
+#include "fwk/vdp_utils.h"
 
 #include "elements.h"
 #include "game.h"
-#include "config.h"
+#include "game_config.h"
 
 #define LOADING_TIME	3000
 
 int main(bool hard) {
 
 	// default resolution
-	VDP_setScreenWidth320();
+	VDP_setScreenWidth256();
 	VDP_setScreenHeight224();
 
 	// initPrinter();
@@ -41,9 +40,9 @@ int main(bool hard) {
 	while (1) {
 
 		// log_memory();
-		Config config = setUpGame();
+		setUpGame();
 
-		GameResult result = runGame(&config);
+		GameResult result = runGame(&currentConfig);
 
 		SYS_doVBlankProcess();
 	}

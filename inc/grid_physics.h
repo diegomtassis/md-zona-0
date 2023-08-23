@@ -33,14 +33,14 @@ typedef struct {
 	u8 direction;
 	u8 turn;
 	bool justTurned;
-	V2s16 nextCrossing;
+	V2u16 nextCrossing;
 
 } GridMovable;
 
 void updatePosition(GridMovable* movable);
 void handleCrossing(GridMovable* movable);
 
-void updateBox(GridMovable* movable);
+void updateMovableBox(GridMovable* movable);
 
 Box_s16 targetBox(const GridMovable* subject);
 Box_s16 targetHBox(const GridMovable* subject);

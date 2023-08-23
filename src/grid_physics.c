@@ -20,7 +20,7 @@ void updatePosition(GridMovable* movable) {
 
     movable->object.pos.x += movable->mov.x;
     movable->object.pos.y += movable->mov.y;
-    updateBox(movable);
+    updateMovableBox(movable);
 
     handleCrossing(movable);
 }
@@ -30,27 +30,49 @@ void handleCrossing(GridMovable* movable) {
     if (movable->direction & DOWN) {
         // has the movable reached the next crossing?
         if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
+
+            KLog("Going down");
+            KLog_U1("object box max x-8: ", movable->object.box.max.x - 8);
+            KLog_U1("crossing x: ", movable->nextCrossing.x);
+
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & UP) {
         if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
+
+            KLog("Going up");
+            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
+            KLog_U1("crossing x: ", movable->nextCrossing.x);
+
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & LEFT) {
         if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
+
+            KLog("Going left");
+            KLog_U1("object box max x-8: ", movable->object.box.max.x - 8);
+            KLog_U1("crossing x: ", movable->nextCrossing.x);
+
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & RIGHT) {
         if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
+
+            KLog("Going right");
+            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
+            KLog_U1("crossing x: ", movable->nextCrossing.x);
+
             handleCrossingCrossed(movable);
+        } else {
+            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
         }
     }
 }
 
-void updateBox(GridMovable* movable) {
+void updateMovableBox(GridMovable* movable) {
 
     movable->object.box.min.x = fix16ToInt(movable->object.pos.x);
     movable->object.box.min.y = fix16ToInt(movable->object.pos.y);
@@ -89,8 +111,10 @@ Box_s16 targetVBox(const GridMovable* movable) {
 
 static void handleCrossingCrossed(GridMovable* movable) {
 
+    KLog("crossing crossed");
+
     if (turnIfRequested(movable)) {
-        updateBox(movable);
+        updateMovableBox(movable);
     }
 
     updateNextCrossing(movable);
@@ -155,4 +179,6 @@ static void updateNextCrossing(GridMovable* movable) {
         movable->nextCrossing.x += 16;
         movable->nextCrossing.y += 8;
     }
+
+    KLog_U1("updated next crossing: ", movable->nextCrossing.x);
 }

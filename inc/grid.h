@@ -7,6 +7,10 @@
 #ifndef INC_GRID_H_
 #define INC_GRID_H_
 
-#include "genesis.h"
+#include <genesis.h>
+
+extern Map *gridMap;
+
+void displayGrid();
 
 #endif /* INC_GRID_H_ */

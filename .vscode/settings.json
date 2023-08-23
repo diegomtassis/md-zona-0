@@ -13,6 +13,8 @@
         "sprite.h": "c",
         "sprites.h": "c",
         "game.h": "c",
-        "config.h": "c"
+        "config.h": "c",
+        "gfx_grid.h": "c",
+        "physics.h": "c"
     }
 }

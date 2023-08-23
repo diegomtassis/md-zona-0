@@ -1,12 +1,12 @@
 /*
- * config.h
+ * game_config.h
  *
  *  Created on: Aug 8, 2023
  *      Author: diegomtassis
  */
 
-#ifndef INC_CONFIG_H_
-#define INC_CONFIG_H_
+#ifndef INC_GAMECONFIG_H_
+#define INC_GAMECONFIG_H_
 
 #include <genesis.h>
 
@@ -20,6 +20,8 @@ typedef enum {
 } Difficulty;
 
 void initConfig();
-Config setUpGame();
+void setUpGame();
 
-#endif /* INC_CONFIG_H_ */
+extern Config currentConfig;
+
+#endif /* INC_GAMECONFIG_H_ */
