@@ -24,11 +24,11 @@
 #define ANIM_DOWN       	0
 #define ANIM_DOWN_FLIP_H	0
 
-#define SPEED_ZERO			FIX16_0
-#define SPEED_H_SLOW		FIX16(0.2)
-#define SPEED_H_FAST		FIX16(0.4)
-#define SPEED_V_SLOW		FIX16(0.1)
-#define SPEED_V_FAST    	FIX16(0.2)
+#define SPEED_ZERO			FIX32_0
+#define SPEED_H_SLOW		FIX32(1)
+#define SPEED_H_FAST		FIX32(2)
+#define SPEED_V_SLOW		FIX32(0.5)
+#define SPEED_V_FAST    	FIX32(1)
 
 #define BOOST		0x10
 
@@ -39,14 +39,12 @@ static void calculateNextMovement(LightCycle* lightCycle);
 
 void initLightCycle(LightCycle* lightCycle) {
 
-    KLog("Init lightcycle");
-
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
 
     // position
-    lightCycle->movable.object.pos.x = FIX16(504);
-    lightCycle->movable.object.pos.y = FIX16(12);
+    lightCycle->movable.object.pos.x = FIX32(504);
+    lightCycle->movable.object.pos.y = FIX32(12);
     lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
     lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
     lightCycle->movable.object.box.w = lightCycle->movable.object.size.x;

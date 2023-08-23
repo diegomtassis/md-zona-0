@@ -30,88 +30,64 @@ void handleCrossing(GridMovable* movable) {
     if (movable->direction & DOWN) {
         // has the movable reached the next crossing?
         if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
-
-            KLog("Going down");
-            KLog_U1("object box max x-8: ", movable->object.box.max.x - 8);
-            KLog_U1("crossing x: ", movable->nextCrossing.x);
-
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & UP) {
         if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
-
-            KLog("Going up");
-            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
-            KLog_U1("crossing x: ", movable->nextCrossing.x);
-
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & LEFT) {
         if (movable->object.box.max.x - 8 < movable->nextCrossing.x) {
-
-            KLog("Going left");
-            KLog_U1("object box max x-8: ", movable->object.box.max.x - 8);
-            KLog_U1("crossing x: ", movable->nextCrossing.x);
-
             handleCrossingCrossed(movable);
         }
 
     } else if (movable->direction & RIGHT) {
         if (movable->object.box.min.x + 8 > movable->nextCrossing.x) {
-
-            KLog("Going right");
-            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
-            KLog_U1("crossing x: ", movable->nextCrossing.x);
-
             handleCrossingCrossed(movable);
-        } else {
-            KLog_U1("object box min x+8: ", movable->object.box.min.x + 8);
         }
     }
 }
 
 void updateMovableBox(GridMovable* movable) {
 
-    movable->object.box.min.x = fix16ToInt(movable->object.pos.x);
-    movable->object.box.min.y = fix16ToInt(movable->object.pos.y);
+    movable->object.box.min.x = fix32ToInt(movable->object.pos.x);
+    movable->object.box.min.y = fix32ToInt(movable->object.pos.y);
     updateBoxMax(&movable->object.box);
 }
 
-Box_s16 targetBox(const GridMovable* movable) {
+Box_s32 targetBox(const GridMovable* movable) {
 
-    Box_s16 box = { .w = movable->object.size.x, .h = movable->object.size.y };
-    box.min.x = fix16ToInt(fix16Add(movable->object.pos.x, movable->mov.x));
-    box.min.y = fix16ToInt(fix16Add(movable->object.pos.y, movable->mov.y));
+    Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
+    box.min.x = fix32ToInt(fix16Add(movable->object.pos.x, movable->mov.x));
+    box.min.y = fix32ToInt(fix16Add(movable->object.pos.y, movable->mov.y));
     updateBoxMax(&box);
 
     return box;
 }
 
-Box_s16 targetHBox(const GridMovable* movable) {
+Box_s32 targetHBox(const GridMovable* movable) {
 
-    Box_s16 box = { .w = movable->object.size.x, .h = movable->object.size.y };
-    box.min.x = fix16ToInt(fix16Add(movable->object.pos.x, movable->mov.x));
-    box.min.y = fix16ToInt(movable->object.pos.y);
+    Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
+    box.min.x = fix32ToInt(fix32Add(movable->object.pos.x, movable->mov.x));
+    box.min.y = fix32ToInt(movable->object.pos.y);
     updateBoxMax(&box);
 
     return box;
 }
 
-Box_s16 targetVBox(const GridMovable* movable) {
+Box_s32 targetVBox(const GridMovable* movable) {
 
-    Box_s16 box = { .w = movable->object.size.x, .h = movable->object.size.y };
-    box.min.x = fix16ToInt(movable->object.pos.x);
-    box.min.y = fix16ToInt(fix16Add(movable->object.pos.y, movable->mov.y));
+    Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
+    box.min.x = fix32ToInt(movable->object.pos.x);
+    box.min.y = fix32ToInt(fix32Add(movable->object.pos.y, movable->mov.y));
     updateBoxMax(&box);
 
     return box;
 }
 
 static void handleCrossingCrossed(GridMovable* movable) {
-
-    KLog("crossing crossed");
 
     if (turnIfRequested(movable)) {
         updateMovableBox(movable);
@@ -139,20 +115,20 @@ static bool turnIfRequested(GridMovable* movable) {
         movable->justTurned = TRUE;
 
         if (newDirection & UP) {
-            movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-            movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y);
+            movable->object.pos.x = intToFix32(movable->nextCrossing.x);
+            movable->object.pos.y = intToFix32(movable->nextCrossing.y - movable->object.size.y);
 
         } else if (newDirection & DOWN) {
-            movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x);
-            movable->object.pos.y = intToFix16(movable->nextCrossing.y - 12);
+            movable->object.pos.x = intToFix32(movable->nextCrossing.x - movable->object.size.x);
+            movable->object.pos.y = intToFix32(movable->nextCrossing.y - 12);
 
         } else if (newDirection & LEFT) {
-            movable->object.pos.x = intToFix16(movable->nextCrossing.x - movable->object.size.x + 8);
-            movable->object.pos.y = intToFix16(movable->nextCrossing.y - movable->object.size.y + 4);
+            movable->object.pos.x = intToFix32(movable->nextCrossing.x - movable->object.size.x + 8);
+            movable->object.pos.y = intToFix32(movable->nextCrossing.y - movable->object.size.y + 4);
 
         } else if (newDirection & RIGHT) {
-            movable->object.pos.x = intToFix16(movable->nextCrossing.x);
-            movable->object.pos.y = intToFix16(movable->nextCrossing.y - 12);
+            movable->object.pos.x = intToFix32(movable->nextCrossing.x);
+            movable->object.pos.y = intToFix32(movable->nextCrossing.y - 12);
         }
 
         return TRUE;
@@ -179,6 +155,4 @@ static void updateNextCrossing(GridMovable* movable) {
         movable->nextCrossing.x += 16;
         movable->nextCrossing.y += 8;
     }
-
-    KLog_U1("updated next crossing: ", movable->nextCrossing.x);
 }

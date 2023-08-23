@@ -18,22 +18,19 @@
 
 typedef struct {
 
-	V2f16 pos;
+	V2f32 pos;
 	V2u16 size;
-	Box_s16 box;
-
-	V2u16 centerOffset;
-	V2u16 viewPosition;
+	Box_s32 box;
 
 } GridObject;
 
 typedef struct {
 	GridObject object;
-	V2f16 mov;
+	V2f32 mov;
 	u8 direction;
 	u8 turn;
 	bool justTurned;
-	V2u16 nextCrossing;
+	V2s32 nextCrossing;
 
 } GridMovable;
 
@@ -42,8 +39,8 @@ void handleCrossing(GridMovable* movable);
 
 void updateMovableBox(GridMovable* movable);
 
-Box_s16 targetBox(const GridMovable* subject);
-Box_s16 targetHBox(const GridMovable* subject);
-Box_s16 targetVBox(const GridMovable* subject);
+Box_s32 targetBox(const GridMovable* subject);
+Box_s32 targetHBox(const GridMovable* subject);
+Box_s32 targetVBox(const GridMovable* subject);
 
 #endif /* INC_GRID_PHYSICS_H_ */

@@ -9,9 +9,9 @@
 #include "grid.h"
 #include "fwk/physics.h"
 
-Box_s16 cameraView;
+Box_s32 cameraView;
 
-void setupCamera(u16 x, u16 y, u16 width, u16 height) {
+void setupCamera(s32 x, s32 y, u16 width, u16 height) {
 
     cameraView.min.x = x;
     cameraView.min.y = y;
@@ -26,7 +26,7 @@ void updateCamera() {
     updateBoxMax(&cameraView);
 }
 
-V2u16 cordsInView(Box_s16 *subject) {
+V2u16 cordsInView(Box_s32 *subject) {
 
     V2u16 relative = {
         .x = subject->min.x - cameraView.min.x,
