@@ -70,7 +70,7 @@ static bool runLevel() {
     bool game_over = FALSE;
     bool mission_accomplished = FALSE;
 
-    setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight());
+    setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight(), GRID_WIDTH, GRID_HEIGTH);
     displayGrid(400, 0);
 
     initLevelObjects();

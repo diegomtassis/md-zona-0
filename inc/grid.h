@@ -11,6 +11,9 @@
 
 extern Map *gridMap;
 
+#define GRID_WIDTH 960
+#define GRID_HEIGTH 488
+
 void displayGrid(u32, u32);
 void scrollGrid();
 

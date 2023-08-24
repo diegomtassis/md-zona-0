@@ -23,7 +23,9 @@ static bool subjectLockedV;
 static u16 lockingOffsetH;
 static u16 lockingOffsetV;
 
-void setupCamera(s32 x, s32 y, u16 width, u16 height) {
+static V2s32 screenMaxBounds;
+
+void setupCamera(s32 x, s32 y, u16 width, u16 height, s32 maxX, s32 maxY) {
 
     cameraView.min.x = x;
     cameraView.min.y = y;
@@ -37,6 +39,9 @@ void setupCamera(s32 x, s32 y, u16 width, u16 height) {
 
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
+
+    screenMaxBounds.x = maxX;
+    screenMaxBounds.y = maxY;
 }
 
 void cameraFocus(Box_s32 * objectToTrack) {
@@ -46,14 +51,13 @@ void cameraFocus(Box_s32 * objectToTrack) {
 
 void updateCamera() {
 
-    s32 normalizedX = subject->min.x - lockingOffsetH;
+    s32 normalizedMinX = subject->min.x - lockingOffsetH;
     if (subjectLockedH) {
-        cameraView.min.x = normalizedX;
         KLog("Already locked H");
+        cameraView.min.x = normalizedMinX;
 
     } else {
-        // Subject not locked. If it's near the view center don't do anything, but if it's far from the center, follow it.
-        if (cameraView.min.x == normalizedX) {
+        if (cameraView.min.x == normalizedMinX) {
             subjectLockedH = TRUE;
             KLog("Just locked H");
 
@@ -71,15 +75,34 @@ void updateCamera() {
         }
     }
 
-    s32 normalizedY = subject->min.y - lockingOffsetV;
+    if (cameraView.min.x < 0) {
+        KLog("Unlocking H");
+        cameraView.min.x = 0;
+        subjectLockedH = FALSE;
+
+    } else if (cameraView.max.x > screenMaxBounds.x) {
+        KLog("Unlocking H");
+        cameraView.min.x = screenMaxBounds.x - cameraView.w;
+        subjectLockedH = FALSE;
+    }
+
+    s32 normalizedMinY = subject->min.y - lockingOffsetV;
     if (subjectLockedV) {
-        cameraView.min.y = normalizedY;
+
         KLog("Already locked V");
+        if (normalizedMinY < 0) {
+            KLog("Unlocking V");
+            cameraView.min.y = 0;
+            subjectLockedV = FALSE;
+        } else {
+            cameraView.min.y = normalizedMinY;
+        }
 
     } else {
-        if (cameraView.min.y == normalizedY) {
+        if (cameraView.min.y == normalizedMinY) {
             subjectLockedV = TRUE;
             KLog("Just locked V");
+
         } else {
             KLog("Unlocked V");
             s32 upPadded = subject->min.y - MIN_PADDING_V;
@@ -92,6 +115,17 @@ void updateCamera() {
                 }
             }
         }
+    }
+
+    if (cameraView.min.y < 0) {
+        KLog("Unlocking V");
+        cameraView.min.y = 0;
+        subjectLockedV = FALSE;
+
+    } else if (cameraView.max.y > screenMaxBounds.y) {
+        KLog("Unlocking V");
+        cameraView.min.y = screenMaxBounds.y - cameraView.h;
+        subjectLockedV = FALSE;
     }
 
     updateBoxMax(&cameraView);
