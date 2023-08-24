@@ -10,8 +10,8 @@
 
 #include <kdebug.h>
 
-#define MAX_GAP_H		120
-#define MAX_GAP_V		110
+#define MIN_PADDING_H		16
+#define MIN_PADDING_V		8
 
 Box_s32 cameraView;
 
@@ -49,7 +49,6 @@ void updateCamera() {
     s32 normalizedX = subject->min.x - lockingOffsetH;
     if (subjectLockedH) {
         cameraView.min.x = normalizedX;
-
         KLog("Already locked H");
 
     } else {
@@ -58,15 +57,17 @@ void updateCamera() {
             subjectLockedH = TRUE;
             KLog("Just locked H");
 
-
         } else {
             KLog("Unlocked H");
-            // s32 gapH = cameraView.min.x - normalizedX;
-            // if (gapH > MAX_GAP_H) {
-            //     cameraView.min.x += 8;
-            // } else if (gapH < -MAX_GAP_H) {
-            //     cameraView.min.x -= 8;
-            // }
+            s32 leftPadded = subject->min.x - MIN_PADDING_H;
+            if (leftPadded < cameraView.min.x) {
+                cameraView.min.x = leftPadded;
+            } else {
+                s32 rightPadded = subject->max.x + MIN_PADDING_H;
+                if (rightPadded > cameraView.max.x) {
+                    cameraView.min.x = rightPadded - cameraView.w;
+                }
+            }
         }
     }
 
@@ -79,6 +80,17 @@ void updateCamera() {
         if (cameraView.min.y == normalizedY) {
             subjectLockedV = TRUE;
             KLog("Just locked V");
+        } else {
+            KLog("Unlocked V");
+            s32 upPadded = subject->min.y - MIN_PADDING_V;
+            if (upPadded < cameraView.min.y) {
+                cameraView.min.y = upPadded;
+            } else {
+                s32 downPadded = subject->max.y + MIN_PADDING_V;
+                if (downPadded > cameraView.max.y) {
+                    cameraView.min.y = downPadded - cameraView.h;
+                }
+            }
         }
     }
 
