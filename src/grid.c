@@ -6,13 +6,18 @@
 
 #include "grid.h"
 
+#include "camera.h"
+
 #include "gfx_grid.h"
 
 #include "fwk/vdp_utils.h"
 
+#define INIT_OFFSET_X   400;
+#define INIT_OFFSET_Y   0;
+
 Map *gridMap;
 
-void displayGrid() {
+void displayGrid(u32 x, u32 y) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 
@@ -24,6 +29,11 @@ void displayGrid() {
 
     gridMap = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
-    MAP_scrollTo(gridMap, 400, 0);
+    MAP_scrollTo(gridMap, x, y);
+}
+
+void scrollGrid() {
+
+    MAP_scrollTo(gridMap, cameraView.min.x, cameraView.min.y);
 }
 

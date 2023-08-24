@@ -7,6 +7,10 @@
 #ifndef INC_PLAYER_H_
 #define INC_PLAYER_H_
 
+#include <lightcycle.h>
+
+extern LightCycle lightCycle;
+
 void initPlayer();
 
 void playerActs();

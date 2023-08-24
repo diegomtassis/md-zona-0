@@ -11,6 +11,7 @@
 
 extern Map *gridMap;
 
-void displayGrid();
+void displayGrid(u32, u32);
+void scrollGrid();
 
 #endif /* INC_GRID_H_ */

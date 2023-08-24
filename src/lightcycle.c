@@ -66,11 +66,10 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.nextCrossing.x = 504;
     lightCycle->movable.nextCrossing.y = 32;
 
-    V2u16 relativePos = cordsInView(&lightCycle->movable.object.box);
+    V2s32 relativePos = positionInView(&lightCycle->movable.object.box);
 
     lightCycle->sprite = SPR_addSprite(&flynn_sprite, //
-        fix16ToInt(relativePos.x), //
-        fix16ToInt(relativePos.y), //
+        relativePos.x, relativePos.y, //
         TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
@@ -80,7 +79,7 @@ void moveLightCycle(LightCycle* lightCycle) {
     calculateNextMovement(lightCycle);
     updatePosition(&lightCycle->movable);
 
-    V2u16 relativePos = cordsInView(&lightCycle->movable.object.box);
+    V2s32 relativePos = positionInView(&lightCycle->movable.object.box);
 
     SPR_setPosition(lightCycle->sprite, relativePos.x, relativePos.y);
 }

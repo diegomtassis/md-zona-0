@@ -19,8 +19,6 @@
 #include "fwk/commons.h"
 #include "fwk/vdp_utils.h"
 
-#define DEFAULT_FLASH_WAIT 2000
-
 static void initGame(const Config config[static 1]);
 
 static Game current_game;
@@ -72,18 +70,21 @@ static bool runLevel() {
     bool game_over = FALSE;
     bool mission_accomplished = FALSE;
 
-    displayGrid();
-
     setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight());
+    displayGrid(400, 0);
 
     initLevelObjects();
+    cameraFocus(&lightCycle.movable.object.box);
+
     SPR_update();
 
     while (!game_over && !mission_accomplished) {
-        
+
         if (!paused) {
             playerActs();
             SPR_update();
+            scrollGrid();
+
             updateCamera();
         }
 

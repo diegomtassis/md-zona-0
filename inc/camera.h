@@ -8,14 +8,14 @@
 #define INC_CAMERA_H_
 
 #include <genesis.h>
-
 #include "fwk/physics.h"
+
+void setupCamera(s32 x, s32 y, u16 width, u16 height);
+void cameraFocus(Box_s32 *);
+void updateCamera();
 
 extern Box_s32 cameraView;
 
-void setupCamera(s32 x, s32 y, u16 width, u16 height);
-void updateCamera();
-
-V2u16 cordsInView(Box_s32 *);
+V2s32 positionInView(Box_s32 *);
 
 #endif /* INC_CAMERA_H_ */

@@ -13,8 +13,6 @@
 #include "game.h"
 #include "game_config.h"
 
-#define LOADING_TIME	3000
-
 int main(bool hard) {
 
 	// default resolution

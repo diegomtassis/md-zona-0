@@ -7,7 +7,6 @@
 #include "player.h"
 
 #include <genesis.h>
-#include <lightcycle.h>
 
 #include "gfx_lightcycles.h"
 
