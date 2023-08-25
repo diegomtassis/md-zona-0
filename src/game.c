@@ -12,6 +12,7 @@
 #include "gfx_grid.h"
 #include "gfx_lightcycles.h"
 
+#include "hud.h"
 #include "grid.h"
 #include "player.h"
 #include "camera.h"
@@ -69,6 +70,8 @@ static bool runLevel() {
 
     bool game_over = FALSE;
     bool mission_accomplished = FALSE;
+
+    displayHud();
 
     setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight(), GRID_WIDTH, GRID_HEIGTH);
     displayGrid(400, 0);

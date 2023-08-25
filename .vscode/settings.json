@@ -17,6 +17,7 @@
         "gfx_grid.h": "c",
         "physics.h": "c",
         "maths.h": "c",
-        "grid.h": "c"
+        "grid.h": "c",
+        "gfx_hud.h": "c"
     }
 }

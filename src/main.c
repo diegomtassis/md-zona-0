@@ -16,7 +16,7 @@
 int main(bool hard) {
 
 	// default resolution
-	VDP_setScreenWidth256();
+	VDP_setScreenWidth320();
 	VDP_setScreenHeight224();
 
 	// initPrinter();
