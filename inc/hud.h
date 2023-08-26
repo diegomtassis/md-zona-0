@@ -9,6 +9,8 @@
 
 #include <genesis.h>
 
+#define HUD_LEFT_COLUMN_WIDTH   16
+
 extern Map *hudMap;
 
 u16 displayHud(u16);

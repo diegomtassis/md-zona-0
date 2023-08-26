@@ -43,7 +43,7 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->finished = FALSE;
 
     // position
-    lightCycle->movable.object.pos.x = FIX32(504);
+    lightCycle->movable.object.pos.x = FIX32(496);
     lightCycle->movable.object.pos.y = FIX32(12);
     lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
     lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
@@ -66,7 +66,7 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.nextCrossing.x = 504;
     lightCycle->movable.nextCrossing.y = 32;
 
-    V2s32 relativePos = positionInView(&lightCycle->movable.object.box);
+    V2s32 relativePos = positionInScreen(&lightCycle->movable.object.box);
 
     lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
         relativePos.x, relativePos.y, //
@@ -79,7 +79,7 @@ void moveLightCycle(LightCycle* lightCycle) {
     calculateNextMovement(lightCycle);
     updatePosition(&lightCycle->movable);
 
-    V2s32 relativePos = positionInView(&lightCycle->movable.object.box);
+    V2s32 relativePos = positionInScreen(&lightCycle->movable.object.box);
 
     SPR_setPosition(lightCycle->sprite, relativePos.x, relativePos.y);
 }

@@ -75,7 +75,7 @@ static bool runLevel() {
 
     vramIdx = displayHud(vramIdx);
 
-    setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight(), GRID_WIDTH, GRID_HEIGTH);
+    setupCamera(HUD_LEFT_COLUMN_WIDTH, 0, 288, 160, 400, 0, GRID_WIDTH, GRID_HEIGTH);
     vramIdx = displayGrid(vramIdx, 400, 0);
 
     initLevelObjects();

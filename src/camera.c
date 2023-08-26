@@ -10,40 +10,47 @@
 
 #include <kdebug.h>
 
-#define MIN_PADDING_H		16
-#define MIN_PADDING_V		8
+#define MIN_PADDING_H		32
+#define MIN_PADDING_V		24
 
 Box_s32 cameraView;
+
+static Vect2D_s32 screenMinBounds;
+static Vect2D_s32 screenMaxBounds;
 
 static Box_s32 *subject;
 
 static bool subjectLockedH;
 static bool subjectLockedV;
 
-static u16 lockingOffsetH;
-static u16 lockingOffsetV;
+static u16 centerOffsetH;
+static u16 centerOffsetV;
 
 static V2s32 planMaxBounds;
 
-void setupCamera(s32 x, s32 y, u16 width, u16 height, s32 planMaxX, s32 planMaxY) {
+void setupCamera(s32 screenLeftBound, s32 screenUpperBound, u16 width, u16 height, s32 planInitX, s32 planInitY, s32 planMaxX, s32 planMaxY) {
 
-    cameraView.min.x = x;
-    cameraView.min.y = y;
+    cameraView.min.x = planInitX;
+    cameraView.min.y = planInitY;
     cameraView.w = width;
     cameraView.h = height;
-
     updateBoxMax(&cameraView);
 
-    lockingOffsetH = width >> 1;
-    lockingOffsetV = height >> 1;
+    planMaxBounds.x = planMaxX;
+    planMaxBounds.y = planMaxY;
+
+    screenMinBounds.x = screenLeftBound;
+    screenMinBounds.y = screenUpperBound;
+    screenMaxBounds.x = screenLeftBound + width;
+    screenMaxBounds.y = screenUpperBound + height;
+
+    centerOffsetH = width >> 1;
+    centerOffsetV = height >> 1;
 
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
 
-    planMaxBounds.x = planMaxX;
-    planMaxBounds.y = planMaxY;
 }
-
 void cameraFocus(Box_s32 * objectToTrack) {
 
     subject = objectToTrack;
@@ -51,7 +58,7 @@ void cameraFocus(Box_s32 * objectToTrack) {
 
 void updateCamera() {
 
-    s32 normalizedMinX = subject->min.x - lockingOffsetH;
+    s32 normalizedMinX = subject->min.x - centerOffsetH;
     if (subjectLockedH) {
         KLog("Already locked H");
         cameraView.min.x = normalizedMinX;
@@ -86,7 +93,7 @@ void updateCamera() {
         subjectLockedH = FALSE;
     }
 
-    s32 normalizedMinY = subject->min.y - lockingOffsetV;
+    s32 normalizedMinY = subject->min.y - centerOffsetV;
     if (subjectLockedV) {
 
         KLog("Already locked V");
@@ -131,11 +138,11 @@ void updateCamera() {
     updateBoxMax(&cameraView);
 }
 
-V2s32 positionInView(Box_s32 *subject) {
+V2s32 positionInScreen(Box_s32 *subject) {
 
     V2s32 relative = {
-        .x = subject->min.x - cameraView.min.x,
-        .y = subject->min.y - cameraView.min.y
+        .x = subject->min.x - cameraView.min.x + screenMinBounds.x,
+        .y = subject->min.y - cameraView.min.y + screenMinBounds.y
     };
 
     return relative;

@@ -7,13 +7,11 @@
 #include "grid.h"
 
 #include "camera.h"
+#include "hud.h"
 
 #include "gfx_grid.h"
 
 #include "fwk/vdp_utils.h"
-
-#define INIT_OFFSET_X   400;
-#define INIT_OFFSET_Y   0;
 
 Map *gridMap;
 
@@ -29,13 +27,13 @@ u16 displayGrid(u16 vram_base, u32 x, u32 y) {
 
     gridMap = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
-    MAP_scrollTo(gridMap, x, y);
+    MAP_scrollTo(gridMap, x + HUD_LEFT_COLUMN_WIDTH, y);
 
     return vram_idx;
 }
 
 void scrollGrid() {
 
-    MAP_scrollTo(gridMap, cameraView.min.x, cameraView.min.y);
+    MAP_scrollTo(gridMap, cameraView.min.x + HUD_LEFT_COLUMN_WIDTH, cameraView.min.y);
 }
 
