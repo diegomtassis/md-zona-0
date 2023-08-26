@@ -12,6 +12,14 @@
 
 Map *hudMap;
 
+Sprite * leftColumSprite;
+Sprite * rightColumSprite;
+
+Sprite * helmet1Sprite;
+Sprite * helmet2Sprite;
+Sprite * helmet3Sprite;
+Sprite * helmet4Sprite;
+
 u16 displayHud(u16 vramBase) {
 
     PAL_setPalette(PAL2, palette_hud.data, DMA_QUEUE);
@@ -27,6 +35,35 @@ u16 displayHud(u16 vramBase) {
     VDP_setTileMapEx(WINDOW, &tilemap_hud_low, //
         TILE_ATTR_FULL(PAL2, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
         0, 20, 0, 0, 40, 8, DMA_QUEUE);
+
+    // left column
+    leftColumSprite = SPR_addSprite(&sprite_hud_left_column, //
+        0, 0, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+
+    rightColumSprite = SPR_addSprite(&sprite_hud_right_column, //
+        304, 0, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+
+    helmet1Sprite = SPR_addSprite(&sprite_hud_helmet, //
+        0, 96, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+
+    helmet2Sprite = SPR_addSprite(&sprite_hud_helmet, //
+        0, 112, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+
+    helmet3Sprite = SPR_addSprite(&sprite_hud_helmet, //
+        0, 128, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+    SPR_setFrame(helmet3Sprite, 1);
+
+    helmet4Sprite = SPR_addSprite(&sprite_hud_helmet, //
+        0, 144, //
+        TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+    SPR_setFrame(helmet4Sprite, 1);
+
+    SPR_update();
 
     return vram_idx;
 }

@@ -25,10 +25,10 @@
 #define ANIM_DOWN_FLIP_H	0
 
 #define SPEED_ZERO			FIX32_0
-#define SPEED_H_SLOW		FIX32(1)
-#define SPEED_H_FAST		FIX32(2)
-#define SPEED_V_SLOW		FIX32(0.5)
-#define SPEED_V_FAST    	FIX32(1)
+#define SPEED_H_SLOW		FIX32(2)
+#define SPEED_H_FAST		FIX32(4)
+#define SPEED_V_SLOW		FIX32(1)
+#define SPEED_V_FAST    	FIX32(2)
 
 #define BOOST		0x10
 
@@ -68,7 +68,7 @@ void initLightCycle(LightCycle* lightCycle) {
 
     V2s32 relativePos = positionInView(&lightCycle->movable.object.box);
 
-    lightCycle->sprite = SPR_addSprite(&flynn_sprite, //
+    lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
         relativePos.x, relativePos.y, //
         TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
