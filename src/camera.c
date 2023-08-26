@@ -23,9 +23,9 @@ static bool subjectLockedV;
 static u16 lockingOffsetH;
 static u16 lockingOffsetV;
 
-static V2s32 screenMaxBounds;
+static V2s32 planMaxBounds;
 
-void setupCamera(s32 x, s32 y, u16 width, u16 height, s32 maxX, s32 maxY) {
+void setupCamera(s32 x, s32 y, u16 width, u16 height, s32 planMaxX, s32 planMaxY) {
 
     cameraView.min.x = x;
     cameraView.min.y = y;
@@ -40,8 +40,8 @@ void setupCamera(s32 x, s32 y, u16 width, u16 height, s32 maxX, s32 maxY) {
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
 
-    screenMaxBounds.x = maxX;
-    screenMaxBounds.y = maxY;
+    planMaxBounds.x = planMaxX;
+    planMaxBounds.y = planMaxY;
 }
 
 void cameraFocus(Box_s32 * objectToTrack) {
@@ -80,9 +80,9 @@ void updateCamera() {
         cameraView.min.x = 0;
         subjectLockedH = FALSE;
 
-    } else if (cameraView.max.x > screenMaxBounds.x) {
+    } else if (cameraView.max.x > planMaxBounds.x) {
         KLog("Unlocking H");
-        cameraView.min.x = screenMaxBounds.x - cameraView.w;
+        cameraView.min.x = planMaxBounds.x - cameraView.w;
         subjectLockedH = FALSE;
     }
 
@@ -122,9 +122,9 @@ void updateCamera() {
         cameraView.min.y = 0;
         subjectLockedV = FALSE;
 
-    } else if (cameraView.max.y > screenMaxBounds.y) {
+    } else if (cameraView.max.y > planMaxBounds.y) {
         KLog("Unlocking V");
-        cameraView.min.y = screenMaxBounds.y - cameraView.h;
+        cameraView.min.y = planMaxBounds.y - cameraView.h;
         subjectLockedV = FALSE;
     }
 

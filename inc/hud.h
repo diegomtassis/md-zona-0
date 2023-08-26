@@ -11,6 +11,6 @@
 
 extern Map *hudMap;
 
-void displayHud();
+u16 displayHud(u16);
 
 #endif /* INC_HUD_H_ */

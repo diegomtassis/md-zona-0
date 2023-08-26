@@ -17,11 +17,11 @@
 
 Map *gridMap;
 
-void displayGrid(u32 x, u32 y) {
+u16 displayGrid(u16 vram_base, u32 x, u32 y) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 
-    u16 idx_tile_bg_grid = idx_tile_malloc;
+    u16 idx_tile_bg_grid = vram_base;
     u16 vram_idx = idx_tile_bg_grid;
 
     VDP_loadTileSet(&tileset_grid, idx_tile_bg_grid, DMA);
@@ -30,6 +30,8 @@ void displayGrid(u32 x, u32 y) {
     gridMap = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
     MAP_scrollTo(gridMap, x, y);
+
+    return vram_idx;
 }
 
 void scrollGrid() {

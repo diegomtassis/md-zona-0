@@ -71,10 +71,12 @@ static bool runLevel() {
     bool game_over = FALSE;
     bool mission_accomplished = FALSE;
 
-    displayHud();
+    u16 vramIdx = idx_tile_malloc;
+
+    vramIdx = displayHud(vramIdx);
 
     setupCamera(400, 0, VDP_getScreenWidth(), VDP_getScreenHeight(), GRID_WIDTH, GRID_HEIGTH);
-    displayGrid(400, 0);
+    vramIdx = displayGrid(vramIdx, 400, 0);
 
     initLevelObjects();
     cameraFocus(&lightCycle.movable.object.box);
