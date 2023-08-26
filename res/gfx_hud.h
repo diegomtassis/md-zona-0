@@ -1,8 +1,6 @@
 #ifndef _RES_GFX_HUD_H_
 #define _RES_GFX_HUD_H_
 
-#include <genesis.h>
-
 extern const Palette palette_hud;
 extern const TileSet tileset_hud;
 extern const TileMap tilemap_hud;
