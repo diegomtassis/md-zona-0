@@ -14,17 +14,19 @@ Map *hudMap;
 
 u16 displayHud(u16 vramBase) {
 
-    PAL_setPalette(PAL2, palette_hud.data, DMA);
+    PAL_setPalette(PAL2, palette_hud.data, DMA_QUEUE);
 
     u16 idx_tile_bg_hud = vramBase;
     u16 vram_idx = idx_tile_bg_hud;
 
-    VDP_loadTileSet(&tileset_hud, idx_tile_bg_hud, DMA);
-    vram_idx += tileset_hud.numTile;
+    VDP_loadTileSet(&tileset_hud_low, idx_tile_bg_hud, DMA_QUEUE);
+    vram_idx += tileset_hud_low.numTile;
 
-    hudMap = MAP_create(&map_hud, BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_bg_hud));
+    VDP_setWindowVPos(TRUE, 20); // the last 8 rows
 
-    MAP_scrollTo(hudMap, 0, 0);
+    VDP_setTileMapEx(WINDOW, &tilemap_hud_low, //
+        TILE_ATTR_FULL(PAL2, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
+        0, 20, 0, 0, 40, 8, DMA_QUEUE);
 
     return vram_idx;
 }
