@@ -1,10 +1,10 @@
 /*
- * Filename: hud.c
+ * Filename: screen.c
  * Created: August 26th 2023
  * Author: diegomtassis
  */
 
-#include "hud.h"
+#include "screen.h"
 
 #include "gfx_hud.h"
 
@@ -66,4 +66,14 @@ u16 displayHud(u16 vramBase) {
     SPR_update();
 
     return vram_idx;
+}
+
+V2s32 positionInScreen(V2s32 *subject) {
+
+    V2s32 relative = {
+        .x = subject->x + HUD_LEFT_COLUMN_WIDTH,
+        .y = subject->y
+    };
+
+    return relative;
 }

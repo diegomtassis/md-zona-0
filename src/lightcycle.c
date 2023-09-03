@@ -9,6 +9,7 @@
 #include <kdebug.h>
 
 #include "camera.h"
+#include "screen.h"
 
 #include "gfx_lightcycles.h"
 
@@ -66,10 +67,11 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.nextCrossing.x = 504;
     lightCycle->movable.nextCrossing.y = 32;
 
-    V2s32 relativePos = positionInScreen(&lightCycle->movable.object.box);
+    V2s32 posInView = positionInView(&lightCycle->movable.object.box.min);
+    V2s32 posInScreen = positionInScreen(&posInView);
 
     lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
-        relativePos.x, relativePos.y, //
+        posInScreen.x, posInScreen.y, //
         TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
@@ -79,9 +81,10 @@ void moveLightCycle(LightCycle* lightCycle) {
     calculateNextMovement(lightCycle);
     updatePosition(&lightCycle->movable);
 
-    V2s32 relativePos = positionInScreen(&lightCycle->movable.object.box);
+    V2s32 posInView = positionInView(&lightCycle->movable.object.box.min);
+    V2s32 posInScreen = positionInScreen(&posInView);
 
-    SPR_setPosition(lightCycle->sprite, relativePos.x, relativePos.y);
+    SPR_setPosition(lightCycle->sprite, posInScreen.x, posInScreen.y);
 }
 
 static void calculateNextMovement(LightCycle* lightCycle) {

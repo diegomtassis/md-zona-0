@@ -7,7 +7,7 @@
 #include "grid.h"
 
 #include "camera.h"
-#include "hud.h"
+#include "screen.h"
 
 #include "gfx_grid.h"
 

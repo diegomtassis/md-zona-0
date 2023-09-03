@@ -10,12 +10,13 @@
 #include <genesis.h>
 #include "fwk/physics.h"
 
-void setupCamera(s32 screenInitX, s32 screenInitY, u16 width, u16 height, s32 planInitX, s32 planInitY, s32 planMaxX, s32 planMaxY);
+void setupCamera(u16 width, u16 height, //
+    s32 worldWidth, s32 worldHeight, s32 planInitX, s32 planInitY);
 void cameraFocus(Box_s32 *);
 void updateCamera();
 
 extern Box_s32 cameraView;
 
-V2s32 positionInScreen(Box_s32 *);
+V2s32 positionInView(V2s32 *);
 
 #endif /* INC_CAMERA_H_ */

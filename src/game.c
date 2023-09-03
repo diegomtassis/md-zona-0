@@ -12,7 +12,7 @@
 #include "gfx_grid.h"
 #include "gfx_lightcycles.h"
 
-#include "hud.h"
+#include "screen.h"
 #include "grid.h"
 #include "player.h"
 #include "camera.h"
@@ -75,7 +75,9 @@ static bool runLevel() {
 
     vramIdx = displayHud(vramIdx);
 
-    setupCamera(HUD_LEFT_COLUMN_WIDTH, 0, 288, 160, 400, 0, GRID_WIDTH, GRID_HEIGTH);
+    setupCamera( //
+        288, 160, //
+        GRID_WIDTH, GRID_HEIGTH, 400, 0);
     vramIdx = displayGrid(vramIdx, 400, 0);
 
     initLevelObjects();
