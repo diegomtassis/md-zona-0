@@ -70,10 +70,10 @@ u16 displayHud(u16 vramBase) {
 
 V2s32 positionInScreen(V2s32 *subject) {
 
-    V2s32 relative = {
+    V2s32 position = {
         .x = subject->x + HUD_LEFT_COLUMN_WIDTH,
         .y = subject->y
     };
 
-    return relative;
+    return position;
 }

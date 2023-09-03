@@ -75,10 +75,14 @@ static bool runLevel() {
 
     vramIdx = displayHud(vramIdx);
 
-    setupCamera( //
-        288, 160, //
-        GRID_WIDTH, GRID_HEIGTH, 400, 0);
-    vramIdx = displayGrid(vramIdx, 400, 0);
+    V2s32 worldInitPos = {
+    .x = 400,
+    .y = 0
+    };
+    setupCamera(GRID_WIDTH, GRID_HEIGTH, worldInitPos.x, worldInitPos.y);
+
+    V2s32 initPosInScreen = positionInScreen(&worldInitPos);
+    vramIdx = displayGrid(vramIdx, initPosInScreen);
 
     initLevelObjects();
     cameraFocus(&lightCycle.movable.object.box);
@@ -90,7 +94,7 @@ static bool runLevel() {
         if (!paused) {
             playerActs();
             SPR_update();
-            scrollGrid();
+            scrollGrid(cameraView.min);
 
             updateCamera();
         }

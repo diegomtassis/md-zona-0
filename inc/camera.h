@@ -10,8 +10,10 @@
 #include <genesis.h>
 #include "fwk/physics.h"
 
-void setupCamera(u16 width, u16 height, //
-    s32 worldWidth, s32 worldHeight, s32 planInitX, s32 planInitY);
+#define CAMERA_VIEW_WIDTH		288
+#define CAMERA_VIEW_HEIGHT		160
+
+void setupCamera(s32 worldWidth, s32 worldHeight, s32 planInitX, s32 planInitY);
 void cameraFocus(Box_s32 *);
 void updateCamera();
 

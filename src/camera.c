@@ -30,17 +30,16 @@ static bool subjectLockedV;
 
 
 void setupCamera( //
-    u16 width, u16 height, //
     s32 worldWidth, s32 worldHeight, s32 worldInitPosX, s32 worldInitPosY) {
 
     worldSize.x = worldWidth;
     worldSize.y = worldHeight;
 
-    centerOffsetH = width / 2;
-    centerOffsetV = height / 2;
+    centerOffsetH = CAMERA_VIEW_WIDTH / 2;
+    centerOffsetV = CAMERA_VIEW_HEIGHT / 2;
 
-    cameraView.w = width;
-    cameraView.h = height;
+    cameraView.w = CAMERA_VIEW_WIDTH;
+    cameraView.h = CAMERA_VIEW_HEIGHT;
     cameraView.min.x = worldInitPosX;
     cameraView.min.y = worldInitPosY;
     updateBoxMax(&cameraView);
