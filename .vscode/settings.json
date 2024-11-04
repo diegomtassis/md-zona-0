@@ -7,18 +7,6 @@
         "inc"
     ],
     "files.associations": {
-        "genesis.h": "c",
-        "vdp.h": "c",
-        "pal.h": "c",
-        "sprite.h": "c",
-        "sprites.h": "c",
-        "game.h": "c",
-        "config.h": "c",
-        "gfx_grid.h": "c",
-        "physics.h": "c",
-        "maths.h": "c",
-        "grid.h": "c",
-        "gfx_hud.h": "c",
-        "hud.h": "c"
+        "*.h": "c"
     }
 }

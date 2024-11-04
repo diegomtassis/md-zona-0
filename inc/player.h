@@ -7,7 +7,9 @@
 #ifndef INC_PLAYER_H_
 #define INC_PLAYER_H_
 
-#include <lightcycle.h>
+#include "lightcycle.h"
+
+extern Player player;
 
 extern LightCycle lightCycle;
 

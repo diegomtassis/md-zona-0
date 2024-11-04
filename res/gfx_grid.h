@@ -4,5 +4,6 @@
 extern const Palette palette_grid;
 extern const TileSet tileset_grid;
 extern const MapDefinition map_zona0_zona14;
+extern const void* grid_objects[7];
 
 #endif // _RES_GFX_GRID_H_

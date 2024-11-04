@@ -18,26 +18,32 @@ typedef struct Config Config;
 typedef struct Player Player;
 typedef struct Game Game;
 typedef struct GameResult GameResult;
+typedef struct TiledObject TiledObject;
 
 struct Config {
-    u8 difficulty;
-    u8 lives;
+  u8 difficulty;
+  u8 lives;
 };
 
 struct Player {
-    u8 lives;
-    u16 score;
-    u8 joystick;
+  u8 lives;
+  u16 score;
+  u8 joystick;
 };
 
 struct Game {
-    const Config* config;
+  const Config* config;
 };
 
 struct GameResult {
-    u16 p1_score;
+  u16 p1_score;
 };
 
-extern Player player;
+struct TiledObject {
+  u16 type;
+  char* name;
+  f32 x;
+  f32 y;
+};
 
 #endif /* INC_ELEMENTS_H_ */

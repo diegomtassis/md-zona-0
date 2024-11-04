@@ -60,8 +60,8 @@ void updateMovableBox(GridMovable* movable) {
 Box_s32 targetBox(const GridMovable* movable) {
 
     Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
-    box.min.x = fix32ToInt(fix16Add(movable->object.pos.x, movable->mov.x));
-    box.min.y = fix32ToInt(fix16Add(movable->object.pos.y, movable->mov.y));
+    box.min.x = fix32ToInt(movable->object.pos.x + movable->mov.x);
+    box.min.y = fix32ToInt(movable->object.pos.y + movable->mov.y);
     updateBoxMax(&box);
 
     return box;
@@ -70,7 +70,7 @@ Box_s32 targetBox(const GridMovable* movable) {
 Box_s32 targetHBox(const GridMovable* movable) {
 
     Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
-    box.min.x = fix32ToInt(fix32Add(movable->object.pos.x, movable->mov.x));
+    box.min.x = fix32ToInt(movable->object.pos.x + movable->mov.x);
     box.min.y = fix32ToInt(movable->object.pos.y);
     updateBoxMax(&box);
 
@@ -81,7 +81,7 @@ Box_s32 targetVBox(const GridMovable* movable) {
 
     Box_s32 box = { .w = movable->object.size.x, .h = movable->object.size.y };
     box.min.x = fix32ToInt(movable->object.pos.x);
-    box.min.y = fix32ToInt(fix32Add(movable->object.pos.y, movable->mov.y));
+    box.min.y = fix32ToInt(movable->object.pos.y + movable->mov.y);
     updateBoxMax(&box);
 
     return box;

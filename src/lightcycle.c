@@ -26,10 +26,10 @@
 #define ANIM_DOWN_FLIP_H	0
 
 #define SPEED_ZERO			FIX32_0
-#define SPEED_H_SLOW		FIX32(2)
-#define SPEED_H_FAST		FIX32(4)
-#define SPEED_V_SLOW		FIX32(1)
-#define SPEED_V_FAST    	FIX32(2)
+#define SPEED_H_SLOW		FIX32(0.4)
+#define SPEED_H_FAST		FIX32(0.8)
+#define SPEED_V_SLOW		FIX32(0.2)
+#define SPEED_V_FAST    	FIX32(0.4)
 
 #define BOOST		0x10
 
