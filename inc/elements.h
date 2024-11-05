@@ -18,7 +18,9 @@ typedef struct Config Config;
 typedef struct Player Player;
 typedef struct Game Game;
 typedef struct GameResult GameResult;
-typedef struct TiledObject TiledObject;
+typedef struct TiledGridObject TiledGridObject;
+typedef struct VehicleStartPosition VehicleStartPosition;
+
 
 struct Config {
   u8 difficulty;
@@ -39,7 +41,7 @@ struct GameResult {
   u16 p1_score;
 };
 
-struct GridObject {
+struct TiledGridObject {
   char* name;
   s16 x;
   s16 y;

@@ -72,7 +72,7 @@
 </data>
  </layer>
  <objectgroup id="3" name="layer_objects">
-  <object id="5" name="top_left" type="GridObject" x="504" y="8">
+  <object id="5" name="top_left" type="TiledGridObject" x="504" y="8">
    <properties>
     <property name="conn_down" type="object" value="8"/>
     <property name="conn_right" type="object" value="9"/>
@@ -84,7 +84,7 @@
    </properties>
    <point/>
   </object>
-  <object id="7" name="bottom_right" type="GridObject" x="504" y="504">
+  <object id="7" name="bottom_right" type="TiledGridObject" x="504" y="504">
    <properties>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
@@ -94,7 +94,7 @@
    </properties>
    <point/>
   </object>
-  <object id="8" name="bottom_left" type="GridObject" x="8" y="256">
+  <object id="8" name="bottom_left" type="TiledGridObject" x="8" y="256">
    <properties>
     <property name="conn_right" type="object" value="7"/>
     <property name="exportName" type="bool" value="true"/>
@@ -105,7 +105,7 @@
    </properties>
    <point/>
   </object>
-  <object id="9" name="top_right" type="GridObject" x="1000" y="256">
+  <object id="9" name="top_right" type="TiledGridObject" x="1000" y="256">
    <properties>
     <property name="conn_down" type="object" value="7"/>
     <property name="exportName" type="bool" value="true"/>
@@ -118,6 +118,9 @@
   </object>
   <object id="16" name="enemy_1" type="VehicleStartPosition" x="472" y="24">
    <properties>
+    <property name="exportName" type="bool" value="true"/>
+    <property name="exportPosition" type="bool" value="true"/>
+    <property name="exportSize" type="bool" value="true"/>
     <property name="direction" type="int" propertytype="Direction" value="2"/>
     <property name="grid_x" type="int" value="0"/>
     <property name="grid_y" type="int" value="2"/>
@@ -127,6 +130,9 @@
   </object>
   <object id="19" name="player_1" type="VehicleStartPosition" x="536" y="24">
    <properties>
+    <property name="exportName" type="bool" value="true"/>
+    <property name="exportPosition" type="bool" value="true"/>
+    <property name="exportSize" type="bool" value="true"/>
     <property name="direction" type="int" propertytype="Direction" value="1"/>
     <property name="grid_x" type="int" value="2"/>
     <property name="type" type="int" value="1"/>
