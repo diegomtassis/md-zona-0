@@ -14,6 +14,7 @@
 #include "gfx_grid.h"
 
 int main(bool hard) {
+	
   // default resolution
   VDP_setScreenWidth320();
   VDP_setScreenHeight224();
@@ -30,42 +31,15 @@ int main(bool hard) {
   // 	waitMs(50);
   // }
 
-//   resetTileMemory();
+  resetTileMemory();
 
-//   initConfig();
-
-  // while (object != 0)
-  //{
-
-  //}
-
-  //   initPrinter();
-  //   turnPrinterOn();
-  //   println("1");
-  //   println(((TiledObject *)grid_objects[0])->name);
-  //   println("2");
-  //   println(((TiledObject *)grid_objects[1])->name);
-  //   println("3");
-  //   println(((TiledObject *)grid_objects[2])->name);
-  //   println("4");
-  //   println(((TiledObject *)grid_objects[3])->name);
-
-
-VDP_drawText("Foo bar werjkthwkejh", 5, 5);
-
-  VDP_drawText(((TiledObject *)grid_objects[0])->name, 1, 1);
-  VDP_drawText(((TiledObject *)grid_objects[5])->name, 1, 2);
-  VDP_drawText(((TiledObject *)grid_objects[2])->name, 1, 3);
-  VDP_drawText(((TiledObject *)grid_objects[3])->name, 1, 4);
-  VDP_drawText(((TiledObject *)grid_objects[4])->name, 1, 5);
-  VDP_drawText(((TiledObject *)grid_objects[5])->name, 1, 6);
-  VDP_drawText(((TiledObject *)grid_objects[6])->name, 1, 7);
+  initConfig();
 
   while (1) {
     // log_memory();
-    //		setUpGame();
+    setUpGame();
 
-    //		GameResult result = runGame(&currentConfig);
+    GameResult result = runGame(&currentConfig);
 
     SYS_doVBlankProcess();
   }

@@ -39,11 +39,23 @@ struct GameResult {
   u16 p1_score;
 };
 
-struct TiledObject {
-  u16 type;
+struct GridObject {
   char* name;
-  f32 x;
-  f32 y;
+  s16 x;
+  s16 y;
+  s16 grid_x;
+  s16 grid_y;
+  void* conn_right;
+  void* conn_down;
+};
+
+struct VehicleStartPosition {
+  char* name;
+  s16 x;
+  s16 y;
+  s16 grid_x;
+  s16 grid_y;
+  u16 direction;
 };
 
 #endif /* INC_ELEMENTS_H_ */
