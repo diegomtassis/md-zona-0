@@ -13,8 +13,8 @@
 #define MIN_PADDING_H		32
 #define MIN_PADDING_V		24
 
- // World
-static V2s32 worldSize;
+ // Map
+static V2s32 mapSize;
 
 // Camera
 Box_s32 cameraView;
@@ -30,18 +30,18 @@ static bool subjectLockedV;
 
 
 void setupCamera( //
-    s32 worldWidth, s32 worldHeight, s32 worldInitPosX, s32 worldInitPosY) {
+    s32 mapWidth, s32 mapHeight, s32 mapInitPosX, s32 mapInitPosY) {
 
-    worldSize.x = worldWidth;
-    worldSize.y = worldHeight;
+    mapSize.x = mapWidth;
+    mapSize.y = mapHeight;
 
     centerOffsetH = CAMERA_VIEW_WIDTH / 2;
     centerOffsetV = CAMERA_VIEW_HEIGHT / 2;
 
     cameraView.w = CAMERA_VIEW_WIDTH;
     cameraView.h = CAMERA_VIEW_HEIGHT;
-    cameraView.min.x = worldInitPosX;
-    cameraView.min.y = worldInitPosY;
+    cameraView.min.x = mapInitPosX;
+    cameraView.min.y = mapInitPosY;
     updateBoxMax(&cameraView);
 
     subjectLockedH = FALSE;
@@ -83,9 +83,9 @@ void updateCamera() {
         cameraView.min.x = 0;
         subjectLockedH = FALSE;
 
-    } else if (cameraView.max.x > worldSize.x) {
+    } else if (cameraView.max.x > mapSize.x) {
         // Unlocking H
-        cameraView.min.x = worldSize.x - cameraView.w;
+        cameraView.min.x = mapSize.x - cameraView.w;
         subjectLockedH = FALSE;
     }
 
@@ -125,16 +125,16 @@ void updateCamera() {
         cameraView.min.y = 0;
         subjectLockedV = FALSE;
 
-    } else if (cameraView.max.y > worldSize.y) {
+    } else if (cameraView.max.y > mapSize.y) {
         // Unlocking V
-        cameraView.min.y = worldSize.y - cameraView.h;
+        cameraView.min.y = mapSize.y - cameraView.h;
         subjectLockedV = FALSE;
     }
 
     updateBoxMax(&cameraView);
 }
 
-V2s32 positionInView(V2s32 *subject) {
+V2s32 mapToView(V2s32 *subject) {
 
     V2s32 relative = {
         .x = subject->x - cameraView.min.x,

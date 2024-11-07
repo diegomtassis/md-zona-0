@@ -11,8 +11,8 @@
 
 extern Map *gridMap;
 
-#define GRID_WIDTH 960
-#define GRID_HEIGTH 488
+#define MAP_WIDTH 1008
+#define MAP_HEIGTH 560
 
 u16 displayGrid(u16 vramBase, V2s32 point);
 void scrollGrid(V2s32 point);

@@ -6,9 +6,8 @@
 
 #include "grid.h"
 
-#include "gfx_grid.h"
-
 #include "fwk/vdp_utils.h"
+#include "gfx_grid.h"
 
 Map *gridMap;
 
@@ -22,15 +21,13 @@ u16 displayGrid(u16 vram_base, V2s32 point) {
     VDP_loadTileSet(&tileset_grid, idx_tile_bg_grid, DMA);
     vram_idx += tileset_grid.numTile;
 
-    gridMap = MAP_create(&map_zona0_zona14, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
+    gridMap =
+        MAP_create(&map_zona0_zona14, BG_B,
+                   TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
-    MAP_scrollTo(gridMap, point.x, point.y);
+    scrollGrid(point);
 
     return vram_idx;
 }
 
-void scrollGrid(V2s32 point) {
-
-    MAP_scrollTo(gridMap, point.x, point.y);
-}
-
+void scrollGrid(V2s32 point) { MAP_scrollTo(gridMap, point.x, point.y); }

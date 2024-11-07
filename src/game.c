@@ -7,18 +7,16 @@
 #include "game.h"
 
 #include <genesis.h>
-#include "config.h"
 
-#include "gfx_grid.h"
-#include "gfx_lightcycles.h"
-
-#include "screen.h"
-#include "grid.h"
-#include "player.h"
 #include "camera.h"
-
+#include "config.h"
 #include "fwk/commons.h"
 #include "fwk/vdp_utils.h"
+#include "gfx_grid.h"
+#include "gfx_lightcycles.h"
+#include "grid.h"
+#include "player.h"
+#include "screen.h"
 
 static void initGame(const Config config[static 1]);
 
@@ -44,7 +42,6 @@ GameResult runGame(const Config config[static 1]) {
     bool game_over = FALSE;
 
     while (!game_over) {
-
         game_over = !runLevel();
     }
 
@@ -52,7 +49,7 @@ GameResult runGame(const Config config[static 1]) {
 
     GameResult result = {
         //
-        .p1_score = player.score,  //
+        .p1_score = player.score, //
     };
 
     return result;
@@ -75,28 +72,24 @@ static bool runLevel() {
 
     vramIdx = displayHud(vramIdx);
 
-    V2s32 worldInitPos = {
-    .x = 400,
-    .y = 0
-    };
-    setupCamera(GRID_WIDTH, GRID_HEIGTH, worldInitPos.x, worldInitPos.y);
+    V2s32 mapInitPos = {.x = 399, .y = 0};
+    setupCamera(MAP_WIDTH, MAP_HEIGTH, mapInitPos.x, mapInitPos.y);
 
-    V2s32 initPosInScreen = positionInScreen(&worldInitPos);
+    V2s32 initPosInScreen = screenToView(&mapInitPos);
     vramIdx = displayGrid(vramIdx, initPosInScreen);
 
     initLevelObjects();
-    cameraFocus(&lightCycle.movable.object.box);
+    // cameraFocus(&lightCycle.movable.object.box);
 
     SPR_update();
 
     while (!game_over && !mission_accomplished) {
-
         if (!paused) {
-            playerActs();
+            //     playerActs();
             SPR_update();
-            scrollGrid(cameraView.min);
+            //        scrollGrid(cameraView.min);
 
-            updateCamera();
+            //      updateCamera();
         }
 
         VDP_showFPS(FALSE);
@@ -108,7 +101,6 @@ static bool runLevel() {
 }
 
 static void initLevelObjects() {
-
     PAL_setPalette(PAL1, palette_sprites.data, DMA);
 
     initPlayer();

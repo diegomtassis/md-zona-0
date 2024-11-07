@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="126" height="66" tilewidth="8" tileheight="8" infinite="0" nextlayerid="4" nextobjectid="20">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="126" height="70" tilewidth="8" tileheight="8" infinite="0" nextlayerid="4" nextobjectid="20">
  <tileset firstgid="1" source="tileset_zona0_grid.tsx"/>
- <layer id="1" name="layer_grid" width="126" height="66">
+ <layer id="1" name="layer_grid" width="126" height="70">
   <data encoding="csv">
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
+4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2147483656,8,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2147483656,2147483655,2147483654,6,7,8,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,2147483656,2147483655,2147483654,1,2,2147483650,2147483649,6,7,8,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
@@ -72,69 +76,58 @@
 </data>
  </layer>
  <objectgroup id="3" name="layer_objects">
-  <object id="5" name="top_left" type="TiledGridObject" x="504" y="8">
+  <object id="5" name="top_left" type="GridBoundaryMarker" x="504" y="40">
    <properties>
     <property name="conn_down" type="object" value="8"/>
     <property name="conn_right" type="object" value="9"/>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
+    <property name="exportSize" type="bool" value="false"/>
     <property name="grid_x" type="int" value="0"/>
     <property name="grid_y" type="int" value="0"/>
    </properties>
    <point/>
   </object>
-  <object id="7" name="bottom_right" type="TiledGridObject" x="504" y="504">
+  <object id="7" name="bottom_right" type="GridBoundaryMarker" x="504" y="536">
    <properties>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
-    <property name="grid_x" type="int" value="29"/>
-    <property name="grid_y" type="int" value="30"/>
+    <property name="exportSize" type="bool" value="false"/>
+    <property name="grid_x" type="int" value="31"/>
+    <property name="grid_y" type="int" value="31"/>
    </properties>
    <point/>
   </object>
-  <object id="8" name="bottom_left" type="TiledGridObject" x="8" y="256">
+  <object id="8" name="bottom_left" type="GridBoundaryMarker" x="8" y="288">
    <properties>
     <property name="conn_right" type="object" value="7"/>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
+    <property name="exportSize" type="bool" value="false"/>
     <property name="grid_x" type="int" value="0"/>
-    <property name="grid_y" type="int" value="30"/>
+    <property name="grid_y" type="int" value="31"/>
    </properties>
    <point/>
   </object>
-  <object id="9" name="top_right" type="TiledGridObject" x="1000" y="256">
+  <object id="9" name="top_right" type="GridBoundaryMarker" x="1000" y="288">
    <properties>
     <property name="conn_down" type="object" value="7"/>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
-    <property name="grid_x" type="int" value="29"/>
+    <property name="exportSize" type="bool" value="false"/>
+    <property name="grid_x" type="int" value="31"/>
     <property name="grid_y" type="int" value="0"/>
    </properties>
    <point/>
   </object>
-  <object id="16" name="enemy_1" type="VehicleStartPosition" x="472" y="24">
+  <object id="19" name="player_1" type="MovableInitMarker" x="536" y="56">
    <properties>
-    <property name="exportName" type="bool" value="true"/>
-    <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
-    <property name="direction" type="int" propertytype="Direction" value="2"/>
-    <property name="grid_x" type="int" value="0"/>
-    <property name="grid_y" type="int" value="2"/>
-    <property name="type" type="int" value="2"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="19" name="player_1" type="VehicleStartPosition" x="536" y="24">
-   <properties>
-    <property name="exportName" type="bool" value="true"/>
-    <property name="exportPosition" type="bool" value="true"/>
-    <property name="exportSize" type="bool" value="true"/>
     <property name="direction" type="int" propertytype="Direction" value="1"/>
+    <property name="exportName" type="bool" value="true"/>
+    <property name="exportPosition" type="bool" value="true"/>
+    <property name="exportSize" type="bool" value="false"/>
     <property name="grid_x" type="int" value="2"/>
+    <property name="grid_y" type="int" value="0"/>
     <property name="type" type="int" value="1"/>
    </properties>
    <point/>

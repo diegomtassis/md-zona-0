@@ -2,8 +2,6 @@
 #define _RES_GFX_HUD_H_
 
 extern const Palette palette_hud;
-extern const TileSet tileset_hud;
-extern const TileMap tilemap_hud;
 extern const TileSet tileset_hud_low;
 extern const TileMap tilemap_hud_low;
 extern const SpriteDefinition sprite_hud_left_column;

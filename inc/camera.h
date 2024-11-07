@@ -13,12 +13,12 @@
 #define CAMERA_VIEW_WIDTH		288
 #define CAMERA_VIEW_HEIGHT		160
 
-void setupCamera(s32 worldWidth, s32 worldHeight, s32 planInitX, s32 planInitY);
+void setupCamera(s32 mapWidth, s32 mapHeight, s32 mapInitX, s32 mapInitY);
 void cameraFocus(Box_s32 *);
 void updateCamera();
 
 extern Box_s32 cameraView;
 
-V2s32 positionInView(V2s32 *);
+V2s32 mapToView(V2s32 *);
 
 #endif /* INC_CAMERA_H_ */

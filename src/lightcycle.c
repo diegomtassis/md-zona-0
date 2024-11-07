@@ -11,41 +11,48 @@
 #include "camera.h"
 #include "screen.h"
 
+#include "gfx_grid.h"
 #include "gfx_lightcycles.h"
+#include "tiled.h"
 
-#define ANIM_LEFT		    1
-#define ANIM_LEFT_FLIP_H	1
+#define ANIM_LEFT 1
+#define ANIM_LEFT_FLIP_H 1
 
-#define ANIM_RIGHT		    0
-#define ANIM_RIGHT_FLIP_H	1
+#define ANIM_RIGHT 0
+#define ANIM_RIGHT_FLIP_H 1
 
-#define ANIM_UP	    	    1
-#define ANIM_UP_FLIP_H	   	0
+#define ANIM_UP 1
+#define ANIM_UP_FLIP_H 0
 
-#define ANIM_DOWN       	0
-#define ANIM_DOWN_FLIP_H	0
+#define ANIM_DOWN 0
+#define ANIM_DOWN_FLIP_H 0
 
-#define SPEED_ZERO			FIX32_0
-#define SPEED_H_SLOW		FIX32(0.4)
-#define SPEED_H_FAST		FIX32(0.8)
-#define SPEED_V_SLOW		FIX32(0.2)
-#define SPEED_V_FAST    	FIX32(0.4)
+#define SPEED_ZERO FIX32_0
+#define SPEED_H_SLOW FIX32(0.4)
+#define SPEED_H_FAST FIX32(0.8)
+#define SPEED_V_SLOW FIX32(0.2)
+#define SPEED_V_FAST FIX32(0.4)
 
-#define BOOST		0x10
+#define BOOST 0x10
 
 #define LIGHTCYCLE_WIDTH 24
 #define LIGHTCYCLE_HEIGHT 24
 
-static void calculateNextMovement(LightCycle* lightCycle);
+static V2s32 normalizePosition(V2s32 *);
 
-void initLightCycle(LightCycle* lightCycle) {
+static void calculateNextMovement(LightCycle *lightCycle);
+
+void initLightCycle(LightCycle *lightCycle) {
 
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
 
     // position
-    lightCycle->movable.object.pos.x = FIX32(496);
-    lightCycle->movable.object.pos.y = FIX32(12);
+    MovableInitMarker *movableMarker = (MovableInitMarker *)movables_markers[0];
+
+    lightCycle->movable.object.pos.x = FIX32(movableMarker->x);
+    lightCycle->movable.object.pos.y = FIX32(movableMarker->y);
+
     lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
     lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
     lightCycle->movable.object.box.w = lightCycle->movable.object.size.x;
@@ -64,30 +71,42 @@ void initLightCycle(LightCycle* lightCycle) {
     lightCycle->movable.turn = 0;
 
     // next crossing
-    lightCycle->movable.nextCrossing.x = 504;
-    lightCycle->movable.nextCrossing.y = 32;
+    lightCycle->movable.nextCrossing.x = movableMarker->x - 32;
+    lightCycle->movable.nextCrossing.y = movableMarker->y + 16;
 
-    V2s32 posInView = positionInView(&lightCycle->movable.object.box.min);
-    V2s32 posInScreen = positionInScreen(&posInView);
+    V2s32 posInView = mapToView(&lightCycle->movable.object.box.min);
+    V2s32 posInScreen = viewToScreen(&posInView);
 
-    lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
-        posInScreen.x, posInScreen.y, //
-        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+    // normalize: down
+    V2s32 posNormalized = normalizePosition(&posInScreen);
+
+    lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn,     //
+                                       posNormalized.x, posNormalized.y, //
+                                       TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
 
-void moveLightCycle(LightCycle* lightCycle) {
+// Take into account the sprite shape
+static V2s32 normalizePosition(V2s32 *position) {
+
+    V2s32 normalized = {.x = position->x - 16,
+                        .y = position->y - 12};
+
+    return normalized;
+}
+
+void moveLightCycle(LightCycle *lightCycle) {
 
     calculateNextMovement(lightCycle);
     updatePosition(&lightCycle->movable);
 
-    V2s32 posInView = positionInView(&lightCycle->movable.object.box.min);
-    V2s32 posInScreen = positionInScreen(&posInView);
+    V2s32 posInView = mapToView(&lightCycle->movable.object.box.min);
+    V2s32 posInScreen = viewToScreen(&posInView);
 
     SPR_setPosition(lightCycle->sprite, posInScreen.x, posInScreen.y);
 }
 
-static void calculateNextMovement(LightCycle* lightCycle) {
+static void calculateNextMovement(LightCycle *lightCycle) {
 
     // speed is already set and keeps constant until something happens
     if (lightCycle->movable.justTurned) {
@@ -110,7 +129,7 @@ static void calculateNextMovement(LightCycle* lightCycle) {
     }
 }
 
-void drawLightCycle(LightCycle* lightCycle) {
+void drawLightCycle(LightCycle *lightCycle) {
 
     if (lightCycle->movable.justTurned) {
         u8 direction = lightCycle->movable.direction;

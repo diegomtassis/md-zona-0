@@ -17,6 +17,8 @@ extern Map *hudMap;
 
 u16 displayHud(u16);
 
-V2s32 positionInScreen(V2s32 *subject);
+V2s32 viewToScreen(V2s32 *subject);
+
+V2s32 screenToView(V2s32 *subject);
 
 #endif /* INC_SCREEN_H_ */

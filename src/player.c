@@ -20,10 +20,7 @@ bool joy_pushed;
 
 static void handleInputPlayer();
 
-void initPlayer() {
-
-    initLightCycle(&lightCycle);
-}
+void initPlayer() { initLightCycle(&lightCycle); }
 
 void playerActs() {
 

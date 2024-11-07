@@ -4,7 +4,7 @@
 extern const Palette palette_grid;
 extern const TileSet tileset_grid;
 extern const MapDefinition map_zona0_zona14;
-extern const struct TiledGridObject* grid_objects[4];
-extern const struct VehicleStartPosition* vehicles_start[2];
+extern const struct GridBoundaryMarker* grid_markers[4];
+extern const struct MovableInitMarker* movables_markers[1];
 
 #endif // _RES_GFX_GRID_H_

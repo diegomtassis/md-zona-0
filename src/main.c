@@ -7,13 +7,14 @@
 #include <genesis.h>
 
 #include "elements.h"
+#include "tiled.h"
 #include "fwk/printer.h"
 #include "fwk/vdp_utils.h"
 #include "game.h"
 #include "game_config.h"
 #include "gfx_grid.h"
 
-static void logTiledObjects();
+static void logMarkers();
 
 int main(bool hard) {
 
@@ -35,7 +36,7 @@ int main(bool hard) {
 
   resetTileMemory();
 
-  logTiledObjects();
+  logMarkers();
 
   initConfig();
 
@@ -52,21 +53,21 @@ int main(bool hard) {
 }
 
 
-static void logTiledObjects() {
+static void logMarkers() {
 
-  // Grid objects
-  TiledGridObject * gridObject;
+  // Grid boundaries
+  GridBoundaryMarker * gridMarker;
   for (int i = 0; i < 4; i++) {
 
-    gridObject = (TiledGridObject *)grid_objects[i];
-    kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d", gridObject->name, gridObject->x, gridObject->y, gridObject->grid_x, gridObject->grid_y);
+    gridMarker = (GridBoundaryMarker *)grid_markers[i];
+    kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d", gridMarker->name, gridMarker->x, gridMarker->y, gridMarker->grid_x, gridMarker->grid_y);
   }
 
-  // Vehicles
-  VehicleStartPosition* vehicle;
-  for (int i = 0; i < 2; i++) {
+  // Movables
+  MovableInitMarker* movableMarker;
+  for (int i = 0; i < 1; i++) {
 
-    vehicle = (VehicleStartPosition *)vehicles_start[i];
-    kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d, direction:%d", vehicle->name, vehicle->x, vehicle->y, vehicle->grid_x, vehicle->grid_y, vehicle->direction);
+    movableMarker = (MovableInitMarker *)movables_markers[i];
+    kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d, direction:%d", movableMarker->name, movableMarker->x, movableMarker->y, movableMarker->grid_x, movableMarker->grid_y, movableMarker->direction);
   }
 }

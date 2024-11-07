@@ -18,9 +18,6 @@ typedef struct Config Config;
 typedef struct Player Player;
 typedef struct Game Game;
 typedef struct GameResult GameResult;
-typedef struct TiledGridObject TiledGridObject;
-typedef struct VehicleStartPosition VehicleStartPosition;
-
 
 struct Config {
   u8 difficulty;
@@ -39,25 +36,6 @@ struct Game {
 
 struct GameResult {
   u16 p1_score;
-};
-
-struct TiledGridObject {
-  char* name;
-  s16 x;
-  s16 y;
-  s16 grid_x;
-  s16 grid_y;
-  void* conn_right;
-  void* conn_down;
-};
-
-struct VehicleStartPosition {
-  char* name;
-  s16 x;
-  s16 y;
-  s16 grid_x;
-  s16 grid_y;
-  u16 direction;
 };
 
 #endif /* INC_ELEMENTS_H_ */
