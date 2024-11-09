@@ -18,8 +18,9 @@
 
 typedef struct {
 
-	V2f32 pos;
+	V2f32 mapPos;
 	V2u16 size;
+	V2s16 gridPos;
 	Box_s32 box;
 
 } GridObject;

@@ -28,19 +28,18 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO FIX32_0
-#define SPEED_H_SLOW FIX32(0.4)
-#define SPEED_H_FAST FIX32(0.8)
-#define SPEED_V_SLOW FIX32(0.2)
-#define SPEED_V_FAST FIX32(0.4)
+#define SPEED_H_SLOW FIX32(0.2)
+#define SPEED_H_FAST FIX32(0.4)
+#define SPEED_V_SLOW FIX32(0.1)
+#define SPEED_V_FAST FIX32(0.2)
 
 #define BOOST 0x10
 
 #define LIGHTCYCLE_WIDTH 24
 #define LIGHTCYCLE_HEIGHT 24
 
-static V2s32 normalizePosition(V2s32 *);
-
-static void calculateNextMovement(LightCycle *lightCycle);
+static void updateMovement(LightCycle *lightCycle);
+static V2s32 normalizePosition(GridMovable *movable);
 
 void initLightCycle(LightCycle *lightCycle) {
 
@@ -50,8 +49,13 @@ void initLightCycle(LightCycle *lightCycle) {
     // position
     MovableInitMarker *movableMarker = (MovableInitMarker *)movables_markers[0];
 
-    lightCycle->movable.object.pos.x = FIX32(movableMarker->x);
-    lightCycle->movable.object.pos.y = FIX32(movableMarker->y);
+    lightCycle->movable.object.mapPos.x = FIX32(movableMarker->x);
+    lightCycle->movable.object.mapPos.y = FIX32(movableMarker->y);
+
+    lightCycle->movable.object.gridPos.x = movableMarker->grid_x;
+    lightCycle->movable.object.gridPos.y = movableMarker->grid_y;
+
+    kprintf("grid pos init: x:%d, y:%d", lightCycle->movable.object.gridPos.x, lightCycle->movable.object.gridPos.y);
 
     lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
     lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
@@ -59,6 +63,8 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->movable.object.box.h = lightCycle->movable.object.size.y;
 
     updateMovableBox(&lightCycle->movable);
+
+    kprintf("map pos init: x:%d, y:%d", lightCycle->movable.object.box.min.x, lightCycle->movable.object.box.min.y);
 
     // movement
     lightCycle->movable.direction = DOWN;
@@ -71,42 +77,31 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->movable.turn = 0;
 
     // next crossing
-    lightCycle->movable.nextCrossing.x = movableMarker->x - 32;
-    lightCycle->movable.nextCrossing.y = movableMarker->y + 16;
+    lightCycle->movable.nextCrossing.x = movableMarker->x - 16;
+    lightCycle->movable.nextCrossing.y = movableMarker->y + 8;
 
-    V2s32 posInView = mapToView(&lightCycle->movable.object.box.min);
-    V2s32 posInScreen = viewToScreen(&posInView);
+    kprintf("next crossing init: x:%d, y:%d", lightCycle->movable.nextCrossing.x, lightCycle->movable.nextCrossing.y);
 
-    // normalize: down
-    V2s32 posNormalized = normalizePosition(&posInScreen);
+    // figure out the position to draw the sprite
+    V2s32 posNormalized = normalizePosition(&lightCycle->movable);
 
-    lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn,     //
+    lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn,         //
                                        posNormalized.x, posNormalized.y, //
                                        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
 
-// Take into account the sprite shape
-static V2s32 normalizePosition(V2s32 *position) {
-
-    V2s32 normalized = {.x = position->x - 16,
-                        .y = position->y - 12};
-
-    return normalized;
-}
-
 void moveLightCycle(LightCycle *lightCycle) {
 
-    calculateNextMovement(lightCycle);
+    updateMovement(lightCycle);
     updatePosition(&lightCycle->movable);
 
-    V2s32 posInView = mapToView(&lightCycle->movable.object.box.min);
-    V2s32 posInScreen = viewToScreen(&posInView);
+    V2s32 posNormalized = normalizePosition(&lightCycle->movable);
 
-    SPR_setPosition(lightCycle->sprite, posInScreen.x, posInScreen.y);
+    SPR_setPosition(lightCycle->sprite, posNormalized.x, posNormalized.y);
 }
 
-static void calculateNextMovement(LightCycle *lightCycle) {
+static void updateMovement(LightCycle *lightCycle) {
 
     // speed is already set and keeps constant until something happens
     if (lightCycle->movable.justTurned) {
@@ -150,4 +145,25 @@ void drawLightCycle(LightCycle *lightCycle) {
             SPR_setHFlip(lightCycle->sprite, ANIM_RIGHT_FLIP_H);
         }
     }
+};
+
+// Take into account the sprite shape
+static V2s32 normalizePosition(GridMovable *movable) {
+
+    V2s32 posInView = mapToView(&movable->object.box.min);
+    V2s32 posInScreen = viewToScreen(&posInView);
+
+    if (movable->direction & DOWN) {
+        V2s32 normalized = {.x = posInScreen.x + 0, .y = posInScreen.y - 20};
+        // kprintf("normalized: x:%d, y:%d", normalized.x, normalized.y);
+        return normalized;
+
+    } else if (movable->direction & UP) {
+
+    } else if (movable->direction & LEFT) {
+
+    } // else movable->direction & RIGHT
+
+    V2s32 normalized;
+    return normalized;
 };

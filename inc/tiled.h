@@ -11,6 +11,7 @@
 
 typedef struct GridBoundaryMarker GridBoundaryMarker;
 typedef struct MovableInitMarker MovableInitMarker;
+typedef struct MapInfo MapInfo;
 
 struct GridBoundaryMarker {
   char* name;
@@ -29,6 +30,12 @@ struct MovableInitMarker {
   s16 grid_x;
   s16 grid_y;
   u16 direction;
+};
+
+struct MapInfo {
+  char* name;
+  s16 width;
+  s16 height;
 };
 
 #endif /* INC_TILED_H_ */
