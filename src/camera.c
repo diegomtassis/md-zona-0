@@ -7,6 +7,7 @@
 #include "camera.h"
 
 #include "fwk/physics.h"
+#include "elements.h"
 
 #include <kdebug.h>
 
@@ -14,23 +15,24 @@
 #define MIN_PADDING_V		24
 
  // Map
-static V2s32 mapSize;
+static V2s16 mapSize;
 
 // Camera
-Box_s32 cameraView;
+Box_s16 cameraView;
 
 static u16 centerOffsetH;
 static u16 centerOffsetV;
 
 // Subject
-static Box_s32 *subject;
+static Box_s16 *subject;
 
 static bool subjectLockedH;
 static bool subjectLockedV;
 
+static void updateBox16Max(Box_s16 *box);
 
 void setupCamera( //
-    s32 mapWidth, s32 mapHeight, s32 mapInitPosX, s32 mapInitPosY) {
+    s16 mapWidth, s16 mapHeight, s16 mapInitPosX, s16 mapInitPosY) {
 
     mapSize.x = mapWidth;
     mapSize.y = mapHeight;
@@ -42,19 +44,19 @@ void setupCamera( //
     cameraView.h = CAMERA_VIEW_HEIGHT;
     cameraView.min.x = mapInitPosX;
     cameraView.min.y = mapInitPosY;
-    updateBoxMax(&cameraView);
+    updateBox16Max(&cameraView);
 
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
 }
-void cameraFocus(Box_s32 * objectToTrack) {
+void cameraFocus(Box_s16 * objectToTrack) {
 
     subject = objectToTrack;
 }
 
 void updateCamera() {
 
-    s32 normalizedMinX = subject->min.x - centerOffsetH;
+    s16 normalizedMinX = subject->min.x - centerOffsetH;
     if (subjectLockedH) {
         // Already locked H
         cameraView.min.x = normalizedMinX;
@@ -66,11 +68,11 @@ void updateCamera() {
 
         } else {
             // Not locked H
-            s32 leftPadded = subject->min.x - MIN_PADDING_H;
+            s16 leftPadded = subject->min.x - MIN_PADDING_H;
             if (leftPadded < cameraView.min.x) {
                 cameraView.min.x = leftPadded;
             } else {
-                s32 rightPadded = subject->max.x + MIN_PADDING_H;
+                s16 rightPadded = subject->max.x + MIN_PADDING_H;
                 if (rightPadded > cameraView.max.x) {
                     cameraView.min.x = rightPadded - cameraView.w;
                 }
@@ -89,7 +91,7 @@ void updateCamera() {
         subjectLockedH = FALSE;
     }
 
-    s32 normalizedMinY = subject->min.y - centerOffsetV;
+    s16 normalizedMinY = subject->min.y - centerOffsetV;
     if (subjectLockedV) {
 
         // Already locked V
@@ -108,11 +110,11 @@ void updateCamera() {
 
         } else {
             // Unlocked V
-            s32 upPadded = subject->min.y - MIN_PADDING_V;
+            s16 upPadded = subject->min.y - MIN_PADDING_V;
             if (upPadded < cameraView.min.y) {
                 cameraView.min.y = upPadded;
             } else {
-                s32 downPadded = subject->max.y + MIN_PADDING_V;
+                s16 downPadded = subject->max.y + MIN_PADDING_V;
                 if (downPadded > cameraView.max.y) {
                     cameraView.min.y = downPadded - cameraView.h;
                 }
@@ -131,15 +133,21 @@ void updateCamera() {
         subjectLockedV = FALSE;
     }
 
-    updateBoxMax(&cameraView);
+    updateBox16Max(&cameraView);
 }
 
-V2s32 mapToView(V2s32 *subject) {
+V2s16 mapToView(V2s16 *subject) {
 
-    V2s32 relative = {
+    V2s16 relative = {
         .x = subject->x - cameraView.min.x,
         .y = subject->y - cameraView.min.y
     };
 
     return relative;
+}
+
+static void updateBox16Max(Box_s16* box) {
+
+	box->max.x = box->min.x + box->w - 1;
+	box->max.y = box->min.y + box->h - 1;
 }

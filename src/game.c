@@ -76,14 +76,14 @@ static bool runLevel() {
     // Grid info
     MapInfo *grid_map_info = map_info[0];
 
-    V2s32 mapInitPos = {.x = 447, .y = 0};
+    V2s16 mapInitPos = {.x = 447, .y = 0};
     setupCamera(grid_map_info->width, grid_map_info->height, mapInitPos.x, mapInitPos.y);
 
-    V2s32 initPosInScreen = screenToView(&mapInitPos);
+    V2s16 initPosInScreen = screenToView(&mapInitPos);
     vramIdx = displayGrid(vramIdx, initPosInScreen);
 
     initLevelObjects();
-    cameraFocus(&lightCycle.movable.object.box);
+    // cameraFocus(&lightCycle.movable.object.box);
 
     SPR_update();
 
@@ -97,7 +97,7 @@ static bool runLevel() {
         if (!paused) {
             playerActs();
             SPR_update();
-            
+
             // scrollGrid(cameraView.min);
 
             // updateCamera();

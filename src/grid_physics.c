@@ -13,97 +13,102 @@
 static void handleCrossingCrossed(GridMovable *movable);
 static bool turnIfRequested(GridMovable *movable);
 static void updateGridPos(GridMovable *movable);
-static void updateNextCrossing(GridMovable *movable);
+static void updatePrevCrossing(GridMovable *movable);
+static void placeInCrossing(GridMovable *movable);
+
+static void updateMapPositionIfNeeded(GridMovable *movable, u16 h_gap, u16 v_gap);
 
 void updatePosition(GridMovable *movable) {
 
     movable->justTurned = FALSE;
 
-    movable->object.mapPos.x += movable->mov.x;
-    movable->object.mapPos.y += movable->mov.y;
-    updateMovableBox(movable);
+    movable->gridPosDelta += movable->speed;
+
+    if (movable->gridPosDelta > 87) {
+        updateMapPositionIfNeeded(movable, 14, 7);
+    } else if (movable->gridPosDelta > 74) {
+        updateMapPositionIfNeeded(movable, 12, 6);
+    } else if (movable->gridPosDelta > 61) {
+        updateMapPositionIfNeeded(movable, 10, 5);
+    } else if (movable->gridPosDelta > 49) {
+        updateMapPositionIfNeeded(movable, 8, 4);
+    } else if (movable->gridPosDelta > 37) {
+        updateMapPositionIfNeeded(movable, 6, 3);
+    } else if (movable->gridPosDelta > 24) {
+        updateMapPositionIfNeeded(movable, 4, 2);
+    } else if (movable->gridPosDelta > 12) {
+        updateMapPositionIfNeeded(movable, 2, 1);
+    } 
 
     handleCrossing(movable);
 }
 
 void handleCrossing(GridMovable *movable) {
 
-    if (movable->direction & DOWN) {
-        // has the movable reached the next crossing?
-        if (movable->object.box.min.x < movable->nextCrossing.x) {
-            handleCrossingCrossed(movable);
-        }
-
-    } else if (movable->direction & UP) {
-        if (movable->object.box.min.x > movable->nextCrossing.x) {
-            handleCrossingCrossed(movable);
-        }
-
-    } else if (movable->direction & LEFT) {
-        if (movable->object.box.min.x < movable->nextCrossing.x) {
-            handleCrossingCrossed(movable);
-        }
-
-    } else if (movable->direction & RIGHT) {
-        if (movable->object.box.min.x > movable->nextCrossing.x) {
-            handleCrossingCrossed(movable);
-        }
+    if (movable->gridPosDelta >= 99) {
+        handleCrossingCrossed(movable);
     }
 }
 
 void updateMovableBox(GridMovable *movable) {
 
-    movable->object.box.min.x = fix32ToInt(movable->object.mapPos.x);
-    movable->object.box.min.y = fix32ToInt(movable->object.mapPos.y);
-    updateBoxMax(&movable->object.box);
+    // movable->object.box.min.x = fix32ToInt(movable->object.mapPos.x);
+    // movable->object.box.min.y = fix32ToInt(movable->object.mapPos.y);
+    // updateBoxMax(&movable->object.box);
 }
 
-Box_s32 targetBox(const GridMovable *movable) {
+static void updateMapPositionIfNeeded(GridMovable *movable, u16 h_gap, u16 v_gap) {
 
-    Box_s32 box = {.w = movable->object.size.x, .h = movable->object.size.y};
-    box.min.x = fix32ToInt(movable->object.mapPos.x + movable->mov.x);
-    box.min.y = fix32ToInt(movable->object.mapPos.y + movable->mov.y);
-    updateBoxMax(&box);
+    if (movable->direction & DOWN) {
+        movable->object.mapPos.x = movable->mapPrevCrossing.x - h_gap;
+        movable->object.mapPos.y = movable->mapPrevCrossing.y + v_gap;
+        updateMovableBox(movable);
 
-    return box;
-}
+    } else if (movable->direction & UP) {
+        movable->object.mapPos.x = movable->mapPrevCrossing.x + h_gap;
+        movable->object.mapPos.y = movable->mapPrevCrossing.y - v_gap;
+        updateMovableBox(movable);
 
-Box_s32 targetHBox(const GridMovable *movable) {
+    } else if (movable->direction & LEFT) {
+        movable->object.mapPos.x = movable->mapPrevCrossing.x - h_gap;
+        movable->object.mapPos.y = movable->mapPrevCrossing.y - v_gap;
+        updateMovableBox(movable);
 
-    Box_s32 box = {.w = movable->object.size.x, .h = movable->object.size.y};
-    box.min.x = fix32ToInt(movable->object.mapPos.x + movable->mov.x);
-    box.min.y = fix32ToInt(movable->object.mapPos.y);
-    updateBoxMax(&box);
-
-    return box;
-}
-
-Box_s32 targetVBox(const GridMovable *movable) {
-
-    Box_s32 box = {.w = movable->object.size.x, .h = movable->object.size.y};
-    box.min.x = fix32ToInt(movable->object.mapPos.x);
-    box.min.y = fix32ToInt(movable->object.mapPos.y + movable->mov.y);
-    updateBoxMax(&box);
-
-    return box;
+    } else if (movable->direction & RIGHT) {
+        movable->object.mapPos.x = movable->mapPrevCrossing.x + h_gap;
+        movable->object.mapPos.y = movable->mapPrevCrossing.y + v_gap;
+        updateMovableBox(movable);
+    }
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
 
-    kprintf("P1: Map pos: x:%d, y:%d", movable->object.box.min.x, movable->object.box.min.y);
     kprintf("P1: Crossing crossed!");
+
+    if (movable->direction & DOWN) {
+
+    } else if (movable->direction & UP) {
+
+    } else if (movable->direction & LEFT) {
+
+    } else if (movable->direction & RIGHT) {
+    }
+
+    updatePrevCrossing(movable);
+    kprintf("P1: Prev crossing: x:%d, y:%d", movable->mapPrevCrossing.x, movable->mapPrevCrossing.y);
+
+    placeInCrossing(movable);
 
     updateGridPos(movable);
     kprintf("P1: Grid pos: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
+
+    movable->gridPosDelta = 0;
 
     bool turned = turnIfRequested(movable);
     if (turned) {
         updateMovableBox(movable);
         kprintf("P1: Turned [%d]!", movable->direction);
     }
-
-    updateNextCrossing(movable);
-    kprintf("P1: Next crossing: x:%d, y:%d", movable->nextCrossing.x, movable->nextCrossing.y);
 }
 
 static bool turnIfRequested(GridMovable *movable) {
@@ -123,23 +128,6 @@ static bool turnIfRequested(GridMovable *movable) {
         movable->direction = newDirection;
         movable->turn = 0;
         movable->justTurned = TRUE;
-
-        if (newDirection & UP) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
-
-        } else if (newDirection & DOWN) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
-
-        } else if (newDirection & LEFT) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
-
-        } else if (newDirection & RIGHT) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
-        }
 
         return TRUE;
     }
@@ -163,22 +151,28 @@ static void updateGridPos(GridMovable *movable) {
     }
 }
 
-static void updateNextCrossing(GridMovable *movable) {
+static void updatePrevCrossing(GridMovable *movable) {
 
     if (movable->direction & DOWN) {
-        movable->nextCrossing.x += -16;
-        movable->nextCrossing.y += 8;
+        movable->mapPrevCrossing.x -= 16;
+        movable->mapPrevCrossing.y += 8;
 
     } else if (movable->direction & UP) {
-        movable->nextCrossing.x += 16;
-        movable->nextCrossing.y += -8;
+        movable->mapPrevCrossing.x += 16;
+        movable->mapPrevCrossing.y -= 8;
 
     } else if (movable->direction & LEFT) {
-        movable->nextCrossing.x += -16;
-        movable->nextCrossing.y += -8;
+        movable->mapPrevCrossing.x -= 16;
+        movable->mapPrevCrossing.y -= 8;
 
     } else if (movable->direction & RIGHT) {
-        movable->nextCrossing.x += 16;
-        movable->nextCrossing.y += 8;
+        movable->mapPrevCrossing.x += 16;
+        movable->mapPrevCrossing.y += 8;
     }
+}
+
+static void placeInCrossing(GridMovable *movable) {
+    movable->object.mapPos.x = movable->mapPrevCrossing.x;
+    movable->object.mapPos.y = movable->mapPrevCrossing.y;
+    updateMovableBox(movable);
 }

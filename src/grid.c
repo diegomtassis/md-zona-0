@@ -11,7 +11,7 @@
 
 Map *gridMap;
 
-u16 displayGrid(u16 vram_base, V2s32 point) {
+u16 displayGrid(u16 vram_base, V2s16 point) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 
@@ -30,4 +30,4 @@ u16 displayGrid(u16 vram_base, V2s32 point) {
     return vram_idx;
 }
 
-void scrollGrid(V2s32 point) { MAP_scrollTo(gridMap, point.x, point.y); }
+void scrollGrid(V2s16 point) { MAP_scrollTo(gridMap, point.x, point.y); }
