@@ -18,9 +18,9 @@ static void logMarkers();
 
 int main(bool hard) {
 
-    kprintf("");
+    kprintf("##############");
     kprintf("NEW EXECUTION");
-    kprintf("");
+    kprintf("##############");
 
     // default resolution
     VDP_setScreenWidth320();

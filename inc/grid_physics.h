@@ -32,16 +32,8 @@ typedef struct {
 	u8 turn;
 	bool justTurned;
 
-	bool justPassed0;
-	bool justPassed25;
-	bool justPassed50;
-	bool justPassed75;
-
 } GridMovable;
 
 void updatePosition(GridMovable* movable);
-void handleCrossing(GridMovable* movable);
-
-void updateMovableBox(GridMovable* movable);
 
 #endif /* INC_GRID_PHYSICS_H_ */

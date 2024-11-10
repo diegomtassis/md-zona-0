@@ -28,8 +28,8 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 1
-#define SPEED_FAST 2
+#define SPEED_SLOW 2
+#define SPEED_FAST 8
 
 #define BOOST 0x10
 
@@ -44,7 +44,7 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
 
-    // Initialize position
+    // initialize position
     MovableInitMarker *movableMarker = (MovableInitMarker *)movables_markers[0];
 
     lightCycle->movable.object.mapPos.x = movableMarker->x;
@@ -57,23 +57,17 @@ void initLightCycle(LightCycle *lightCycle) {
             lightCycle->movable.object.gridPos.y);
     kprintf("P1: Map pos [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x, lightCycle->movable.object.mapPos.y);
 
-    // Initialize movement
+    // initialize movement
     lightCycle->movable.direction = DOWN;
     lightCycle->movable.speed = SPEED_SLOW;
 
     lightCycle->movable.gridPosDelta = 0;
-    kprintf("P1: Grid delta [init]: :%d", lightCycle->movable.gridPosDelta);
 
     lightCycle->movable.mapPrevCrossing.x = movableMarker->x;
     lightCycle->movable.mapPrevCrossing.y = movableMarker->y;
     kprintf("P1: Map prev crossing [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
             lightCycle->movable.mapPrevCrossing.y);
 
-    lightCycle->movable.justPassed0 = FALSE;
-    lightCycle->movable.justPassed25 = FALSE;
-    lightCycle->movable.justPassed50 = FALSE;
-    lightCycle->movable.justPassed75 = FALSE;
-    
     lightCycle->movable.turn = 0;
 
     lightCycle->movable.justTurned = FALSE;
@@ -84,7 +78,7 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->sprite = SPR_addSprite(&sprite_lightcycle_flynn,         //
                                        posNormalized.x, posNormalized.y, //
                                        TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
-    SPR_setAnim(lightCycle->sprite, ANIM_DOWN);    
+    SPR_setAnim(lightCycle->sprite, ANIM_DOWN);
 }
 
 void moveLightCycle(LightCycle *lightCycle) {
@@ -97,20 +91,7 @@ void moveLightCycle(LightCycle *lightCycle) {
     SPR_setPosition(lightCycle->sprite, posNormalized.x, posNormalized.y);
 }
 
-static void updateMovement(LightCycle *lightCycle) {
-
-    // speed is already set and keeps constant until something happens
-    if (lightCycle->movable.justTurned) {
-        if (lightCycle->movable.direction & DOWN) {
-
-        } else if (lightCycle->movable.direction & UP) {
-
-        } else if (lightCycle->movable.direction & LEFT) {
-
-        } else if (lightCycle->movable.direction & RIGHT) {
-        }
-    }
-}
+static void updateMovement(LightCycle *lightCycle) {}
 
 void drawLightCycle(LightCycle *lightCycle) {
 
@@ -142,16 +123,19 @@ static V2s16 normalizePosition(GridMovable *movable) {
     V2s16 posInScreen = viewToScreen(&posInView);
 
     if (movable->direction & DOWN) {
-        V2s16 normalized = {.x = posInScreen.x + 0, .y = posInScreen.y - 20};
-        // kprintf("normalized: x:%d, y:%d", normalized.x, normalized.y);
+        V2s16 normalized = {.x = posInScreen.x - 16, .y = posInScreen.y - 12};
         return normalized;
 
     } else if (movable->direction & UP) {
+        V2s16 normalized = {.x = posInScreen.x + 0, .y = posInScreen.y - 20};
+        return normalized;
 
     } else if (movable->direction & LEFT) {
+        V2s16 normalized = {.x = posInScreen.x - 24, .y = posInScreen.y - 21};
+        return normalized;
+    }
 
-    } // else movable->direction & RIGHT
-
-    V2s16 normalized;
+    // else movable->direction & RIGHT
+    V2s16 normalized = {.x = posInScreen.x, .y = posInScreen.y - 9};
     return normalized;
 };

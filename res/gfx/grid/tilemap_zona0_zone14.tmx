@@ -125,14 +125,14 @@
    </properties>
    <point/>
   </object>
-  <object id="7" name="p1" type="MovableInitMarker" x="576" y="72">
+  <object id="7" name="p1" type="MovableInitMarker" x="592" y="64">
    <properties>
     <property name="direction" type="int" propertytype="Direction" value="1"/>
     <property name="exportName" type="bool" value="true"/>
     <property name="exportPosition" type="bool" value="true"/>
     <property name="exportSize" type="bool" value="false"/>
     <property name="grid_x" type="int" value="2"/>
-    <property name="grid_y" type="int" value="1"/>
+    <property name="grid_y" type="int" value="0"/>
     <property name="type" type="int" value="1"/>
    </properties>
    <point/>
