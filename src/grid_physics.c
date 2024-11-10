@@ -12,6 +12,7 @@
 
 static void handleCrossingCrossed(GridMovable *movable);
 static bool turnIfRequested(GridMovable *movable);
+static void updateGridPos(GridMovable *movable);
 static void updateNextCrossing(GridMovable *movable);
 
 void updatePosition(GridMovable *movable) {
@@ -39,7 +40,7 @@ void handleCrossing(GridMovable *movable) {
         }
 
     } else if (movable->direction & LEFT) {
-        if (movable->object.box.max.x < movable->nextCrossing.x) {
+        if (movable->object.box.min.x < movable->nextCrossing.x) {
             handleCrossingCrossed(movable);
         }
 
@@ -89,15 +90,20 @@ Box_s32 targetVBox(const GridMovable *movable) {
 
 static void handleCrossingCrossed(GridMovable *movable) {
 
-    if (turnIfRequested(movable)) {
+    kprintf("P1: Map pos: x:%d, y:%d", movable->object.box.min.x, movable->object.box.min.y);
+    kprintf("P1: Crossing crossed!");
+
+    updateGridPos(movable);
+    kprintf("P1: Grid pos: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
+
+    bool turned = turnIfRequested(movable);
+    if (turned) {
         updateMovableBox(movable);
+        kprintf("P1: Turned [%d]!", movable->direction);
     }
 
     updateNextCrossing(movable);
-   
-    kprintf("grid pos: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
-    kprintf("map pos: x:%d, y:%d", movable->object.box.min.x, movable->object.box.min.y);
-    kprintf("next crossing: x:%d, y:%d", movable->nextCrossing.x, movable->nextCrossing.y);
+    kprintf("P1: Next crossing: x:%d, y:%d", movable->nextCrossing.x, movable->nextCrossing.y);
 }
 
 static bool turnIfRequested(GridMovable *movable) {
@@ -120,19 +126,19 @@ static bool turnIfRequested(GridMovable *movable) {
 
         if (newDirection & UP) {
             movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y - movable->object.size.y);
+            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
 
         } else if (newDirection & DOWN) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x - movable->object.size.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y - 12);
+            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
+            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
 
         } else if (newDirection & LEFT) {
-            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x - movable->object.size.x + 8);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y - movable->object.size.y + 4);
+            movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
+            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
 
         } else if (newDirection & RIGHT) {
             movable->object.mapPos.x = intToFix32(movable->nextCrossing.x);
-            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y - 12);
+            movable->object.mapPos.y = intToFix32(movable->nextCrossing.y);
         }
 
         return TRUE;
@@ -141,30 +147,38 @@ static bool turnIfRequested(GridMovable *movable) {
     return FALSE;
 }
 
+static void updateGridPos(GridMovable *movable) {
+
+    if (movable->direction & DOWN) {
+        movable->object.gridPos.y++;
+
+    } else if (movable->direction & UP) {
+        movable->object.gridPos.y--;
+
+    } else if (movable->direction & LEFT) {
+        movable->object.gridPos.x--;
+
+    } else if (movable->direction & RIGHT) {
+        movable->object.gridPos.x++;
+    }
+}
+
 static void updateNextCrossing(GridMovable *movable) {
 
     if (movable->direction & DOWN) {
         movable->nextCrossing.x += -16;
         movable->nextCrossing.y += 8;
 
-        movable->object.gridPos.y++;
-
     } else if (movable->direction & UP) {
         movable->nextCrossing.x += 16;
         movable->nextCrossing.y += -8;
-
-        movable->object.gridPos.y--;
 
     } else if (movable->direction & LEFT) {
         movable->nextCrossing.x += -16;
         movable->nextCrossing.y += -8;
 
-        movable->object.gridPos.x--;
-
     } else if (movable->direction & RIGHT) {
         movable->nextCrossing.x += 16;
         movable->nextCrossing.y += 8;
-
-        movable->object.gridPos.y++;
     }
 }

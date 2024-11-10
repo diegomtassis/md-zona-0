@@ -97,6 +97,7 @@ static bool runLevel() {
         if (!paused) {
             playerActs();
             SPR_update();
+            
             // scrollGrid(cameraView.min);
 
             // updateCamera();

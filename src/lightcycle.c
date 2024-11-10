@@ -28,10 +28,10 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO FIX32_0
-#define SPEED_H_SLOW FIX32(0.2)
-#define SPEED_H_FAST FIX32(0.4)
-#define SPEED_V_SLOW FIX32(0.1)
-#define SPEED_V_FAST FIX32(0.2)
+#define SPEED_H_SLOW FIX32(0.1)
+#define SPEED_H_FAST FIX32(0.2)
+#define SPEED_V_SLOW FIX32(0.05)
+#define SPEED_V_FAST FIX32(0.1)
 
 #define BOOST 0x10
 
@@ -55,7 +55,7 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->movable.object.gridPos.x = movableMarker->grid_x;
     lightCycle->movable.object.gridPos.y = movableMarker->grid_y;
 
-    kprintf("grid pos init: x:%d, y:%d", lightCycle->movable.object.gridPos.x, lightCycle->movable.object.gridPos.y);
+    kprintf("P1: Grid pos [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x, lightCycle->movable.object.gridPos.y);
 
     lightCycle->movable.object.size.x = LIGHTCYCLE_WIDTH;
     lightCycle->movable.object.size.y = LIGHTCYCLE_HEIGHT;
@@ -64,7 +64,7 @@ void initLightCycle(LightCycle *lightCycle) {
 
     updateMovableBox(&lightCycle->movable);
 
-    kprintf("map pos init: x:%d, y:%d", lightCycle->movable.object.box.min.x, lightCycle->movable.object.box.min.y);
+    kprintf("P1: Map pos [init]: x:%d, y:%d", lightCycle->movable.object.box.min.x, lightCycle->movable.object.box.min.y);
 
     // movement
     lightCycle->movable.direction = DOWN;
@@ -80,7 +80,7 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->movable.nextCrossing.x = movableMarker->x - 16;
     lightCycle->movable.nextCrossing.y = movableMarker->y + 8;
 
-    kprintf("next crossing init: x:%d, y:%d", lightCycle->movable.nextCrossing.x, lightCycle->movable.nextCrossing.y);
+    kprintf("P1: Next crossing [init]: x:%d, y:%d", lightCycle->movable.nextCrossing.x, lightCycle->movable.nextCrossing.y);
 
     // figure out the position to draw the sprite
     V2s32 posNormalized = normalizePosition(&lightCycle->movable);

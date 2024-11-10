@@ -18,6 +18,10 @@ static void logMarkers();
 
 int main(bool hard) {
 
+    kprintf("");
+    kprintf("NEW EXECUTION");
+    kprintf("");
+
     // default resolution
     VDP_setScreenWidth320();
     VDP_setScreenHeight224();
@@ -56,23 +60,23 @@ static void logMarkers() {
 
     // Grid info
     MapInfo *map_def = (MapInfo *)map_info[0];
-    kprintf("%s - width:%d, height:%d", map_def->name, map_def->width, map_def->height);
+    kprintf("TILED: %s - width:%d, height:%d", map_def->name, map_def->width, map_def->height);
 
     // Grid boundaries
-    GridBoundaryMarker *gridMarker;
-    for (int i = 0; i < 4; i++) {
+    // GridBoundaryMarker *gridMarker;
+    // for (int i = 0; i < 4; i++) {
 
-        gridMarker = (GridBoundaryMarker *)grid_markers[i];
-        kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d", gridMarker->name, gridMarker->x, gridMarker->y,
-                gridMarker->grid_x, gridMarker->grid_y);
-    }
+    //     gridMarker = (GridBoundaryMarker *)grid_markers[i];
+    //     kprintf("TILED: %s - x:%d, y:%d, grid_x:%d, grid_y:%d", gridMarker->name, gridMarker->x, gridMarker->y,
+    //             gridMarker->grid_x, gridMarker->grid_y);
+    // }
 
     // Movables
     MovableInitMarker *movableMarker;
     for (int i = 0; i < 1; i++) {
 
         movableMarker = (MovableInitMarker *)movables_markers[i];
-        kprintf("%s - x:%d, y:%d, grid_x:%d, grid_y:%d, direction:%d", movableMarker->name, movableMarker->x,
+        kprintf("TILED: %s - x:%d, y:%d, grid_x:%d, grid_y:%d, direction:%d", movableMarker->name, movableMarker->x,
                 movableMarker->y, movableMarker->grid_x, movableMarker->grid_y, movableMarker->direction);
     }
 }
