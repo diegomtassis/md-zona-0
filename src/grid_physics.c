@@ -23,30 +23,39 @@ void updatePosition(GridMovable *movable) {
 
     movable->gridPosDelta += movable->speed;
 
+    // 2 steps
     if (movable->gridPosDelta >= 99) {
         handleCrossingCrossed(movable);
 
-    } else if (movable->gridPosDelta > 87) {
-        updateMapPosition(movable, 14, 7);
-
-    } else if (movable->gridPosDelta > 74) {
-        updateMapPosition(movable, 12, 6);
-
-    } else if (movable->gridPosDelta > 62) {
-        updateMapPosition(movable, 10, 5);
-
     } else if (movable->gridPosDelta > 49) {
         updateMapPosition(movable, 8, 4);
-        
-    } else if (movable->gridPosDelta > 37) {
-        updateMapPosition(movable, 6, 3);
-
-    } else if (movable->gridPosDelta > 24) {
-        updateMapPosition(movable, 4, 2);
-
-    } else if (movable->gridPosDelta > 12) {
-        updateMapPosition(movable, 2, 1);
     }
+
+    // 8 steps
+    // if (movable->gridPosDelta >= 99) {
+    //     handleCrossingCrossed(movable);
+
+    // } else if (movable->gridPosDelta > 87) {
+    //     updateMapPosition(movable, 14, 7);
+
+    // } else if (movable->gridPosDelta > 74) {
+    //     updateMapPosition(movable, 12, 6);
+
+    // } else if (movable->gridPosDelta > 62) {
+    //     updateMapPosition(movable, 10, 5);
+
+    // } else if (movable->gridPosDelta > 49) {
+    //     updateMapPosition(movable, 8, 4);
+
+    // } else if (movable->gridPosDelta > 37) {
+    //     updateMapPosition(movable, 6, 3);
+
+    // } else if (movable->gridPosDelta > 24) {
+    //     updateMapPosition(movable, 4, 2);
+
+    // } else if (movable->gridPosDelta > 12) {
+    //     updateMapPosition(movable, 2, 1);
+    // }
 }
 
 static void updateMapPosition(GridMovable *movable, u16 h_gap, u16 v_gap) {

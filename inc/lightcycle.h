@@ -17,7 +17,6 @@ typedef struct LightCycle LightCycle;
 
 struct LightCycle {
     GridMovable movable;
-    Sprite* sprite;
     u8 health;
     u8 finished;
     bool boost;
@@ -29,6 +28,6 @@ void initLightCycle(LightCycle* lightCycle);
 
 void moveLightCycle(LightCycle* lightCycle);
 
-void drawLightCycle(LightCycle* lightCycle);
+void updateLightCycleDrawInfo(LightCycle* lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */

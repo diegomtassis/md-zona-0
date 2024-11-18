@@ -20,6 +20,8 @@ typedef struct {
 
 	V2s16 gridPos;
 	V2s16 mapPos;
+    Sprite* sprite;
+	V2s16 spritePosInMap;
 
 } GridObject;
 

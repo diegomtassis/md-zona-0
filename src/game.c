@@ -74,28 +74,22 @@ static bool runLevel() {
     vramIdx = displayHud(vramIdx);
 
     // Grid info
+    vramIdx = displayGrid(vramIdx, &map_zona0_zona14);
+
     MapInfo *grid_map_info = map_info[0];
-
-    V2s16 mapInitPos = {.x = 447, .y = 0};
-    setupCamera(grid_map_info->width, grid_map_info->height, mapInitPos.x, mapInitPos.y);
-
-    V2s16 initPosInScreen = screenToView(&mapInitPos);
-    vramIdx = displayGrid(vramIdx, initPosInScreen);
+    setupCamera(grid_map_info->width, grid_map_info->height);
 
     initLevelObjects();
-    // cameraFocus(&lightCycle.movable.object.box);
+    cameraFocusOn(&lightCycle.movable.object);
+    updateCamera();
+
+    scrollGrid(cameraView.min);
 
     SPR_update();
 
-    // for (u16 i = 0; i < 25; i++) {
-    //     playerActs();
-    //     SPR_update();
-    //     SYS_doVBlankProcess();
-    // }
-
     while (!game_over && !mission_accomplished) {
         if (!paused) {
-            playerActs();
+            // playerActs();
             SPR_update();
 
             // scrollGrid(cameraView.min);

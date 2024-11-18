@@ -11,7 +11,7 @@
 
 Map *gridMap;
 
-u16 displayGrid(u16 vram_base, V2s16 point) {
+u16 displayGrid(u16 vram_base, const MapDefinition * mapDefinition) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 
@@ -22,10 +22,8 @@ u16 displayGrid(u16 vram_base, V2s16 point) {
     vram_idx += tileset_grid.numTile;
 
     gridMap =
-        MAP_create(&map_zona0_zona14, BG_B,
+        MAP_create(mapDefinition, BG_B,
                    TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
-
-    scrollGrid(point);
 
     return vram_idx;
 }

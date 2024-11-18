@@ -6,15 +6,17 @@
 
 #include "camera.h"
 
-#include "fwk/physics.h"
 #include "elements.h"
+#include "fwk/physics.h"
+
+#include "screen.h"
 
 #include <kdebug.h>
 
-#define MIN_PADDING_H		32
-#define MIN_PADDING_V		24
+#define MIN_PADDING_H 32
+#define MIN_PADDING_V 24
 
- // Map
+// Map
 static V2s16 mapSize;
 
 // Camera
@@ -24,15 +26,18 @@ static u16 centerOffsetH;
 static u16 centerOffsetV;
 
 // Subject
-static Box_s16 *subject;
+static GridObject *subject;
+
+static Box_s16 subjectBox;
 
 static bool subjectLockedH;
 static bool subjectLockedV;
 
+static void focus();
+
 static void updateBox16Max(Box_s16 *box);
 
-void setupCamera( //
-    s16 mapWidth, s16 mapHeight, s16 mapInitPosX, s16 mapInitPosY) {
+void setupCamera(s16 mapWidth, s16 mapHeight) {
 
     mapSize.x = mapWidth;
     mapSize.y = mapHeight;
@@ -42,21 +47,46 @@ void setupCamera( //
 
     cameraView.w = CAMERA_VIEW_WIDTH;
     cameraView.h = CAMERA_VIEW_HEIGHT;
-    cameraView.min.x = mapInitPosX;
-    cameraView.min.y = mapInitPosY;
-    updateBox16Max(&cameraView);
 
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
 }
-void cameraFocus(Box_s16 * objectToTrack) {
-
+void cameraFocusOn(GridObject *objectToTrack) {
     subject = objectToTrack;
+
+    // extract
+    subjectBox.w = 24;
+    subjectBox.h = 16;
+    subjectBox.min.x = subject->spritePosInMap.x;
+    subjectBox.min.y = subject->spritePosInMap.y;
+    updateBox16Max(&subjectBox);
+
+    cameraView.min.x = max(subjectBox.min.x - centerOffsetH, 0);
+    cameraView.min.y = max(subjectBox.min.y - centerOffsetV, 0);
+    updateBox16Max(&cameraView);
+
+    subjectLockedH = TRUE;
+    subjectLockedV = TRUE;
+
+    kprintf("Camera focus on: x:%d, y:%d", cameraView.min.x, cameraView.min.y);
 }
 
 void updateCamera() {
 
-    s16 normalizedMinX = subject->min.x - centerOffsetH;
+    // focus();
+
+    V2s16 viewPos = mapToView(&subject->spritePosInMap);
+    V2s16 screenPos = viewToScreen(&viewPos);
+
+    SPR_setPosition(subject->sprite, screenPos.x, screenPos.y);
+}
+
+static void focus() {
+
+    subjectBox.min.x = subject->mapPos.x;
+    subjectBox.min.y = subject->mapPos.y;
+
+    s16 normalizedMinX = subjectBox.min.x - centerOffsetH;
     if (subjectLockedH) {
         // Already locked H
         cameraView.min.x = normalizedMinX;
@@ -68,11 +98,11 @@ void updateCamera() {
 
         } else {
             // Not locked H
-            s16 leftPadded = subject->min.x - MIN_PADDING_H;
+            s16 leftPadded = subjectBox.min.x - MIN_PADDING_H;
             if (leftPadded < cameraView.min.x) {
                 cameraView.min.x = leftPadded;
             } else {
-                s16 rightPadded = subject->max.x + MIN_PADDING_H;
+                s16 rightPadded = subjectBox.max.x + MIN_PADDING_H;
                 if (rightPadded > cameraView.max.x) {
                     cameraView.min.x = rightPadded - cameraView.w;
                 }
@@ -91,7 +121,7 @@ void updateCamera() {
         subjectLockedH = FALSE;
     }
 
-    s16 normalizedMinY = subject->min.y - centerOffsetV;
+    s16 normalizedMinY = subjectBox.min.y - centerOffsetV;
     if (subjectLockedV) {
 
         // Already locked V
@@ -110,11 +140,11 @@ void updateCamera() {
 
         } else {
             // Unlocked V
-            s16 upPadded = subject->min.y - MIN_PADDING_V;
+            s16 upPadded = subjectBox.min.y - MIN_PADDING_V;
             if (upPadded < cameraView.min.y) {
                 cameraView.min.y = upPadded;
             } else {
-                s16 downPadded = subject->max.y + MIN_PADDING_V;
+                s16 downPadded = subjectBox.max.y + MIN_PADDING_V;
                 if (downPadded > cameraView.max.y) {
                     cameraView.min.y = downPadded - cameraView.h;
                 }
@@ -138,16 +168,13 @@ void updateCamera() {
 
 V2s16 mapToView(V2s16 *subject) {
 
-    V2s16 relative = {
-        .x = subject->x - cameraView.min.x,
-        .y = subject->y - cameraView.min.y
-    };
+    V2s16 relative = {.x = subject->x - cameraView.min.x, .y = subject->y - cameraView.min.y};
 
     return relative;
 }
 
-static void updateBox16Max(Box_s16* box) {
+static void updateBox16Max(Box_s16 *box) {
 
-	box->max.x = box->min.x + box->w - 1;
-	box->max.y = box->min.y + box->h - 1;
+    box->max.x = box->min.x + box->w - 1;
+    box->max.y = box->min.y + box->h - 1;
 }

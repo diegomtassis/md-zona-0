@@ -30,7 +30,7 @@ void playerActs() {
 
     handleInputPlayer();
     moveLightCycle(&lightCycle);
-    drawLightCycle(&lightCycle);
+    updateLightCycleDrawInfo(&lightCycle);
 }
 
 static void handleInputPlayer() {

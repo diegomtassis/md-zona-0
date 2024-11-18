@@ -10,12 +10,13 @@
 #include <genesis.h>
 #include "fwk/physics.h"
 #include "elements.h"
+#include "grid_physics.h"
 
 #define CAMERA_VIEW_WIDTH		288
 #define CAMERA_VIEW_HEIGHT		160
 
-void setupCamera(s16 mapWidth, s16 mapHeight, s16 mapInitX, s16 mapInitY);
-void cameraFocus(Box_s16 *);
+void setupCamera(s16 mapWidth, s16 mapHeight);
+void cameraFocusOn(GridObject *);
 void updateCamera();
 
 extern Box_s16 cameraView;
