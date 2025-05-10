@@ -30,7 +30,9 @@ void playerActs() {
 
     handleInputPlayer();
     moveLightCycle(&lightCycle);
-    updateLightCycleDrawInfo(&lightCycle);
+    if (lightCycle.movable.updateSprite) {
+        updateLightCycleDrawInfo(&lightCycle);
+    }
 }
 
 static void handleInputPlayer() {

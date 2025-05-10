@@ -90,12 +90,12 @@ static bool runLevel() {
 
     while (!game_over && !mission_accomplished) {
         if (!paused) {
-            // playerActs();
-            SPR_update();
-
-            // scrollGrid(cameraView.min);
-
-            // updateCamera();
+            playerActs();
+            if (lightCycle.movable.updateSprite) {
+                updateCamera();
+                SPR_update();
+                lightCycle.movable.updateSprite = FALSE;
+            }
         }
 
         SYS_doVBlankProcess();

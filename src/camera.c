@@ -85,7 +85,7 @@ void cameraFocusOn(GridObject *objectToTrack) {
 
 void updateCamera() {
 
-    // focus();
+    focus();
 
     V2s16 subjectPosInView = mapToView(&subject->spritePosInMap);
     kprintf("CAM: subject sprite pos in view: x:%d, y:%d", subjectPosInView.x, subjectPosInView.y);
@@ -102,9 +102,10 @@ void updateCamera() {
 
 static void focus() {
 
-    subjectBox.min.x = subject->mapPos.x;
-    subjectBox.min.y = subject->mapPos.y;
+    subjectBox.min.x = subject->spritePosInMap.x;
+    subjectBox.min.y = subject->spritePosInMap.y;
 
+    // horizontal
     s16 normalizedMinX = subjectBox.min.x - subjectOffsetInView.x;
     if (subjectLockedH) {
         // Already locked H
@@ -140,6 +141,7 @@ static void focus() {
         subjectLockedH = FALSE;
     }
 
+    // vertical
     s16 normalizedMinY = subjectBox.min.y - subjectOffsetInView.y;
     if (subjectLockedV) {
 
