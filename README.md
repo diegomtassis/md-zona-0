@@ -26,7 +26,7 @@ https://github.com/diegomtassis/md-zona0
 
 #### SGDK
 
-This Zona 0 port is built using SGDK 1.90.
+This Zona 0 port is built using SGDK 2.11.
 
 SGDK is a development kit for Sega Mega Drive created by Stephane Dallongeville
 https://stephane-d.github.io/SGDK/

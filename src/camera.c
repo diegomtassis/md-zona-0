@@ -9,6 +9,7 @@
 #include "elements.h"
 #include "fwk/physics.h"
 
+#include "grid.h"
 #include "screen.h"
 
 #include <kdebug.h>
@@ -21,13 +22,10 @@ static V2s16 mapSize;
 
 // Camera
 Box_s16 cameraView;
-
-static u16 centerOffsetH;
-static u16 centerOffsetV;
+static V2s16 subjectOffsetInView;
 
 // Subject
 static GridObject *subject;
-
 static Box_s16 subjectBox;
 
 static bool subjectLockedH;
@@ -42,9 +40,6 @@ void setupCamera(s16 mapWidth, s16 mapHeight) {
     mapSize.x = mapWidth;
     mapSize.y = mapHeight;
 
-    centerOffsetH = CAMERA_VIEW_WIDTH / 2;
-    centerOffsetV = CAMERA_VIEW_HEIGHT / 2;
-
     cameraView.w = CAMERA_VIEW_WIDTH;
     cameraView.h = CAMERA_VIEW_HEIGHT;
 
@@ -52,33 +47,57 @@ void setupCamera(s16 mapWidth, s16 mapHeight) {
     subjectLockedV = FALSE;
 }
 void cameraFocusOn(GridObject *objectToTrack) {
+
+    // subject
     subject = objectToTrack;
 
-    // extract
+    // box for the subject
     subjectBox.w = 24;
-    subjectBox.h = 16;
+    subjectBox.h = 24;
     subjectBox.min.x = subject->spritePosInMap.x;
     subjectBox.min.y = subject->spritePosInMap.y;
     updateBox16Max(&subjectBox);
 
-    cameraView.min.x = max(subjectBox.min.x - centerOffsetH, 0);
-    cameraView.min.y = max(subjectBox.min.y - centerOffsetV, 0);
+    // adapt camera offset to subject dimensions
+    V2s16 offset = {.x = (cameraView.w - subjectBox.w) / 2, .y = (cameraView.h - subjectBox.h) / 2};
+    subjectOffsetInView = offset;
+    kprintf("CAM: center offset in view: x:%d, y:%d", subjectOffsetInView.x, subjectOffsetInView.y);
+
+    V2s16 subjectOffsetInScreeen = viewToScreen(&subjectOffsetInView);
+    kprintf("CAM: center offset in screen: x:%d, y:%d", subjectOffsetInScreeen.x, subjectOffsetInScreeen.y);
+
+    // update camera position
+    // V2s16 viewPosInMap = {.x = max(subjectBox.min.x - subjectOffsetInView.x, 0),
+    //                       .y = max(subjectBox.min.y - subjectOffsetInView.y, 0)};
+
+    V2s16 viewPosInMap = {.x = subjectBox.min.x - subjectOffsetInView.x,
+                          .y = subjectBox.min.y - subjectOffsetInView.y};
+
+    cameraView.min.x = viewPosInMap.x;
+    cameraView.min.y = viewPosInMap.y;
+    kprintf("CAM: view pos in map: x:%d, y:%d", cameraView.min.x, cameraView.min.y);
+
     updateBox16Max(&cameraView);
 
     subjectLockedH = TRUE;
     subjectLockedV = TRUE;
-
-    kprintf("Camera focus on: x:%d, y:%d", cameraView.min.x, cameraView.min.y);
 }
 
 void updateCamera() {
 
     // focus();
 
-    V2s16 viewPos = mapToView(&subject->spritePosInMap);
-    V2s16 screenPos = viewToScreen(&viewPos);
+    V2s16 subjectPosInView = mapToView(&subject->spritePosInMap);
+    kprintf("CAM: subject sprite pos in view: x:%d, y:%d", subjectPosInView.x, subjectPosInView.y);
 
-    SPR_setPosition(subject->sprite, screenPos.x, screenPos.y);
+    V2s16 subjectPosInScreen = viewToScreen(&subjectPosInView);
+    kprintf("CAM: subject sprite pos in screen: x:%d, y:%d", subjectPosInScreen.x, subjectPosInScreen.y);
+
+    SPR_setPosition(subject->sprite, subjectPosInScreen.x, subjectPosInScreen.y);
+
+    V2s16 screenPosInMap = screenInMap(&cameraView.min);
+    kprintf("CAM: screen pos in map: x:%d, y:%d", screenPosInMap.x, screenPosInMap.y);
+    scrollGrid(screenPosInMap);
 }
 
 static void focus() {
@@ -86,7 +105,7 @@ static void focus() {
     subjectBox.min.x = subject->mapPos.x;
     subjectBox.min.y = subject->mapPos.y;
 
-    s16 normalizedMinX = subjectBox.min.x - centerOffsetH;
+    s16 normalizedMinX = subjectBox.min.x - subjectOffsetInView.x;
     if (subjectLockedH) {
         // Already locked H
         cameraView.min.x = normalizedMinX;
@@ -121,7 +140,7 @@ static void focus() {
         subjectLockedH = FALSE;
     }
 
-    s16 normalizedMinY = subjectBox.min.y - centerOffsetV;
+    s16 normalizedMinY = subjectBox.min.y - subjectOffsetInView.y;
     if (subjectLockedV) {
 
         // Already locked V

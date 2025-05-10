@@ -11,7 +11,7 @@
 
 Map *gridMap;
 
-u16 displayGrid(u16 vram_base, const MapDefinition * mapDefinition) {
+u16 loadGrid(u16 vram_base, const MapDefinition * mapDefinition) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 

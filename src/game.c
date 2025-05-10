@@ -71,19 +71,20 @@ static bool runLevel() {
 
     u16 vramIdx = idx_tile_malloc;
 
-    vramIdx = displayHud(vramIdx);
+    // hud
+    vramIdx = setupHud(vramIdx);
 
-    // Grid info
-    vramIdx = displayGrid(vramIdx, &map_zona0_zona14);
-
+    // grid
+    vramIdx = loadGrid(vramIdx, &map_zona0_zona14);
+    
+    // objects
+    initLevelObjects();
+    
+    // camera
     MapInfo *grid_map_info = map_info[0];
     setupCamera(grid_map_info->width, grid_map_info->height);
-
-    initLevelObjects();
     cameraFocusOn(&lightCycle.movable.object);
     updateCamera();
-
-    scrollGrid(cameraView.min);
 
     SPR_update();
 
@@ -97,8 +98,6 @@ static bool runLevel() {
             // updateCamera();
         }
 
-        VDP_showFPS(FALSE);
-        VDP_showCPULoad();
         SYS_doVBlankProcess();
     }
 

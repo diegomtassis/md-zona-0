@@ -20,7 +20,7 @@ Sprite *helmet2Sprite;
 Sprite *helmet3Sprite;
 Sprite *helmet4Sprite;
 
-u16 displayHud(u16 vramBase) {
+u16 setupHud(u16 vramBase) {
 
     PAL_setPalette(PAL2, palette_hud.data, DMA_QUEUE);
 
@@ -79,6 +79,13 @@ V2s16 viewToScreen(V2s16 *subject) {
 V2s16 screenToView(V2s16 *subject) {
 
     V2s16 position = {.x = subject->x - HUD_LEFT_COLUMN_WIDTH, .y = subject->y};
+
+    return position;
+}
+
+V2s16 screenInMap(V2s16 *viewInMap) {
+
+    V2s16 position = {.x = viewInMap->x - HUD_LEFT_COLUMN_WIDTH, .y = viewInMap->y};
 
     return position;
 }

@@ -26,7 +26,7 @@ int main(bool hard) {
     VDP_setScreenWidth320();
     VDP_setScreenHeight224();
 
-    initPrinter();
+    // initPrinter();
 
     // if (hard) {
 
@@ -58,11 +58,11 @@ int main(bool hard) {
 
 static void logMarkers() {
 
-    // Grid info
+    // grid info
     MapInfo *map_def = (MapInfo *)map_info[0];
     kprintf("TILED: %s - width:%d, height:%d", map_def->name, map_def->width, map_def->height);
 
-    // Grid boundaries
+    // grid boundaries
     // GridBoundaryMarker *gridMarker;
     // for (int i = 0; i < 4; i++) {
 
@@ -71,7 +71,7 @@ static void logMarkers() {
     //             gridMarker->grid_x, gridMarker->grid_y);
     // }
 
-    // Movables
+    // movables
     MovableInitMarker *movableMarker;
     for (int i = 0; i < 1; i++) {
 

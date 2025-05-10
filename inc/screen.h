@@ -15,10 +15,12 @@
 
 extern Map *hudMap;
 
-u16 displayHud(u16);
+u16 setupHud(u16);
 
 V2s16 viewToScreen(V2s16 *subject);
 
 V2s16 screenToView(V2s16 *subject);
+
+V2s16 screenInMap(V2s16 *viewInMap);
 
 #endif /* INC_SCREEN_H_ */

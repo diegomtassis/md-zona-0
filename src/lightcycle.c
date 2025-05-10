@@ -43,33 +43,33 @@ void initLightCycle(LightCycle *lightCycle) {
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
 
-    // initialize position
-    MovableInitMarker *movableMarker = (MovableInitMarker *)movables_markers[0];
+    // Initialize position
+    MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers[0];
 
-    lightCycle->movable.object.mapPos.x = movableMarker->x;
-    lightCycle->movable.object.mapPos.y = movableMarker->y;
-
-    lightCycle->movable.object.gridPos.x = movableMarker->grid_x;
-    lightCycle->movable.object.gridPos.y = movableMarker->grid_y;
-
-    kprintf("P1: Grid pos [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x,
+    lightCycle->movable.object.gridPos.x = cycleMarker->grid_x;
+    lightCycle->movable.object.gridPos.y = cycleMarker->grid_y;
+    kprintf("P1: cycle pos in grid [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x,
             lightCycle->movable.object.gridPos.y);
-    kprintf("P1: Map pos [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x, lightCycle->movable.object.mapPos.y);
 
-    // initialize movement
+    lightCycle->movable.object.mapPos.x = cycleMarker->x;
+    lightCycle->movable.object.mapPos.y = cycleMarker->y;
+    kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x, lightCycle->movable.object.mapPos.y);
+
+    // Initialize movement
     lightCycle->movable.direction = DOWN;
     lightCycle->movable.speed = SPEED_SLOW;
 
-    lightCycle->movable.gridPosDelta = 90;
+    lightCycle->movable.gridPosDelta = 10;
 
-    lightCycle->movable.mapPrevCrossing.x = movableMarker->x;
-    lightCycle->movable.mapPrevCrossing.y = movableMarker->y;
-    kprintf("P1: Map prev crossing [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
+    lightCycle->movable.mapPrevCrossing.x = cycleMarker->x;
+    lightCycle->movable.mapPrevCrossing.y = cycleMarker->y;
+    kprintf("P1: prev cross pos in map [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
             lightCycle->movable.mapPrevCrossing.y);
 
     lightCycle->movable.turn = 0;
     lightCycle->movable.justTurned = FALSE;
 
+    // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
                                                       0, 0,                     //
                                                       TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
@@ -108,22 +108,21 @@ void updateLightCycleDrawInfo(LightCycle *lightCycle) {
 static void updateSpritePositionInMap(GridMovable *movable) {
 
     if (movable->direction & DOWN) {
-        movable->object.spritePosInMap.x = movable->object.mapPos.x - 24;
-        movable->object.spritePosInMap.y = movable->object.mapPos.y - 8;
+        movable->object.spritePosInMap.x = movable->object.mapPos.x - 16;
+        movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
 
     } else if (movable->direction & UP) {
-        movable->object.spritePosInMap.x = movable->object.mapPos.x + 0;
-        movable->object.spritePosInMap.y = movable->object.mapPos.y - 20;
+        movable->object.spritePosInMap.x = movable->object.mapPos.x - 8;
+        movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
 
     } else if (movable->direction & LEFT) {
-        movable->object.spritePosInMap.x = movable->object.mapPos.x - 24;
-        movable->object.spritePosInMap.y = movable->object.mapPos.y - 21;
+        movable->object.spritePosInMap.x = movable->object.mapPos.x - 16;
+        movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
 
     } else { // movable->direction & RIGHT
-        movable->object.spritePosInMap.x = movable->object.mapPos.x;
-        movable->object.spritePosInMap.y = movable->object.mapPos.y - 9;
+        movable->object.spritePosInMap.x = movable->object.mapPos.x - 8;
+        movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
     }
 
-    kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x,
-            movable->object.spritePosInMap.y);
+    kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
 };
