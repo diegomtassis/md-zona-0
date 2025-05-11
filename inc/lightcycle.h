@@ -24,10 +24,10 @@ struct LightCycle {
     bool immunity;
 };
 
-void initLightCycle(LightCycle* lightCycle);
+void CYCLE_init(LightCycle* lightCycle);
 
-void moveLightCycle(LightCycle* lightCycle);
+void CYCLE_move(LightCycle* lightCycle);
 
-void updateLightCycleDrawInfo(LightCycle* lightCycle);
+void CYCLE_updateRenderInfo(LightCycle* lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */

@@ -9,6 +9,6 @@
 
 #include "elements.h"
 
-GameResult runGame(const Config config[static 1]);
+GameResult GAME_run(const Config config[static 1]);
 
 #endif /* INC_GAME_H_ */

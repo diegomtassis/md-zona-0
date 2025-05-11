@@ -15,12 +15,12 @@
 #define CAMERA_VIEW_WIDTH		288
 #define CAMERA_VIEW_HEIGHT		160
 
-void setupCamera(s16 mapWidth, s16 mapHeight);
-void cameraFocusOn(GridObject *);
-void updateCamera();
+void CAM_setup(s16 mapWidth, s16 mapHeight);
+void CAM_focusOn(GridObject * subject);
+void CAM_update();
 
 extern Box_s16 cameraView;
 
-V2s16 mapToView(V2s16 *);
+V2s16 CAM_mapToView(V2s16 *);
 
 #endif /* INC_CAMERA_H_ */

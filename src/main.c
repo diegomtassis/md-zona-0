@@ -48,7 +48,7 @@ int main(bool hard) {
         // log_memory();
         setUpGame();
 
-        GameResult result = runGame(&currentConfig);
+        GameResult result = GAME_run(&currentConfig);
 
         SYS_doVBlankProcess();
     }

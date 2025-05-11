@@ -35,7 +35,7 @@ static void focus();
 
 static void updateBox16Max(Box_s16 *box);
 
-void setupCamera(s16 mapWidth, s16 mapHeight) {
+void CAM_setup(s16 mapWidth, s16 mapHeight) {
 
     mapSize.x = mapWidth;
     mapSize.y = mapHeight;
@@ -46,7 +46,7 @@ void setupCamera(s16 mapWidth, s16 mapHeight) {
     subjectLockedH = FALSE;
     subjectLockedV = FALSE;
 }
-void cameraFocusOn(GridObject *objectToTrack) {
+void CAM_focusOn(GridObject *objectToTrack) {
 
     // subject
     subject = objectToTrack;
@@ -63,7 +63,7 @@ void cameraFocusOn(GridObject *objectToTrack) {
     subjectOffsetInView = offset;
     kprintf("CAM: center offset in view: x:%d, y:%d", subjectOffsetInView.x, subjectOffsetInView.y);
 
-    V2s16 subjectOffsetInScreeen = viewToScreen(&subjectOffsetInView);
+    V2s16 subjectOffsetInScreeen = SCREEN_viewToScreen(&subjectOffsetInView);
     kprintf("CAM: center offset in screen: x:%d, y:%d", subjectOffsetInScreeen.x, subjectOffsetInScreeen.y);
 
     // update camera position
@@ -83,21 +83,21 @@ void cameraFocusOn(GridObject *objectToTrack) {
     subjectLockedV = TRUE;
 }
 
-void updateCamera() {
+void CAM_update() {
 
     focus();
 
-    V2s16 subjectPosInView = mapToView(&subject->spritePosInMap);
+    V2s16 subjectPosInView = CAM_mapToView(&subject->spritePosInMap);
     kprintf("CAM: subject sprite pos in view: x:%d, y:%d", subjectPosInView.x, subjectPosInView.y);
 
-    V2s16 subjectPosInScreen = viewToScreen(&subjectPosInView);
+    V2s16 subjectPosInScreen = SCREEN_viewToScreen(&subjectPosInView);
     kprintf("CAM: subject sprite pos in screen: x:%d, y:%d", subjectPosInScreen.x, subjectPosInScreen.y);
 
     SPR_setPosition(subject->sprite, subjectPosInScreen.x, subjectPosInScreen.y);
 
-    V2s16 screenPosInMap = screenInMap(&cameraView.min);
+    V2s16 screenPosInMap = SCREEN_screenInMap(&cameraView.min);
     kprintf("CAM: screen pos in map: x:%d, y:%d", screenPosInMap.x, screenPosInMap.y);
-    scrollGrid(screenPosInMap);
+    GRID_scroll(screenPosInMap);
 }
 
 static void focus() {
@@ -187,7 +187,7 @@ static void focus() {
     updateBox16Max(&cameraView);
 }
 
-V2s16 mapToView(V2s16 *subject) {
+V2s16 CAM_mapToView(V2s16 *subject) {
 
     V2s16 relative = {.x = subject->x - cameraView.min.x, .y = subject->y - cameraView.min.y};
 

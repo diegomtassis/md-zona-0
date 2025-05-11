@@ -34,7 +34,7 @@ static bool runLevel();
 
 static void initLevelObjects();
 
-GameResult runGame(const Config config[static 1]) {
+GameResult GAME_run(const Config config[static 1]) {
 
     initGame(config);
 
@@ -72,27 +72,27 @@ static bool runLevel() {
     u16 vramIdx = idx_tile_malloc;
 
     // hud
-    vramIdx = setupHud(vramIdx);
+    vramIdx = SCREEN_setupHud(vramIdx);
 
     // grid
-    vramIdx = loadGrid(vramIdx, &map_zona0_zona14);
+    vramIdx = GRID_load(vramIdx, &map_zona0_zona14);
     
     // objects
     initLevelObjects();
     
     // camera
     MapInfo *grid_map_info = map_info[0];
-    setupCamera(grid_map_info->width, grid_map_info->height);
-    cameraFocusOn(&lightCycle.movable.object);
-    updateCamera();
+    CAM_setup(grid_map_info->width, grid_map_info->height);
+    CAM_focusOn(&lightCycle.movable.object);
+    CAM_update();
 
     SPR_update();
 
     while (!game_over && !mission_accomplished) {
         if (!paused) {
-            playerActs();
+            PLAYER_act();
             if (lightCycle.movable.updateSprite) {
-                updateCamera();
+                CAM_update();
                 SPR_update();
                 lightCycle.movable.updateSprite = FALSE;
             }
@@ -107,5 +107,5 @@ static bool runLevel() {
 static void initLevelObjects() {
     PAL_setPalette(PAL1, palette_sprites.data, DMA);
 
-    initPlayer();
+    PLAYER_init();
 }

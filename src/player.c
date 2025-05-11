@@ -20,18 +20,18 @@ bool joy_pushed;
 
 static void handleInputPlayer();
 
-void initPlayer() { initLightCycle(&lightCycle); }
+void PLAYER_init() { CYCLE_init(&lightCycle); }
 
-void playerActs() {
+void PLAYER_act() {
 
     if (!(lightCycle.health & ALIVE) || lightCycle.finished) {
         return;
     }
 
     handleInputPlayer();
-    moveLightCycle(&lightCycle);
+    CYCLE_move(&lightCycle);
     if (lightCycle.movable.updateSprite) {
-        updateLightCycleDrawInfo(&lightCycle);
+        CYCLE_updateRenderInfo(&lightCycle);
     }
 }
 

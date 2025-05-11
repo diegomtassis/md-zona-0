@@ -37,6 +37,6 @@ typedef struct {
 
 } GridMovable;
 
-void updatePosition(GridMovable* movable);
+void VEH_move(GridMovable* movable);
 
 #endif /* INC_GRID_PHYSICS_H_ */

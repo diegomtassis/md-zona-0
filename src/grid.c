@@ -11,7 +11,7 @@
 
 Map *gridMap;
 
-u16 loadGrid(u16 vram_base, const MapDefinition * mapDefinition) {
+u16 GRID_load(u16 vram_base, const MapDefinition * mapDefinition) {
 
     PAL_setPalette(PAL0, palette_grid.data, DMA);
 
@@ -28,4 +28,4 @@ u16 loadGrid(u16 vram_base, const MapDefinition * mapDefinition) {
     return vram_idx;
 }
 
-void scrollGrid(V2s16 point) { MAP_scrollTo(gridMap, point.x, point.y); }
+void GRID_scroll(V2s16 point) { MAP_scrollTo(gridMap, point.x, point.y); }

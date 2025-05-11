@@ -13,8 +13,8 @@ extern Player player;
 
 extern LightCycle lightCycle;
 
-void initPlayer();
+void PLAYER_init();
 
-void playerActs();
+void PLAYER_act();
 
 #endif /* INC_PLAYER_H_ */

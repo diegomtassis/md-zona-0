@@ -14,7 +14,7 @@ extern Map *gridMap;
 #define MAP_WIDTH 1008
 #define MAP_HEIGTH 560
 
-u16 loadGrid(u16 vramBase, const MapDefinition *);
-void scrollGrid(V2s16 point);
+u16 GRID_load(u16 vramBase, const MapDefinition *);
+void GRID_scroll(V2s16 point);
 
 #endif /* INC_GRID_H_ */

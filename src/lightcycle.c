@@ -38,7 +38,7 @@
 
 static void updateSpritePositionInMap(GridMovable *movable);
 
-void initLightCycle(LightCycle *lightCycle) {
+void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->health = ALIVE;
     lightCycle->finished = FALSE;
@@ -74,12 +74,12 @@ void initLightCycle(LightCycle *lightCycle) {
                                                       0, 0,                     //
                                                       TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
-    updateLightCycleDrawInfo(lightCycle);
+    CYCLE_updateRenderInfo(lightCycle);
 }
 
-void moveLightCycle(LightCycle *lightCycle) { updatePosition(&lightCycle->movable); }
+void CYCLE_move(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
-void updateLightCycleDrawInfo(LightCycle *lightCycle) {
+void CYCLE_updateRenderInfo(LightCycle *lightCycle) {
 
     updateSpritePositionInMap(&lightCycle->movable);
 

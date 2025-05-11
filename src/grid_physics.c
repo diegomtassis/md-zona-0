@@ -17,7 +17,7 @@ static void updateGridPosAfterCrossingCrossed(GridMovable *movable);
 static void updatePrevCrossingAfterCrossingCrossed(GridMovable *movable);
 static void placeInCrossing(GridMovable *movable);
 
-void updatePosition(GridMovable *movable) {
+void VEH_move(GridMovable *movable) {
 
     movable->justTurned = FALSE;
 
