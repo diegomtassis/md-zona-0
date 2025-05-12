@@ -10,7 +10,7 @@
 
 #include <kdebug.h>
 
-static void makeSmallStepForward(GridMovable *movable, u16 h_gap, u16 v_gap);
+static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap);
 static void handleCrossingCrossed(GridMovable *movable);
 static bool turnIfRequested(GridMovable *movable);
 static void updateGridPosAfterCrossingCrossed(GridMovable *movable);
@@ -20,6 +20,7 @@ static void placeInCrossing(GridMovable *movable);
 void VEH_move(GridMovable *movable) {
 
     movable->justTurned = FALSE;
+    movable->spritePosJustChanged = FALSE;
 
     u16 prevGridPosDelta = movable->gridPosDelta;
     movable->gridPosDelta += movable->speed;
@@ -29,11 +30,11 @@ void VEH_move(GridMovable *movable) {
         handleCrossingCrossed(movable);
 
     } else if (movable->gridPosDelta > 49 && prevGridPosDelta <= 49) {
-        makeSmallStepForward(movable, 8, 4);
+        moveForward(movable, 8, 4);
     }
 }
 
-static void makeSmallStepForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
+static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
 
     if (movable->direction & DOWN) {
         movable->object.mapPos.x = movable->mapPrevCrossing.x - h_gap;
@@ -52,7 +53,7 @@ static void makeSmallStepForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
         movable->object.mapPos.y = movable->mapPrevCrossing.y + v_gap;
     }
 
-    movable->updateSprite = TRUE;
+    movable->spritePosJustChanged = TRUE;
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
@@ -74,7 +75,7 @@ static void handleCrossingCrossed(GridMovable *movable) {
         kprintf("P1: cycle turned [%d]!", movable->direction);
     }
 
-    movable->updateSprite = TRUE;
+    movable->spritePosJustChanged = TRUE;
 }
 
 static bool turnIfRequested(GridMovable *movable) {

@@ -36,7 +36,9 @@
 #define LIGHTCYCLE_WIDTH 24
 #define LIGHTCYCLE_HEIGHT 24
 
-static void updateSpritePositionInMap(GridMovable *movable);
+static void setRenderInfo(GridMovable *movable, bool force);
+static void setSpritePositionInMap(GridMovable *movable);
+static void setSpriteAnim(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
@@ -53,7 +55,8 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.object.mapPos.x = cycleMarker->x;
     lightCycle->movable.object.mapPos.y = cycleMarker->y;
-    kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x, lightCycle->movable.object.mapPos.y);
+    kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x,
+            lightCycle->movable.object.mapPos.y);
 
     // Initialize movement
     lightCycle->movable.direction = DOWN;
@@ -74,38 +77,23 @@ void CYCLE_init(LightCycle *lightCycle) {
                                                       0, 0,                     //
                                                       TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
-    CYCLE_updateRenderInfo(lightCycle);
+    setRenderInfo(&lightCycle->movable, TRUE);
 }
 
 void CYCLE_move(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
-void CYCLE_updateRenderInfo(LightCycle *lightCycle) {
+void CYCLE_setRenderInfo(LightCycle *lightCycle) { setRenderInfo(&lightCycle->movable, FALSE); };
 
-    updateSpritePositionInMap(&lightCycle->movable);
+static void setRenderInfo(GridMovable *movable, bool force) {
+    setSpritePositionInMap(movable);
 
-    if (lightCycle->movable.justTurned) {
-        u8 direction = lightCycle->movable.direction;
-        if (direction & DOWN) {
-            SPR_setAnim(lightCycle->movable.object.sprite, ANIM_DOWN);
-            SPR_setHFlip(lightCycle->movable.object.sprite, ANIM_DOWN_FLIP_H);
-
-        } else if (direction & UP) {
-            SPR_setAnim(lightCycle->movable.object.sprite, ANIM_UP);
-            SPR_setHFlip(lightCycle->movable.object.sprite, ANIM_UP_FLIP_H);
-
-        } else if (direction & LEFT) {
-            SPR_setAnim(lightCycle->movable.object.sprite, ANIM_LEFT);
-            SPR_setHFlip(lightCycle->movable.object.sprite, ANIM_LEFT_FLIP_H);
-
-        } else if (direction & RIGHT) {
-            SPR_setAnim(lightCycle->movable.object.sprite, ANIM_RIGHT);
-            SPR_setHFlip(lightCycle->movable.object.sprite, ANIM_RIGHT_FLIP_H);
-        }
+    if (movable->justTurned || force) {
+        setSpriteAnim(movable);
     }
-};
+}
 
 // Take into account the sprite shape
-static void updateSpritePositionInMap(GridMovable *movable) {
+static void setSpritePositionInMap(GridMovable *movable) {
 
     if (movable->direction & DOWN) {
         movable->object.spritePosInMap.x = movable->object.mapPos.x - 16;
@@ -126,3 +114,24 @@ static void updateSpritePositionInMap(GridMovable *movable) {
 
     kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
 };
+
+static void setSpriteAnim(GridMovable *movable) {
+
+    u8 direction = movable->direction;
+    if (direction & DOWN) {
+        SPR_setAnim(movable->object.sprite, ANIM_DOWN);
+        SPR_setHFlip(movable->object.sprite, ANIM_DOWN_FLIP_H);
+
+    } else if (direction & UP) {
+        SPR_setAnim(movable->object.sprite, ANIM_UP);
+        SPR_setHFlip(movable->object.sprite, ANIM_UP_FLIP_H);
+
+    } else if (direction & LEFT) {
+        SPR_setAnim(movable->object.sprite, ANIM_LEFT);
+        SPR_setHFlip(movable->object.sprite, ANIM_LEFT_FLIP_H);
+
+    } else if (direction & RIGHT) {
+        SPR_setAnim(movable->object.sprite, ANIM_RIGHT);
+        SPR_setHFlip(movable->object.sprite, ANIM_RIGHT_FLIP_H);
+    }
+}

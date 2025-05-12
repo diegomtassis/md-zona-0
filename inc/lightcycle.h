@@ -28,6 +28,6 @@ void CYCLE_init(LightCycle* lightCycle);
 
 void CYCLE_move(LightCycle* lightCycle);
 
-void CYCLE_updateRenderInfo(LightCycle* lightCycle);
+void CYCLE_setRenderInfo(LightCycle* lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */

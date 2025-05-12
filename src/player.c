@@ -18,7 +18,7 @@ LightCycle lightCycle;
 
 bool joy_pushed;
 
-static void handleInputPlayer();
+static void readPlayerInput();
 
 void PLAYER_init() { CYCLE_init(&lightCycle); }
 
@@ -28,14 +28,14 @@ void PLAYER_act() {
         return;
     }
 
-    handleInputPlayer();
+    readPlayerInput();
     CYCLE_move(&lightCycle);
-    if (lightCycle.movable.updateSprite) {
-        CYCLE_updateRenderInfo(&lightCycle);
+    if (lightCycle.movable.spritePosJustChanged) {
+        CYCLE_setRenderInfo(&lightCycle);
     }
 }
 
-static void handleInputPlayer() {
+static void readPlayerInput() {
 
     u16 value = JOY_readJoypad(player.joystick);
     if (value & BUTTON_DIR) {

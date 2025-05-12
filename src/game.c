@@ -86,15 +86,15 @@ static bool runLevel() {
     CAM_focusOn(&lightCycle.movable.object);
     CAM_update();
 
+    SYS_doVBlankProcess();
     SPR_update();
 
     while (!game_over && !mission_accomplished) {
         if (!paused) {
             PLAYER_act();
-            if (lightCycle.movable.updateSprite) {
+            if (lightCycle.movable.spritePosJustChanged) {
                 CAM_update();
                 SPR_update();
-                lightCycle.movable.updateSprite = FALSE;
             }
         }
 
