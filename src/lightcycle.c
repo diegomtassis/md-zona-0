@@ -28,13 +28,10 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 1
-#define SPEED_FAST 8
+#define SPEED_SLOW 6
+#define SPEED_FAST 10
 
 #define BOOST 0x10
-
-#define LIGHTCYCLE_WIDTH 24
-#define LIGHTCYCLE_HEIGHT 24
 
 static void setRenderInfo(GridMovable *movable, bool force);
 static void setSpritePositionInMap(GridMovable *movable);
@@ -46,7 +43,7 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->finished = FALSE;
 
     // Initialize position
-    MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers[0];
+    MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers_zona_14[0];
 
     lightCycle->movable.object.gridPos.x = cycleMarker->grid_x;
     lightCycle->movable.object.gridPos.y = cycleMarker->grid_y;
@@ -75,7 +72,7 @@ void CYCLE_init(LightCycle *lightCycle) {
     // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
                                                       0, 0,                     //
-                                                      TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+                                                      TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 
     setRenderInfo(&lightCycle->movable, TRUE);
 }

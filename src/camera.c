@@ -17,19 +17,18 @@
 #define MIN_PADDING_H 32
 #define MIN_PADDING_V 24
 
-// Map
-static V2s16 mapSize;
-
 // Camera
 Box_s16 cameraView;
 static V2s16 subjectOffsetInView;
+static V2s16 viewMinBounds;
+static V2s16 viewMaxBounds;
+
+// Map
+static V2s16 mapSize;
 
 // Subject
 static GridObject *subject;
 static Box_s16 subjectBox;
-
-static V2s16 viewMinBounds;
-static V2s16 viewMaxBounds;
 
 static void focus();
 static void updatePositionInScreen(GridObject *object);
@@ -47,11 +46,11 @@ void CAM_setup(s16 mapWidth, s16 mapHeight) {
     mapSize.x = mapWidth;
     mapSize.y = mapHeight;
 
-    V2s16 vMinBounds = {0, 0};
-    viewMinBounds = vMinBounds;
+    viewMinBounds.x = 0;
+    viewMaxBounds.y = 0;
 
-    V2s16 vMaxBounds = {mapSize.x - CAMERA_VIEW_WIDTH, mapSize.y - CAMERA_VIEW_HEIGHT};
-    viewMaxBounds = vMaxBounds;
+    viewMaxBounds.x = mapSize.x - CAMERA_VIEW_WIDTH;
+    viewMaxBounds.y = mapSize.y - CAMERA_VIEW_HEIGHT;
 }
 void CAM_track(GridObject *objectToTrack) {
 
@@ -59,12 +58,13 @@ void CAM_track(GridObject *objectToTrack) {
     subject = objectToTrack;
 
     // box for the subject
-    subjectBox.w = 24;
-    subjectBox.h = 24;
+    subjectBox.w = objectToTrack->sprite->definition->w;
+    subjectBox.h = objectToTrack->sprite->definition->h;
 
     // adapt camera offset to subject dimensions
-    V2s16 offset = {.x = (cameraView.w - subjectBox.w) / 2, .y = (cameraView.h - subjectBox.h) / 2};
-    subjectOffsetInView = offset;
+    subjectOffsetInView.x = (cameraView.w - subjectBox.w) / 2;
+    subjectOffsetInView.y = (cameraView.h - subjectBox.h) / 2;
+
     // kprintf("CAM: center offset in view: x:%d, y:%d", subjectOffsetInView.x, subjectOffsetInView.y);
 }
 
@@ -80,29 +80,29 @@ static void focus() {
     // kprintf("CAM: focusing...");
 
     // horizontal
-    s16 viewNormalizedMinX = subject->spritePosInMap.x - subjectOffsetInView.x;
-    if (viewNormalizedMinX < viewMinBounds.x) {
+    s16 viewMinX = subject->spritePosInMap.x - subjectOffsetInView.x;
+    if (viewMinX < viewMinBounds.x) {
         // not centered, to the left
         cameraView.min.x = viewMinBounds.x;
-    } else if (viewNormalizedMinX > viewMaxBounds.x) {
+    } else if (viewMinX > viewMaxBounds.x) {
         // not centered, to the right
         cameraView.min.x = viewMaxBounds.x;
     } else {
         // centered
-        cameraView.min.x = viewNormalizedMinX;
+        cameraView.min.x = viewMinX;
     }
 
     // vertical
-    s16 viewNormalizedMinY = subject->spritePosInMap.y - subjectOffsetInView.y;
-    if (viewNormalizedMinY < viewMinBounds.y) {
+    s16 viewMinY = subject->spritePosInMap.y - subjectOffsetInView.y;
+    if (viewMinY < viewMinBounds.y) {
         // not centered, up
         cameraView.min.y = viewMinBounds.y;
-    } else if (viewNormalizedMinY > viewMaxBounds.y) {
+    } else if (viewMinY > viewMaxBounds.y) {
         // not centered, down
         cameraView.min.y = viewMaxBounds.y;
     } else {
         // centered
-        cameraView.min.y = viewNormalizedMinY;
+        cameraView.min.y = viewMinY;
     }
 
     // kprintf("CAM: view pos in map: x:%d, y:%d", cameraView.min.x, cameraView.min.y);

@@ -75,13 +75,13 @@ static bool runLevel() {
     vramIdx = SCREEN_setupHud(vramIdx);
 
     // grid
-    vramIdx = GRID_load(vramIdx, &map_zona0_zona14);
+    vramIdx = GRID_load(vramIdx, &map_zona_14);
     
     // objects
     initLevelObjects();
     
     // camera
-    MapInfo *grid_map_info = map_info[0];
+    MapInfo *grid_map_info = map_info_zona_14[0];
     CAM_setup(grid_map_info->width, grid_map_info->height);
     CAM_track(&lightCycle.movable.object);
     CAM_update();
@@ -105,7 +105,6 @@ static bool runLevel() {
 }
 
 static void initLevelObjects() {
-    PAL_setPalette(PAL1, palette_sprites.data, DMA);
-
+    PAL_setPalette(PAL2, palette_sprites.data, DMA);
     PLAYER_init();
 }

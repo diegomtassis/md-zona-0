@@ -22,7 +22,7 @@ Sprite *helmet4Sprite;
 
 u16 SCREEN_setupHud(u16 vramBase) {
 
-    PAL_setPalette(PAL2, palette_hud.data, DMA_QUEUE);
+    PAL_setPalette(PAL1, palette_hud.data, DMA_QUEUE);
 
     u16 idx_tile_bg_hud = vramBase;
     u16 vram_idx = idx_tile_bg_hud;
@@ -34,34 +34,34 @@ u16 SCREEN_setupHud(u16 vramBase) {
 
     VDP_setTileMapEx(
         WINDOW, &tilemap_hud_low,                                  //
-        TILE_ATTR_FULL(PAL2, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
+        TILE_ATTR_FULL(PAL1, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
         0, 20, 0, 0, 40, 8, DMA_QUEUE);
 
     // left column
     leftColumSprite = SPR_addSprite(&sprite_hud_left_column, //
                                     0, 0,                    //
-                                    TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                    TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     rightColumSprite = SPR_addSprite(&sprite_hud_right_column, //
                                      304, 0,                   //
-                                     TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                     TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     helmet1Sprite = SPR_addSprite(&sprite_hud_helmet, //
                                   0, 96,              //
-                                  TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                  TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     helmet2Sprite = SPR_addSprite(&sprite_hud_helmet, //
                                   0, 112,             //
-                                  TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                  TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
 
     helmet3Sprite = SPR_addSprite(&sprite_hud_helmet, //
                                   0, 128,             //
-                                  TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                  TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setFrame(helmet3Sprite, 1);
 
     helmet4Sprite = SPR_addSprite(&sprite_hud_helmet, //
                                   0, 144,             //
-                                  TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
+                                  TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     SPR_setFrame(helmet4Sprite, 1);
 
     SPR_update();
@@ -69,16 +69,16 @@ u16 SCREEN_setupHud(u16 vramBase) {
     return vram_idx;
 }
 
-V2s16 SCREEN_viewToScreen(V2s16 *subject) {
+V2s16 SCREEN_viewToScreen(V2s16 *object) {
 
-    V2s16 position = {.x = subject->x + HUD_LEFT_COLUMN_WIDTH, .y = subject->y};
+    V2s16 position = {.x = object->x + HUD_LEFT_COLUMN_WIDTH, .y = object->y};
 
     return position;
 }
 
-V2s16 SCREEN_screenToView(V2s16 *subject) {
+V2s16 SCREEN_screenToView(V2s16 *object) {
 
-    V2s16 position = {.x = subject->x - HUD_LEFT_COLUMN_WIDTH, .y = subject->y};
+    V2s16 position = {.x = object->x - HUD_LEFT_COLUMN_WIDTH, .y = object->y};
 
     return position;
 }
