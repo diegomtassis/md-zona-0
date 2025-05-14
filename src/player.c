@@ -31,6 +31,7 @@ void PLAYER_act() {
     readPlayerInput();
     CYCLE_move(&lightCycle);
     if (lightCycle.movable.spritePosJustChanged) {
+        // kprintf("P1: ACT");
         CYCLE_setRenderInfo(&lightCycle);
     }
 }

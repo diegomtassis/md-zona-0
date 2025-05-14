@@ -50,13 +50,13 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.object.gridPos.x = cycleMarker->grid_x;
     lightCycle->movable.object.gridPos.y = cycleMarker->grid_y;
-    kprintf("P1: cycle pos in grid [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x,
-            lightCycle->movable.object.gridPos.y);
+    // kprintf("P1: cycle pos in grid [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x,
+    //         lightCycle->movable.object.gridPos.y);
 
     lightCycle->movable.object.mapPos.x = cycleMarker->x;
     lightCycle->movable.object.mapPos.y = cycleMarker->y;
-    kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x,
-            lightCycle->movable.object.mapPos.y);
+    // kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x,
+    //         lightCycle->movable.object.mapPos.y);
 
     // Initialize movement
     lightCycle->movable.direction = DOWN;
@@ -112,7 +112,7 @@ static void setSpritePositionInMap(GridMovable *movable) {
         movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
     }
 
-    kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
+    // kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
 };
 
 static void setSpriteAnim(GridMovable *movable) {

@@ -53,27 +53,30 @@ static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
         movable->object.mapPos.y = movable->mapPrevCrossing.y + v_gap;
     }
 
+    // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
+
     movable->spritePosJustChanged = TRUE;
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
 
-    kprintf("P1: Crossing crossed!");
+    // kprintf("P1: Crossing crossed!");
 
     updateGridPosAfterCrossingCrossed(movable);
-    kprintf("P1: cycle pos in grid: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
+    // kprintf("P1: cycle pos in grid: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
 
     updatePrevCrossingAfterCrossingCrossed(movable);
-    kprintf("P1: prev cross pos in map: x:%d, y:%d", movable->mapPrevCrossing.x, movable->mapPrevCrossing.y);
+    // kprintf("P1: prev cross pos in map: x:%d, y:%d", movable->mapPrevCrossing.x, movable->mapPrevCrossing.y);
 
     placeInCrossing(movable);
+    // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
 
     movable->gridPosDelta = 0;
 
     bool turned = turnIfRequested(movable);
-    if (turned) {
-        kprintf("P1: cycle turned [%d]!", movable->direction);
-    }
+    // if (turned) {
+    //     kprintf("P1: cycle turned [%d]!", movable->direction);
+    // }
 
     movable->spritePosJustChanged = TRUE;
 }

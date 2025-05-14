@@ -16,11 +16,9 @@
 #define CAMERA_VIEW_HEIGHT		160
 
 void CAM_setup(s16 mapWidth, s16 mapHeight);
-void CAM_focusOn(GridObject * subject);
+void CAM_track(GridObject * subject);
 void CAM_update();
 
 extern Box_s16 cameraView;
-
-V2s16 CAM_mapToView(V2s16 *);
 
 #endif /* INC_CAMERA_H_ */

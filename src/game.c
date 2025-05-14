@@ -83,7 +83,7 @@ static bool runLevel() {
     // camera
     MapInfo *grid_map_info = map_info[0];
     CAM_setup(grid_map_info->width, grid_map_info->height);
-    CAM_focusOn(&lightCycle.movable.object);
+    CAM_track(&lightCycle.movable.object);
     CAM_update();
 
     SYS_doVBlankProcess();
