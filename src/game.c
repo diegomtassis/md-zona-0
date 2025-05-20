@@ -76,10 +76,10 @@ static bool runLevel() {
 
     // grid
     vramIdx = GRID_load(vramIdx, &map_zona_14);
-    
+
     // objects
     initLevelObjects();
-    
+
     // camera
     MapInfo *grid_map_info = map_info_zona_14[0];
     CAM_setup(grid_map_info->width, grid_map_info->height);
@@ -96,15 +96,23 @@ static bool runLevel() {
                 CAM_update();
                 SPR_update();
             }
+
+            game_over = lightCycle.health & DEAD;
         }
 
         SYS_doVBlankProcess();
     }
 
-    return game_over;
+    return mission_accomplished;
 }
 
 static void initLevelObjects() {
-    PAL_setPalette(PAL2, palette_sprites.data, DMA);
+    PAL_setPalette(PAL2, palette_cycles.data, DMA);
+    PAL_setPalette(PAL3, palette_explosion.data, DMA);
+
+    SPR_addSprite(&sprite_explosion, //
+                  30, 5,             //
+                  TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+
     PLAYER_init();
 }

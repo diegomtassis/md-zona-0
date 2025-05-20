@@ -16,15 +16,27 @@ Player player;
 
 LightCycle lightCycle;
 
-bool joy_pushed;
+bool dir_pushed;
+
+bool b_pushed;
+bool b_flank;
 
 static void readPlayerInput();
+
+static void killPlayer();
 
 void PLAYER_init() { CYCLE_init(&lightCycle); }
 
 void PLAYER_act() {
 
     if (!(lightCycle.health & ALIVE) || lightCycle.finished) {
+        return;
+    }
+
+    if (b_flank && (lightCycle.health & ALIVE)) {
+        
+        b_flank = FALSE;
+        killPlayer();
         return;
     }
 
@@ -40,12 +52,26 @@ static void readPlayerInput() {
 
     u16 value = JOY_readJoypad(player.joystick);
     if (value & BUTTON_DIR) {
-        if (!joy_pushed) {
+        if (!dir_pushed) {
             lightCycle.movable.turn = value;
         }
-        joy_pushed = TRUE;
-
+        dir_pushed = TRUE;
     } else {
-        joy_pushed = FALSE;
+        dir_pushed = FALSE;
     }
+
+    if (value & BUTTON_B) {
+        if (!b_pushed) {
+            // detect flank
+            b_flank = TRUE;
+        }
+        b_pushed = TRUE;
+    } else {
+        b_pushed = FALSE;
+    }
+};
+
+static void killPlayer() {
+    lightCycle.health = DEAD;
+    lightCycle.finished = TRUE;
 };

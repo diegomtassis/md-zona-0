@@ -63,8 +63,8 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.mapPrevCrossing.x = cycleMarker->x;
     lightCycle->movable.mapPrevCrossing.y = cycleMarker->y;
-    kprintf("P1: prev cross pos in map [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
-            lightCycle->movable.mapPrevCrossing.y);
+    // kprintf("P1: prev cross pos in map [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
+    //         lightCycle->movable.mapPrevCrossing.y);
 
     lightCycle->movable.turn = 0;
     lightCycle->movable.justTurned = FALSE;
