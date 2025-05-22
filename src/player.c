@@ -19,30 +19,35 @@ LightCycle lightCycle;
 bool dir_pushed;
 
 bool b_pushed;
-bool b_flank;
 
 static void readPlayerInput();
-
-static void killPlayer();
 
 void PLAYER_init() { CYCLE_init(&lightCycle); }
 
 void PLAYER_act() {
 
-    if (!(lightCycle.health & ALIVE) || lightCycle.finished) {
+    if (lightCycle.derezzed) {
         return;
     }
 
-    if (b_flank && (lightCycle.health & ALIVE)) {
-        
-        b_flank = FALSE;
-        killPlayer();
-        return;
+    lightCycle.justDied = FALSE;
+    lightCycle.movable.viewIsDirty = FALSE;
+
+    if (lightCycle.health & ALIVE) {
+        readPlayerInput();
+        if (lightCycle.justDied) {
+            CYCLE_crash(&lightCycle);
+        } else {
+            CYCLE_step(&lightCycle);
+        }
+    } else {
+        // Already DEAD
+        if (SPR_isAnimationDone(lightCycle.movable.object.sprite)) {
+            lightCycle.derezzed = TRUE;
+        }
     }
 
-    readPlayerInput();
-    CYCLE_move(&lightCycle);
-    if (lightCycle.movable.spritePosJustChanged) {
+    if (lightCycle.movable.viewIsDirty) {
         // kprintf("P1: ACT");
         CYCLE_setRenderInfo(&lightCycle);
     }
@@ -63,15 +68,10 @@ static void readPlayerInput() {
     if (value & BUTTON_B) {
         if (!b_pushed) {
             // detect flank
-            b_flank = TRUE;
+            lightCycle.justDied = TRUE;
         }
         b_pushed = TRUE;
     } else {
         b_pushed = FALSE;
     }
-};
-
-static void killPlayer() {
-    lightCycle.health = DEAD;
-    lightCycle.finished = TRUE;
 };

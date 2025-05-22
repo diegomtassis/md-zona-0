@@ -28,7 +28,7 @@ static V2s16 mapSize;
 
 // Subject
 static GridObject *subject;
-static Box_s16 subjectBox;
+static GridObject *object;
 
 static void focus();
 static void updatePositionInScreen(GridObject *object);
@@ -52,32 +52,48 @@ void CAM_setup(s16 mapWidth, s16 mapHeight) {
     viewMaxBounds.x = mapSize.x - CAMERA_VIEW_WIDTH;
     viewMaxBounds.y = mapSize.y - CAMERA_VIEW_HEIGHT;
 }
+
 void CAM_track(GridObject *objectToTrack) {
 
-    // subject
+    // subject to track
     subject = objectToTrack;
 
     // box for the subject
-    subjectBox.w = objectToTrack->sprite->definition->w;
-    subjectBox.h = objectToTrack->sprite->definition->h;
+    Box_s16 subjectBox = {                                           //
+                          .w = objectToTrack->sprite->definition->w, //
+                          .h = objectToTrack->sprite->definition->h};
 
     // adapt camera offset to subject dimensions
     subjectOffsetInView.x = (cameraView.w - subjectBox.w) / 2;
     subjectOffsetInView.y = (cameraView.h - subjectBox.h) / 2;
 
     // kprintf("CAM: center offset in view: x:%d, y:%d", subjectOffsetInView.x, subjectOffsetInView.y);
+
+    // The subject is as well an object to display
+    CAM_awareOf(subject);
 }
+
+void CAM_awareOf(GridObject *objectToTrack) { object = objectToTrack; }
+
+void CAM_still() { subject = 0; }
 
 void CAM_update() {
 
-    focus();
-    updatePositionInScreen(subject);
-    scrollMapToScreen();
+    if (subject) {
+        focus();
+        scrollMapToScreen();
+    }
+
+    updatePositionInScreen(object);
 }
 
 static void focus() {
 
     // kprintf("CAM: focusing...");
+
+    if (!subject) {
+        return;
+    }
 
     // horizontal
     s16 viewMinX = subject->spritePosInMap.x - subjectOffsetInView.x;
@@ -112,13 +128,13 @@ static void focus() {
 
 static void updatePositionInScreen(GridObject *object) {
 
-    V2s16 subjectPosInView = mapToView(&subject->spritePosInMap);
-    // kprintf("CAM: subject sprite pos in view: x:%d, y:%d", subjectPosInView.x, subjectPosInView.y);
+    V2s16 objectPosInView = mapToView(&object->spritePosInMap);
+    // kprintf("CAM: subject sprite pos in view: x:%d, y:%d", objectPosInView.x, objectPosInView.y);
 
-    V2s16 subjectPosInScreen = SCREEN_viewToScreen(&subjectPosInView);
-    // kprintf("CAM: subject sprite pos in screen: x:%d, y:%d", subjectPosInScreen.x, subjectPosInScreen.y);
+    V2s16 objectPosInScreen = SCREEN_viewToScreen(&objectPosInView);
+    // kprintf("CAM: subject sprite pos in screen: x:%d, y:%d", objectPosInScreen.x, objectPosInScreen.y);
 
-    SPR_setPosition(subject->sprite, subjectPosInScreen.x, subjectPosInScreen.y);
+    SPR_setPosition(object->sprite, objectPosInScreen.x, objectPosInScreen.y);
 }
 
 static void scrollMapToScreen() {

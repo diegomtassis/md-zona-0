@@ -33,14 +33,15 @@
 
 #define BOOST 0x10
 
-static void setRenderInfo(GridMovable *movable, bool force);
-static void setSpritePositionInMap(GridMovable *movable);
+static void setCycleRenderInfo(GridMovable *movable, bool force);
+static void setCycleSpritePositionInMap(GridMovable *movable);
+static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->health = ALIVE;
-    lightCycle->finished = FALSE;
+    lightCycle->derezzed = FALSE;
 
     // Initialize position
     MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers_zona_14[0];
@@ -74,15 +75,41 @@ void CYCLE_init(LightCycle *lightCycle) {
                                                       0, 0,                     //
                                                       TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 
-    setRenderInfo(&lightCycle->movable, TRUE);
+    setCycleRenderInfo(&lightCycle->movable, TRUE);
 }
 
-void CYCLE_move(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
+void CYCLE_step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
-void CYCLE_setRenderInfo(LightCycle *lightCycle) { setRenderInfo(&lightCycle->movable, FALSE); };
+void CYCLE_crash(LightCycle *lightCycle) {
 
-static void setRenderInfo(GridMovable *movable, bool force) {
-    setSpritePositionInMap(movable);
+    lightCycle->health = DEAD;
+
+    // Replace the cycle sprite with an explosion
+    SPR_releaseSprite(lightCycle->movable.object.sprite);
+
+    PAL_setPalette(PAL3, palette_explosion.data, DMA);
+    lightCycle->movable.object.sprite = SPR_addSprite(&sprite_explosion, //
+                                                      0, 0,              // position set by the camera
+                                                      TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
+    SPR_setAnimationLoop(lightCycle->movable.object.sprite, FALSE);
+    lightCycle->movable.viewIsDirty = TRUE;
+}
+
+void CYCLE_setRenderInfo(LightCycle *lightCycle) {
+
+    if (lightCycle->health & ALIVE) {
+        setCycleRenderInfo(&lightCycle->movable, FALSE);
+        return;
+    };
+
+    if (lightCycle->justDied) {
+        setExplosionSpritePositionInMap(&lightCycle->movable);
+        return;
+    };
+}
+
+static void setCycleRenderInfo(GridMovable *movable, bool force) {
+    setCycleSpritePositionInMap(movable);
 
     if (movable->justTurned || force) {
         setSpriteAnim(movable);
@@ -90,7 +117,7 @@ static void setRenderInfo(GridMovable *movable, bool force) {
 }
 
 // Take into account the sprite shape
-static void setSpritePositionInMap(GridMovable *movable) {
+static void setCycleSpritePositionInMap(GridMovable *movable) {
 
     if (movable->direction & DOWN) {
         movable->object.spritePosInMap.x = movable->object.mapPos.x - 16;
@@ -110,6 +137,13 @@ static void setSpritePositionInMap(GridMovable *movable) {
     }
 
     // kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
+};
+
+// Take into account the sprite shape
+static void setExplosionSpritePositionInMap(GridMovable *movable) {
+
+    movable->object.spritePosInMap.x = movable->object.mapPos.x - 20;
+    movable->object.spritePosInMap.y = movable->object.mapPos.y - 20;
 };
 
 static void setSpriteAnim(GridMovable *movable) {

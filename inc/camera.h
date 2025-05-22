@@ -17,6 +17,8 @@
 
 void CAM_setup(s16 mapWidth, s16 mapHeight);
 void CAM_track(GridObject * subject);
+void CAM_awareOf(GridObject * subject);
+void CAM_still();
 void CAM_update();
 
 extern Box_s16 cameraView;

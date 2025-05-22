@@ -33,7 +33,7 @@ typedef struct {
 	V2s16 mapPrevCrossing;
 	u8 turn;
 	bool justTurned;
-	bool spritePosJustChanged;
+	bool viewIsDirty;
 
 } GridMovable;
 

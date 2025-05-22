@@ -20,7 +20,6 @@ static void placeInCrossing(GridMovable *movable);
 void VEH_move(GridMovable *movable) {
 
     movable->justTurned = FALSE;
-    movable->spritePosJustChanged = FALSE;
 
     u16 prevGridPosDelta = movable->gridPosDelta;
     movable->gridPosDelta += movable->speed;
@@ -55,7 +54,7 @@ static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
 
     // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
 
-    movable->spritePosJustChanged = TRUE;
+    movable->viewIsDirty = TRUE;
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
@@ -78,7 +77,7 @@ static void handleCrossingCrossed(GridMovable *movable) {
     //     kprintf("P1: cycle turned [%d]!", movable->direction);
     // }
 
-    movable->spritePosJustChanged = TRUE;
+    movable->viewIsDirty = TRUE;
 }
 
 static bool turnIfRequested(GridMovable *movable) {

@@ -92,12 +92,18 @@ static bool runLevel() {
     while (!game_over && !mission_accomplished) {
         if (!paused) {
             PLAYER_act();
-            if (lightCycle.movable.spritePosJustChanged) {
-                CAM_update();
-                SPR_update();
+
+            if (lightCycle.justDied) {
+                CAM_still();
             }
 
-            game_over = lightCycle.health & DEAD;
+            if (lightCycle.movable.viewIsDirty) {
+                CAM_update();
+            }
+
+            SPR_update();
+
+            game_over = lightCycle.derezzed;
         }
 
         SYS_doVBlankProcess();
@@ -108,11 +114,5 @@ static bool runLevel() {
 
 static void initLevelObjects() {
     PAL_setPalette(PAL2, palette_cycles.data, DMA);
-    PAL_setPalette(PAL3, palette_explosion.data, DMA);
-
-    SPR_addSprite(&sprite_explosion, //
-                  30, 5,             //
-                  TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
-
     PLAYER_init();
 }
