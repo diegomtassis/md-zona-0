@@ -18,8 +18,7 @@ typedef struct LightCycle LightCycle;
 struct LightCycle {
     GridMovable movable;
     u8 health;
-    u8 derezzed;
-    bool justDied;
+    bool justBegunDerezzing;
     bool boost;
     bool airborne;
     bool immunity;

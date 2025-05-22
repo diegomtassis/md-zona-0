@@ -93,7 +93,7 @@ static bool runLevel() {
         if (!paused) {
             PLAYER_act();
 
-            if (lightCycle.justDied) {
+            if (lightCycle.justBegunDerezzing) {
                 CAM_still();
             }
 
@@ -103,7 +103,7 @@ static bool runLevel() {
 
             SPR_update();
 
-            game_over = lightCycle.derezzed;
+            game_over = lightCycle.health & DEREZZED;
         }
 
         SYS_doVBlankProcess();

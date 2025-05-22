@@ -12,7 +12,8 @@
 #include "fwk/physics.h"
 
 #define ALIVE 0x01
-#define DEAD 0x02
+#define DEREZZING 0x02
+#define DEREZZED 0x04
 
 typedef struct Box_s16 Box_s16;
 typedef struct Config Config;

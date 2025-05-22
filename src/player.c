@@ -26,24 +26,24 @@ void PLAYER_init() { CYCLE_init(&lightCycle); }
 
 void PLAYER_act() {
 
-    if (lightCycle.derezzed) {
+    if (lightCycle.health & DEREZZED) {
         return;
     }
 
-    lightCycle.justDied = FALSE;
+    lightCycle.justBegunDerezzing = FALSE;
     lightCycle.movable.viewIsDirty = FALSE;
 
     if (lightCycle.health & ALIVE) {
         readPlayerInput();
-        if (lightCycle.justDied) {
+        if (lightCycle.justBegunDerezzing) {
             CYCLE_crash(&lightCycle);
         } else {
             CYCLE_step(&lightCycle);
         }
     } else {
-        // Already DEAD
+        // Already DEREZZING
         if (SPR_isAnimationDone(lightCycle.movable.object.sprite)) {
-            lightCycle.derezzed = TRUE;
+            lightCycle.health = DEREZZED;
         }
     }
 
@@ -68,7 +68,7 @@ static void readPlayerInput() {
     if (value & BUTTON_B) {
         if (!b_pushed) {
             // detect flank
-            lightCycle.justDied = TRUE;
+            lightCycle.justBegunDerezzing = TRUE;
         }
         b_pushed = TRUE;
     } else {

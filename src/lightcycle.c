@@ -41,7 +41,6 @@ static void setSpriteAnim(GridMovable *movable);
 void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->health = ALIVE;
-    lightCycle->derezzed = FALSE;
 
     // Initialize position
     MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers_zona_14[0];
@@ -82,7 +81,7 @@ void CYCLE_step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
 void CYCLE_crash(LightCycle *lightCycle) {
 
-    lightCycle->health = DEAD;
+    lightCycle->health = DEREZZING;
 
     // Replace the cycle sprite with an explosion
     SPR_releaseSprite(lightCycle->movable.object.sprite);
@@ -102,7 +101,7 @@ void CYCLE_setRenderInfo(LightCycle *lightCycle) {
         return;
     };
 
-    if (lightCycle->justDied) {
+    if (lightCycle->justBegunDerezzing) {
         setExplosionSpritePositionInMap(&lightCycle->movable);
         return;
     };
