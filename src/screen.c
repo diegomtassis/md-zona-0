@@ -92,17 +92,15 @@ V2s16 SCREEN_screenInMap(V2s16 *viewInMap) {
 }
 
 void SCREEN_showReady() {
-
     if (!spriteReady) {
-        spriteReady = SPR_addSprite(&sprite_hud_ready, //
-                                    110, 110,          //
+        spriteReady = SPR_addSprite(&sprite_text_ready, //
+                                    110, 110,           //
                                     TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
     }
     SPR_setVisibility(spriteReady, VISIBLE);
 }
 
 void SCREEN_clearMessage() {
-
     if (spriteReady) {
         SPR_setVisibility(spriteReady, HIDDEN);
     }

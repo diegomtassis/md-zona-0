@@ -28,8 +28,8 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 6
-#define SPEED_FAST 10
+#define SPEED_SLOW 8
+#define SPEED_FAST 12
 
 #define BOOST 0x10
 
