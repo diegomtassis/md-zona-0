@@ -25,28 +25,20 @@ static Game current_game;
 
 volatile bool paused = FALSE;
 
-/**
- * @brief run a level.
- *
- * @return goal accomplished
- */
-static bool runLevel();
+static bool runGame();
+
+static bool runLevel(u16 vramIdx);
 
 static void initLevelObjects();
+static void initCamera();
+static void showReadyModal();
+
+static void releaseLevelObjects();
 
 GameResult GAME_run(const Config config[static 1]) {
 
     initGame(config);
-
-    SPR_init();
-
-    bool game_over = FALSE;
-
-    while (!game_over) {
-        game_over = !runLevel();
-    }
-
-    SPR_end();
+    runGame();
 
     GameResult result = {
         //
@@ -64,21 +56,65 @@ static void initGame(const Config config[static 1]) {
     player.score = 0;
 }
 
-static bool runLevel() {
-
-    bool game_over = FALSE;
-    bool mission_accomplished = FALSE;
+static bool runGame() {
 
     u16 vramIdx = idx_tile_malloc;
+
+    SPR_init();
 
     // hud
     vramIdx = SCREEN_setupHud(vramIdx);
 
+    bool game_over = FALSE;
+    while (!game_over) {
+        runLevel(vramIdx);
+    }
+
+    SPR_end();
+}
+
+static bool runLevel(u16 vramIdx) {
+
     // grid
     vramIdx = GRID_load(vramIdx, &map_zona_14);
 
-    // objects
     initLevelObjects();
+    initCamera();
+    showReadyModal();
+
+    bool mission_accomplished = FALSE;
+    bool derezzed = FALSE;
+    while (!mission_accomplished && !derezzed) {
+        if (!paused) {
+            PLAYER_act();
+
+            if (lightCycle.movable.object.justBegunDerezzing) {
+                CAM_still();
+            }
+
+            if (lightCycle.movable.object.viewIsDirty) {
+                CAM_update();
+            }
+
+            SPR_update();
+
+            derezzed = lightCycle.movable.object.health & DEREZZED;
+        }
+
+        SYS_doVBlankProcess();
+    }
+
+    releaseLevelObjects();
+
+    return mission_accomplished;
+}
+
+static void initLevelObjects() {
+    PAL_setPalette(PAL2, palette_cycles.data, DMA);
+    PLAYER_init();
+}
+
+static void initCamera() {
 
     // camera
     MapInfo *grid_map_info = map_info_zona_14[0];
@@ -88,31 +124,16 @@ static bool runLevel() {
 
     SYS_doVBlankProcess();
     SPR_update();
+};
 
-    while (!game_over && !mission_accomplished) {
-        if (!paused) {
-            PLAYER_act();
+static void showReadyModal() {
 
-            if (lightCycle.justBegunDerezzing) {
-                CAM_still();
-            }
+    SCREEN_showReady();
+    SPR_update();
+    JOY_waitPress(JOY_1, BUTTON_ALL);
+    SCREEN_clearMessage();
+    SYS_doVBlankProcess();
+    SPR_update();
+};
 
-            if (lightCycle.movable.viewIsDirty) {
-                CAM_update();
-            }
-
-            SPR_update();
-
-            game_over = lightCycle.health & DEREZZED;
-        }
-
-        SYS_doVBlankProcess();
-    }
-
-    return mission_accomplished;
-}
-
-static void initLevelObjects() {
-    PAL_setPalette(PAL2, palette_cycles.data, DMA);
-    PLAYER_init();
-}
+static void releaseLevelObjects() { PLAYER_release(); }

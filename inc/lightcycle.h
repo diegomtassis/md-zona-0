@@ -17,8 +17,6 @@ typedef struct LightCycle LightCycle;
 
 struct LightCycle {
     GridMovable movable;
-    u8 health;
-    bool justBegunDerezzing;
     bool boost;
     bool airborne;
     bool immunity;
@@ -31,5 +29,7 @@ void CYCLE_step(LightCycle* lightCycle);
 void CYCLE_crash(LightCycle* lightCycle);
 
 void CYCLE_setRenderInfo(LightCycle* lightCycle);
+
+void CYCLE_release(LightCycle* lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */

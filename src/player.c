@@ -17,37 +17,36 @@ Player player;
 LightCycle lightCycle;
 
 bool dir_pushed;
-
-bool b_pushed;
+bool c_pushed;
 
 static void readPlayerInput();
 
 void PLAYER_init() { CYCLE_init(&lightCycle); }
+void PLAYER_release() { CYCLE_release(&lightCycle); }
 
 void PLAYER_act() {
 
-    if (lightCycle.health & DEREZZED) {
+    if (lightCycle.movable.object.health & DEREZZED) {
         return;
     }
 
-    lightCycle.justBegunDerezzing = FALSE;
-    lightCycle.movable.viewIsDirty = FALSE;
+    lightCycle.movable.object.justBegunDerezzing = FALSE;
+    lightCycle.movable.object.viewIsDirty = FALSE;
 
-    if (lightCycle.health & ALIVE) {
+    if (lightCycle.movable.object.health & ALIVE) {
         readPlayerInput();
-        if (lightCycle.justBegunDerezzing) {
+        CYCLE_step(&lightCycle);
+        if (lightCycle.movable.object.justBegunDerezzing) {
             CYCLE_crash(&lightCycle);
-        } else {
-            CYCLE_step(&lightCycle);
         }
     } else {
         // Already DEREZZING
         if (SPR_isAnimationDone(lightCycle.movable.object.sprite)) {
-            lightCycle.health = DEREZZED;
+            lightCycle.movable.object.health = DEREZZED;
         }
     }
 
-    if (lightCycle.movable.viewIsDirty) {
+    if (lightCycle.movable.object.viewIsDirty) {
         // kprintf("P1: ACT");
         CYCLE_setRenderInfo(&lightCycle);
     }
@@ -55,7 +54,7 @@ void PLAYER_act() {
 
 static void readPlayerInput() {
 
-    u16 value = JOY_readJoypad(player.joystick);
+    u16 value = JOY_readJoypad(JOY_1);
     if (value & BUTTON_DIR) {
         if (!dir_pushed) {
             lightCycle.movable.turn = value;
@@ -65,13 +64,13 @@ static void readPlayerInput() {
         dir_pushed = FALSE;
     }
 
-    if (value & BUTTON_B) {
-        if (!b_pushed) {
+    if (value & BUTTON_C) {
+        if (!c_pushed) {
             // detect flank
-            lightCycle.justBegunDerezzing = TRUE;
+            lightCycle.movable.object.justBegunDerezzing = TRUE;
         }
-        b_pushed = TRUE;
+        c_pushed = TRUE;
     } else {
-        b_pushed = FALSE;
+        c_pushed = FALSE;
     }
 };

@@ -11,32 +11,35 @@
 
 #include <fwk/physics.h>
 
-#define UP			0x01
-#define DOWN		0x02
-#define LEFT		0x04
-#define RIGHT		0x08
+#define UP 0x01
+#define DOWN 0x02
+#define LEFT 0x04
+#define RIGHT 0x08
 
 typedef struct {
 
-	V2s16 gridPos;
-	V2s16 mapPos;
-    Sprite* sprite;
-	V2s16 spritePosInMap;
+    V2s16 gridPos;
+    V2s16 mapPos;
+    Sprite *sprite;
+    V2s16 spritePosInMap;
+    bool viewIsDirty;
+
+    u8 health;
+    bool justBegunDerezzing;
 
 } GridObject;
 
 typedef struct {
-	GridObject object;
-	u16 speed;
-	u8 direction;
-	u16 gridPosDelta;
-	V2s16 mapPrevCrossing;
-	u8 turn;
-	bool justTurned;
-	bool viewIsDirty;
+    GridObject object;
+    u16 speed;
+    u8 direction;
+    u16 gridPosDelta;
+    V2s16 mapPrevCrossing;
+    u8 turn;
+    bool justTurned;
 
 } GridMovable;
 
-void VEH_move(GridMovable* movable);
+void VEH_move(GridMovable *movable);
 
 #endif /* INC_GRID_PHYSICS_H_ */

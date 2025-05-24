@@ -9,5 +9,6 @@ extern const TileMap tilemap_hud_low;
 extern const SpriteDefinition sprite_hud_left_column;
 extern const SpriteDefinition sprite_hud_right_column;
 extern const SpriteDefinition sprite_hud_helmet;
+extern const SpriteDefinition sprite_text_ready;
 
 #endif // _RES_GFX_HUD_H_

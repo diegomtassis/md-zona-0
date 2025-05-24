@@ -40,7 +40,7 @@ static void setSpriteAnim(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
-    lightCycle->health = ALIVE;
+    lightCycle->movable.object.health = ALIVE;
 
     // Initialize position
     MovableInitMarker *cycleMarker = (MovableInitMarker *)movables_markers_zona_14[0];
@@ -77,11 +77,13 @@ void CYCLE_init(LightCycle *lightCycle) {
     setCycleRenderInfo(&lightCycle->movable, TRUE);
 }
 
-void CYCLE_step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
+void CYCLE_step(LightCycle *lightCycle) {
+    VEH_move(&lightCycle->movable);
+}
 
 void CYCLE_crash(LightCycle *lightCycle) {
 
-    lightCycle->health = DEREZZING;
+    lightCycle->movable.object.health = DEREZZING;
 
     // Replace the cycle sprite with an explosion
     SPR_releaseSprite(lightCycle->movable.object.sprite);
@@ -91,20 +93,26 @@ void CYCLE_crash(LightCycle *lightCycle) {
                                                       0, 0,              // position set by the camera
                                                       TILE_ATTR(PAL3, TRUE, FALSE, FALSE));
     SPR_setAnimationLoop(lightCycle->movable.object.sprite, FALSE);
-    lightCycle->movable.viewIsDirty = TRUE;
+    lightCycle->movable.object.viewIsDirty = TRUE;
 }
 
 void CYCLE_setRenderInfo(LightCycle *lightCycle) {
 
-    if (lightCycle->health & ALIVE) {
+    if (lightCycle->movable.object.health & ALIVE) {
         setCycleRenderInfo(&lightCycle->movable, FALSE);
         return;
     };
 
-    if (lightCycle->justBegunDerezzing) {
+    if (lightCycle->movable.object.justBegunDerezzing) {
         setExplosionSpritePositionInMap(&lightCycle->movable);
         return;
     };
+}
+
+void CYCLE_release(LightCycle *lightCycle) {
+
+    // Release the sprite.
+    SPR_releaseSprite(lightCycle->movable.object.sprite);
 }
 
 static void setCycleRenderInfo(GridMovable *movable, bool force) {

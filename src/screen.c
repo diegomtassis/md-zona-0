@@ -20,6 +20,8 @@ Sprite *helmet2Sprite;
 Sprite *helmet3Sprite;
 Sprite *helmet4Sprite;
 
+Sprite *spriteReady;
+
 u16 SCREEN_setupHud(u16 vramBase) {
 
     PAL_setPalette(PAL1, palette_hud.data, DMA_QUEUE);
@@ -32,10 +34,9 @@ u16 SCREEN_setupHud(u16 vramBase) {
 
     VDP_setWindowVPos(TRUE, 20); // the last 8 rows
 
-    VDP_setTileMapEx(
-        WINDOW, &tilemap_hud_low,                                  //
-        TILE_ATTR_FULL(PAL1, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
-        0, 20, 0, 0, 40, 8, DMA_QUEUE);
+    VDP_setTileMapEx(WINDOW, &tilemap_hud_low,                                  //
+                     TILE_ATTR_FULL(PAL1, TRUE, FALSE, FALSE, idx_tile_bg_hud), //
+                     0, 20, 0, 0, 40, 8, DMA_QUEUE);
 
     // left column
     leftColumSprite = SPR_addSprite(&sprite_hud_left_column, //
@@ -88,4 +89,21 @@ V2s16 SCREEN_screenInMap(V2s16 *viewInMap) {
     V2s16 position = {.x = viewInMap->x - HUD_LEFT_COLUMN_WIDTH, .y = viewInMap->y};
 
     return position;
+}
+
+void SCREEN_showReady() {
+
+    if (!spriteReady) {
+        spriteReady = SPR_addSprite(&sprite_hud_ready, //
+                                    110, 110,          //
+                                    TILE_ATTR(PAL1, TRUE, FALSE, FALSE));
+    }
+    SPR_setVisibility(spriteReady, VISIBLE);
+}
+
+void SCREEN_clearMessage() {
+
+    if (spriteReady) {
+        SPR_setVisibility(spriteReady, HIDDEN);
+    }
 }

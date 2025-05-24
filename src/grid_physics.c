@@ -14,6 +14,7 @@ static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap);
 static void handleCrossingCrossed(GridMovable *movable);
 static bool turnIfRequested(GridMovable *movable);
 static void updateGridPosAfterCrossingCrossed(GridMovable *movable);
+static bool checkCollisions(GridMovable *movable);
 static void updatePrevCrossingAfterCrossingCrossed(GridMovable *movable);
 static void placeInCrossing(GridMovable *movable);
 
@@ -54,7 +55,7 @@ static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
 
     // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
 
-    movable->viewIsDirty = TRUE;
+    movable->object.viewIsDirty = TRUE;
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
@@ -63,6 +64,8 @@ static void handleCrossingCrossed(GridMovable *movable) {
 
     updateGridPosAfterCrossingCrossed(movable);
     // kprintf("P1: cycle pos in grid: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
+
+    checkCollisions(movable);
 
     updatePrevCrossingAfterCrossingCrossed(movable);
     // kprintf("P1: prev cross pos in map: x:%d, y:%d", movable->mapPrevCrossing.x, movable->mapPrevCrossing.y);
@@ -77,7 +80,7 @@ static void handleCrossingCrossed(GridMovable *movable) {
     //     kprintf("P1: cycle turned [%d]!", movable->direction);
     // }
 
-    movable->viewIsDirty = TRUE;
+    movable->object.viewIsDirty = TRUE;
 }
 
 static bool turnIfRequested(GridMovable *movable) {
@@ -118,6 +121,19 @@ static void updateGridPosAfterCrossingCrossed(GridMovable *movable) {
     } else if (movable->direction & RIGHT) {
         movable->object.gridPos.x++;
     }
+}
+
+static bool checkCollisions(GridMovable *movable) {
+
+    // Collision with grid boundaries
+    if (((movable->direction & DOWN) && (movable->object.gridPos.y == 31)) ||
+        ((movable->direction & UP) && (movable->object.gridPos.y == 0)) ||
+        ((movable->direction & RIGHT) && (movable->object.gridPos.x == 31)) ||
+        ((movable->direction & LEFT) && (movable->object.gridPos.x == 0))) {
+        return movable->object.justBegunDerezzing = TRUE;
+    }
+
+    return FALSE;
 }
 
 static void updatePrevCrossingAfterCrossingCrossed(GridMovable *movable) {

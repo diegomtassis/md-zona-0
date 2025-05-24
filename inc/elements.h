@@ -36,7 +36,6 @@ struct Config {
 struct Player {
     u8 lives;
     u16 score;
-    u8 joystick;
 };
 
 struct Game {

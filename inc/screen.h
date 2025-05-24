@@ -17,6 +17,9 @@ extern Map *hudMap;
 
 u16 SCREEN_setupHud(u16);
 
+void SCREEN_showReady();
+void SCREEN_clearMessage();
+
 V2s16 SCREEN_viewToScreen(V2s16 *subject);
 
 V2s16 SCREEN_screenToView(V2s16 *subject);
