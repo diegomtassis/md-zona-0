@@ -17,7 +17,11 @@ https://github.com/diegomtassis/md-zona0
 
 
 #### To be implemented
-* Basically everything.
+* Light trails.
+* Boost.
+* Enemies.
+* Zones 13-0.
+* Sound.
 
 
 #### Implementation decissions
