@@ -5,9 +5,11 @@
 
 extern const Palette palette_grid;
 extern const TileSet tileset_grid;
-extern const MapDefinition map_zona_14;
+extern const MapDefinition map_zona_14_BG;
 extern const struct GridBoundaryMarker* grid_markers_zona_14[4];
 extern const struct MovableInitMarker* movables_markers_zona_14[1];
 extern const struct MapInfo* map_info_zona_14[1];
+extern const TileSet tileset_trails;
+extern const MapDefinition map_zona_14_FG;
 
 #endif // _RES_GFX_GRID_H_

@@ -26,4 +26,6 @@ V2s16 SCREEN_screenToView(V2s16 *subject);
 
 V2s16 SCREEN_screenInMap(V2s16 *viewInMap);
 
+V2u16 SCREEN_posToTile(V2s16 position);
+
 #endif /* INC_SCREEN_H_ */

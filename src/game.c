@@ -76,7 +76,7 @@ static bool runGame() {
 static bool runLevel(u16 vramIdx) {
 
     // grid
-    vramIdx = GRID_load(vramIdx, &map_zona_14);
+    vramIdx = GRID_load(vramIdx, &map_zona_14_BG, &map_zona_14_FG);
 
     initLevelObjects();
     initCamera();
@@ -105,6 +105,7 @@ static bool runLevel(u16 vramIdx) {
     }
 
     releaseLevelObjects();
+    GRID_release();
 
     return mission_accomplished;
 }

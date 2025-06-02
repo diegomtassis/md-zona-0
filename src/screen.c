@@ -26,8 +26,8 @@ u16 SCREEN_setupHud(u16 vramBase) {
 
     PAL_setPalette(PAL1, palette_hud.data, DMA_QUEUE);
 
-    u16 idx_tile_bg_hud = vramBase;
-    u16 vram_idx = idx_tile_bg_hud;
+    u16 vram_idx = vramBase;
+    u16 idx_tile_bg_hud = vram_idx;
 
     VDP_loadTileSet(&tileset_hud_low, idx_tile_bg_hud, DMA_QUEUE);
     vram_idx += tileset_hud_low.numTile;
@@ -70,26 +70,11 @@ u16 SCREEN_setupHud(u16 vramBase) {
     return vram_idx;
 }
 
-V2s16 SCREEN_viewToScreen(V2s16 *object) {
+V2s16 SCREEN_viewToScreen(V2s16 *object) { return (V2s16){object->x + HUD_LEFT_COLUMN_WIDTH, object->y}; }
 
-    V2s16 position = {.x = object->x + HUD_LEFT_COLUMN_WIDTH, .y = object->y};
+V2s16 SCREEN_screenToView(V2s16 *object) { return (V2s16){object->x - HUD_LEFT_COLUMN_WIDTH, object->y}; }
 
-    return position;
-}
-
-V2s16 SCREEN_screenToView(V2s16 *object) {
-
-    V2s16 position = {.x = object->x - HUD_LEFT_COLUMN_WIDTH, .y = object->y};
-
-    return position;
-}
-
-V2s16 SCREEN_screenInMap(V2s16 *viewInMap) {
-
-    V2s16 position = {.x = viewInMap->x - HUD_LEFT_COLUMN_WIDTH, .y = viewInMap->y};
-
-    return position;
-}
+V2s16 SCREEN_screenInMap(V2s16 *viewInMap) { return (V2s16){viewInMap->x - HUD_LEFT_COLUMN_WIDTH, viewInMap->y}; }
 
 void SCREEN_showReady() {
     if (!spriteReady) {
@@ -105,3 +90,5 @@ void SCREEN_clearMessage() {
         SPR_setVisibility(spriteReady, HIDDEN);
     }
 }
+
+V2u16 SCREEN_posToTile(V2s16 position) { return (V2u16){position.x >> 3, position.y >> 3}; }

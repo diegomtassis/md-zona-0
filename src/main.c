@@ -9,11 +9,11 @@
 #include "elements.h"
 #include "fwk/printer.h"
 #include "fwk/vdp_utils.h"
-#include "zona0_file.h"
 #include "game.h"
 #include "game_config.h"
 #include "gfx_grid.h"
 #include "tiled.h"
+#include "zona0_file.h"
 
 static void logMarkers();
 
@@ -27,12 +27,12 @@ int main(bool hard) {
 
     if (hard) {
 
-    	// zona0 file
-    	printDisclaimer();
-    	JOY_waitPress(JOY_1, BUTTON_BTN);
-    	clearDisclaimer();
+        // zona0 file
+        printDisclaimer();
+        JOY_waitPress(JOY_1, BUTTON_BTN);
+        clearDisclaimer();
 
-    	waitMs(50);
+        waitMs(50);
     }
 
     resetTileMemory();
@@ -57,15 +57,6 @@ static void logMarkers() {
     // grid info
     MapInfo *map_def = (MapInfo *)map_info_zona_14[0];
     kprintf("TILED: %s - width:%d, height:%d", map_def->name, map_def->width, map_def->height);
-
-    // grid boundaries
-    GridBoundaryMarker *gridMarker;
-    for (int i = 0; i < 4; i++) {
-
-        gridMarker = (GridBoundaryMarker *)grid_markers_zona_14[i];
-        kprintf("TILED: %s - x:%d, y:%d, grid_x:%d, grid_y:%d", gridMarker->name, gridMarker->x, gridMarker->y,
-                gridMarker->grid_x, gridMarker->grid_y);
-    }
 
     // movables
     MovableInitMarker *movableMarker;

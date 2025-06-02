@@ -67,8 +67,6 @@ void CAM_track(GridObject *objectToTrack) {
     subjectOffsetInView.x = (cameraView.w - subjectBox.w) / 2;
     subjectOffsetInView.y = (cameraView.h - subjectBox.h) / 2;
 
-    // kprintf("CAM: center offset in view: x:%d, y:%d", subjectOffsetInView.x, subjectOffsetInView.y);
-
     // The subject is as well an object to display
     CAM_awareOf(subject);
 }
@@ -121,34 +119,25 @@ static void focus() {
         cameraView.min.y = viewMinY;
     }
 
-    // kprintf("CAM: view pos in map: x:%d, y:%d", cameraView.min.x, cameraView.min.y);
-
     updateBox16Max(&cameraView);
 }
 
 static void updatePositionInScreen(GridObject *object) {
 
     V2s16 objectPosInView = mapToView(&object->spritePosInMap);
-    // kprintf("CAM: subject sprite pos in view: x:%d, y:%d", objectPosInView.x, objectPosInView.y);
-
     V2s16 objectPosInScreen = SCREEN_viewToScreen(&objectPosInView);
-    // kprintf("CAM: subject sprite pos in screen: x:%d, y:%d", objectPosInScreen.x, objectPosInScreen.y);
 
     SPR_setPosition(object->sprite, objectPosInScreen.x, objectPosInScreen.y);
 }
 
 static void scrollMapToScreen() {
 
-    V2s16 screenPosInMap = SCREEN_screenInMap(&cameraView.min);
-    // kprintf("CAM: screen pos in map: x:%d, y:%d", screenPosInMap.x, screenPosInMap.y);
-    GRID_scroll(screenPosInMap);
+    GRID_scroll(SCREEN_screenInMap(&cameraView.min), FALSE);
 }
 
 V2s16 mapToView(V2s16 *subject) {
 
-    V2s16 posInView = {.x = subject->x - cameraView.min.x, .y = subject->y - cameraView.min.y};
-
-    return posInView;
+    return (V2s16){.x = subject->x - cameraView.min.x, .y = subject->y - cameraView.min.y};
 }
 
 static void updateBox16Max(Box_s16 *box) {

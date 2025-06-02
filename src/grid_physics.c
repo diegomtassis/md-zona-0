@@ -6,9 +6,14 @@
 
 #include "grid_physics.h"
 
+#include "grid.h"
+#include "screen.h"
+
 #include "fwk/physics.h"
 
 #include <kdebug.h>
+
+#define MASK_TILE_NUMBER 0x3FF
 
 static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap);
 static void handleCrossingCrossed(GridMovable *movable);
@@ -17,6 +22,10 @@ static void updateGridPosAfterCrossingCrossed(GridMovable *movable);
 static bool checkCollisions(GridMovable *movable);
 static void updatePrevCrossingAfterCrossingCrossed(GridMovable *movable);
 static void placeInCrossing(GridMovable *movable);
+
+static void triggerDerezzing(GridMovable *movable);
+
+static V2s16 collisionPosition(GridMovable *movable);
 
 void VEH_move(GridMovable *movable) {
 
@@ -53,32 +62,19 @@ static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap) {
         movable->object.mapPos.y = movable->mapPrevCrossing.y + v_gap;
     }
 
-    // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
-
     movable->object.viewIsDirty = TRUE;
 }
 
 static void handleCrossingCrossed(GridMovable *movable) {
 
-    // kprintf("P1: Crossing crossed!");
-
     updateGridPosAfterCrossingCrossed(movable);
-    // kprintf("P1: cycle pos in grid: x:%d, y:%d", movable->object.gridPos.x, movable->object.gridPos.y);
-
-    checkCollisions(movable);
-
     updatePrevCrossingAfterCrossingCrossed(movable);
-    // kprintf("P1: prev cross pos in map: x:%d, y:%d", movable->mapPrevCrossing.x, movable->mapPrevCrossing.y);
-
     placeInCrossing(movable);
-    // kprintf("P1: cycle pos in map: x:%d, y:%d", movable->object.mapPos.x, movable->object.mapPos.y);
+    checkCollisions(movable);
 
     movable->gridPosDelta = 0;
 
-    bool turned = turnIfRequested(movable);
-    // if (turned) {
-    //     kprintf("P1: cycle turned [%d]!", movable->direction);
-    // }
+    turnIfRequested(movable);
 
     movable->object.viewIsDirty = TRUE;
 }
@@ -125,12 +121,37 @@ static void updateGridPosAfterCrossingCrossed(GridMovable *movable) {
 
 static bool checkCollisions(GridMovable *movable) {
 
-    // Collision with grid boundaries
-    if (((movable->direction & DOWN) && (movable->object.gridPos.y == 31)) ||
-        ((movable->direction & UP) && (movable->object.gridPos.y == 0)) ||
-        ((movable->direction & RIGHT) && (movable->object.gridPos.x == 31)) ||
-        ((movable->direction & LEFT) && (movable->object.gridPos.x == 0))) {
-        return movable->object.justBegunDerezzing = TRUE;
+    V2u16 tileCollisionPos = SCREEN_posToTile(movable->object.mapPos);
+    u16 tileCollisionAttrFG = MAP_getTile(mapGridFG, tileCollisionPos.x, tileCollisionPos.y);
+
+    // FG
+    if (movable->direction & RIGHT) {
+        if (tileCollisionAttrFG == 4 || tileCollisionAttrFG == 8 || tileCollisionAttrFG == 2) {
+            triggerDerezzing(movable);
+            return TRUE;
+        }
+    } else if (movable->direction & UP) {
+        if (tileCollisionAttrFG == 4 || tileCollisionAttrFG == 8 || tileCollisionAttrFG == 2) {
+            triggerDerezzing(movable);
+            return TRUE;
+        }
+    } else if (movable->direction & DOWN) {
+        if (tileCollisionAttrFG == 1 || tileCollisionAttrFG == 7 || tileCollisionAttrFG == 11) {
+            triggerDerezzing(movable);
+            return TRUE;
+        }
+    } else if (movable->direction & LEFT) {
+        if (tileCollisionAttrFG == 1 || tileCollisionAttrFG == 7 || tileCollisionAttrFG == 11) {
+            triggerDerezzing(movable);
+            return TRUE;
+        }
+    }
+
+    // BG
+    u16 tileCollisionAttrBG = MAP_getTile(mapGridBG, tileCollisionPos.x, tileCollisionPos.y);
+    if ((tileCollisionAttrBG & MASK_TILE_NUMBER) > 1) {
+        triggerDerezzing(movable);
+        return TRUE;
     }
 
     return FALSE;
@@ -159,4 +180,24 @@ static void updatePrevCrossingAfterCrossingCrossed(GridMovable *movable) {
 static void placeInCrossing(GridMovable *movable) {
     movable->object.mapPos.x = movable->mapPrevCrossing.x;
     movable->object.mapPos.y = movable->mapPrevCrossing.y;
+}
+
+static void triggerDerezzing(GridMovable *movable) { movable->object.justBegunDerezzing = TRUE; }
+
+static V2s16 collisionPosition(GridMovable *movable) {
+
+    if (movable->direction & UP) {
+        return (V2s16){movable->object.mapPos.x, movable->object.mapPos.y - 1};
+    }
+
+    if (movable->direction & DOWN) {
+        return (V2s16){movable->object.mapPos.x - 1, movable->object.mapPos.y - 1};
+    }
+
+    if (movable->direction & LEFT) {
+        return (V2s16){movable->object.mapPos.x - 1, movable->object.mapPos.y - 1};
+    }
+
+    // (movable->direction & RIGHT)
+    return (V2s16){movable->object.mapPos.x, movable->object.mapPos.y - 1};
 }
