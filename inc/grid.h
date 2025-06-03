@@ -12,6 +12,8 @@
 extern Map *mapGridBG;
 extern Map *mapGridFG;
 
+extern u16 trailsVramBaseTile;
+
 #define MAP_WIDTH 1008
 #define MAP_HEIGTH 560
 

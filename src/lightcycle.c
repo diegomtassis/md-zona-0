@@ -9,6 +9,7 @@
 #include <kdebug.h>
 
 #include "camera.h"
+#include "grid.h"
 #include "screen.h"
 
 #include "gfx_grid.h"
@@ -38,6 +39,8 @@ static void setCycleSpritePositionInMap(GridMovable *movable);
 static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(GridMovable *movable);
 
+static void addTrailSegment(GridMovable *movable);
+
 void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.object.health = ALIVE;
@@ -47,13 +50,9 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.object.gridPos.x = cycleMarker->grid_x;
     lightCycle->movable.object.gridPos.y = cycleMarker->grid_y;
-    // kprintf("P1: cycle pos in grid [init]: x:%d, y:%d", lightCycle->movable.object.gridPos.x,
-    //         lightCycle->movable.object.gridPos.y);
 
     lightCycle->movable.object.mapPos.x = cycleMarker->x;
     lightCycle->movable.object.mapPos.y = cycleMarker->y;
-    // kprintf("P1: cycle pos in map [init]: x:%d, y:%d", lightCycle->movable.object.mapPos.x,
-    //         lightCycle->movable.object.mapPos.y);
 
     // Initialize movement
     lightCycle->movable.direction = DOWN;
@@ -63,8 +62,6 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.mapPrevCrossing.x = cycleMarker->x;
     lightCycle->movable.mapPrevCrossing.y = cycleMarker->y;
-    // kprintf("P1: prev cross pos in map [init]: x:%d, y:%d", lightCycle->movable.mapPrevCrossing.x,
-    //         lightCycle->movable.mapPrevCrossing.y);
 
     lightCycle->movable.turn = 0;
     lightCycle->movable.justTurned = FALSE;
@@ -79,6 +76,9 @@ void CYCLE_init(LightCycle *lightCycle) {
 
 void CYCLE_step(LightCycle *lightCycle) {
     VEH_move(&lightCycle->movable);
+    // if (lightCycle->movable.object.viewIsDirty) {
+    //     addTrailSegment(&lightCycle->movable);
+    // }
 }
 
 void CYCLE_crash(LightCycle *lightCycle) {
@@ -142,16 +142,14 @@ static void setCycleSpritePositionInMap(GridMovable *movable) {
         movable->object.spritePosInMap.x = movable->object.mapPos.x - 8;
         movable->object.spritePosInMap.y = movable->object.mapPos.y - 12;
     }
-
-    // kprintf("P1: sprite pos in map: x:%d, y:%d", movable->object.spritePosInMap.x, movable->object.spritePosInMap.y);
-};
+}
 
 // Take into account the sprite shape
 static void setExplosionSpritePositionInMap(GridMovable *movable) {
 
     movable->object.spritePosInMap.x = movable->object.mapPos.x - 20;
     movable->object.spritePosInMap.y = movable->object.mapPos.y - 20;
-};
+}
 
 static void setSpriteAnim(GridMovable *movable) {
 
@@ -171,5 +169,38 @@ static void setSpriteAnim(GridMovable *movable) {
     } else if (direction & RIGHT) {
         SPR_setAnim(movable->object.sprite, ANIM_RIGHT);
         SPR_setHFlip(movable->object.sprite, ANIM_RIGHT_FLIP_H);
+    }
+}
+
+static void addTrailSegment(GridMovable *movable) {
+
+    V2u16 spriteTilePos = SCREEN_posToTile(movable->object.spritePosInMap);
+
+    if (movable->gridPosDelta > 49) {
+        if (movable->direction & DOWN) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
+                             spriteTilePos.x + 1, spriteTilePos.y + 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
+                             spriteTilePos.x + 1, spriteTilePos.y + 2);
+
+        } else if (movable->direction & UP) {
+
+        } else if (movable->direction & LEFT) {
+
+        } else if (movable->direction & RIGHT) {
+        }
+    } else {
+        if (movable->direction & DOWN) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
+                             spriteTilePos.x + 1, spriteTilePos.y);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
+                             spriteTilePos.x + 1, spriteTilePos.y + 1);
+
+        } else if (movable->direction & UP) {
+
+        } else if (movable->direction & LEFT) {
+
+        } else if (movable->direction & RIGHT) {
+        }
     }
 }
