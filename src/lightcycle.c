@@ -29,8 +29,8 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 8
-#define SPEED_FAST 12
+#define SPEED_SLOW 1
+#define SPEED_FAST 8
 
 #define BOOST 0x10
 
@@ -38,6 +38,10 @@ static void setCycleRenderInfo(GridMovable *movable, bool force);
 static void setCycleSpritePositionInMap(GridMovable *movable);
 static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(GridMovable *movable);
+
+static void CYCLE_step(LightCycle *lightCycle);
+static void CYCLE_crash(LightCycle *lightCycle);
+static void CYCLE_setRenderInfo(LightCycle *lightCycle);
 
 static void addTrailSegment(GridMovable *movable);
 
@@ -74,12 +78,39 @@ void CYCLE_init(LightCycle *lightCycle) {
     setCycleRenderInfo(&lightCycle->movable, TRUE);
 }
 
-void CYCLE_step(LightCycle *lightCycle) {
-    VEH_move(&lightCycle->movable);
-    // if (lightCycle->movable.object.viewIsDirty) {
-    //     addTrailSegment(&lightCycle->movable);
-    // }
+void CYCLE_act(LightCycle *lightCycle, u8 turn, bool boost) {
+
+    if (lightCycle->movable.object.health & DEREZZED) {
+        return;
+    }
+
+    lightCycle->movable.speed = boost ? SPEED_FAST : SPEED_SLOW;
+    lightCycle->movable.turn = turn;
+    lightCycle->movable.object.justBegunDerezzing = FALSE;
+    lightCycle->movable.object.viewIsDirty = FALSE;
+
+    if (lightCycle->movable.object.health & ALIVE) {
+        CYCLE_step(lightCycle);
+        if (lightCycle->movable.object.justBegunDerezzing) {
+            CYCLE_crash(lightCycle);
+        }
+    } else {
+        // Already DEREZZING
+        if (SPR_isAnimationDone(lightCycle->movable.object.sprite)) {
+            lightCycle->movable.object.health = DEREZZED;
+        }
+    }
+
+    if (lightCycle->movable.object.viewIsDirty) {
+        // kprintf("P1: ACT");
+        CYCLE_setRenderInfo(lightCycle);
+        if (!lightCycle->movable.justTurned) {
+            addTrailSegment(&lightCycle->movable);
+        }
+    }
 }
+
+void CYCLE_step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
 void CYCLE_crash(LightCycle *lightCycle) {
 
@@ -176,14 +207,18 @@ static void addTrailSegment(GridMovable *movable) {
 
     V2u16 spriteTilePos = SCREEN_posToTile(movable->object.spritePosInMap);
 
-    if (movable->gridPosDelta > 49) {
+    if (movable->gridPosDelta < 50) {
         if (movable->direction & DOWN) {
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
-                             spriteTilePos.x + 1, spriteTilePos.y + 1);
+                             spriteTilePos.x + 3, spriteTilePos.y);
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
-                             spriteTilePos.x + 1, spriteTilePos.y + 2);
+                             spriteTilePos.x + 3, spriteTilePos.y + 1);
 
         } else if (movable->direction & UP) {
+            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
+            //                  spriteTilePos.x + 1, spriteTilePos.y + 1);
+            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
+            //                  spriteTilePos.x + 1, spriteTilePos.y + 2);
 
         } else if (movable->direction & LEFT) {
 
@@ -191,12 +226,16 @@ static void addTrailSegment(GridMovable *movable) {
         }
     } else {
         if (movable->direction & DOWN) {
-            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
-                             spriteTilePos.x + 1, spriteTilePos.y);
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
-                             spriteTilePos.x + 1, spriteTilePos.y + 1);
+                             spriteTilePos.x + 3, spriteTilePos.y);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
+                             spriteTilePos.x + 3, spriteTilePos.y - 1);
 
         } else if (movable->direction & UP) {
+            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
+            //                  spriteTilePos.x + 1, spriteTilePos.y + 1);
+            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
+            //                  spriteTilePos.x + 1, spriteTilePos.y + 2);
 
         } else if (movable->direction & LEFT) {
 

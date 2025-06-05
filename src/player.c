@@ -16,8 +16,10 @@ Player player;
 
 LightCycle lightCycle;
 
-bool dir_pushed;
-bool c_pushed;
+static bool dir_pushed;
+static bool b_pushed;
+
+static u8 turn;
 
 static void readPlayerInput();
 
@@ -26,30 +28,8 @@ void PLAYER_release() { CYCLE_release(&lightCycle); }
 
 void PLAYER_act() {
 
-    if (lightCycle.movable.object.health & DEREZZED) {
-        return;
-    }
-
-    lightCycle.movable.object.justBegunDerezzing = FALSE;
-    lightCycle.movable.object.viewIsDirty = FALSE;
-
-    if (lightCycle.movable.object.health & ALIVE) {
-        readPlayerInput();
-        CYCLE_step(&lightCycle);
-        if (lightCycle.movable.object.justBegunDerezzing) {
-            CYCLE_crash(&lightCycle);
-        }
-    } else {
-        // Already DEREZZING
-        if (SPR_isAnimationDone(lightCycle.movable.object.sprite)) {
-            lightCycle.movable.object.health = DEREZZED;
-        }
-    }
-
-    if (lightCycle.movable.object.viewIsDirty) {
-        // kprintf("P1: ACT");
-        CYCLE_setRenderInfo(&lightCycle);
-    }
+    readPlayerInput();
+    CYCLE_act(&lightCycle, turn, b_pushed);
 }
 
 static void readPlayerInput() {
@@ -57,20 +37,16 @@ static void readPlayerInput() {
     u16 value = JOY_readJoypad(JOY_1);
     if (value & BUTTON_DIR) {
         if (!dir_pushed) {
-            lightCycle.movable.turn = value;
+            turn = value & BUTTON_DIR;
         }
         dir_pushed = TRUE;
     } else {
         dir_pushed = FALSE;
     }
 
-    if (value & BUTTON_C) {
-        if (!c_pushed) {
-            // detect flank
-            lightCycle.movable.object.justBegunDerezzing = TRUE;
-        }
-        c_pushed = TRUE;
+    if (value & BUTTON_B) {
+        b_pushed = TRUE;
     } else {
-        c_pushed = FALSE;
+        b_pushed = FALSE;
     }
 };

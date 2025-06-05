@@ -10,7 +10,7 @@
 #include <genesis.h>
 
 extern Map *mapGridBG;
-extern Map *mapGridFG;
+// extern Map *mapGridFG;
 
 extern u16 trailsVramBaseTile;
 

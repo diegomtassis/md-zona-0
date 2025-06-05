@@ -37,7 +37,6 @@ void VEH_move(GridMovable *movable) {
     // 2 steps
     if (movable->gridPosDelta >= 99) {
         handleCrossingCrossed(movable);
-
     } else if (movable->gridPosDelta > 49 && prevGridPosDelta <= 49) {
         moveForward(movable, 8, 4);
     }
@@ -83,16 +82,21 @@ static bool turnIfRequested(GridMovable *movable) {
 
     if (movable->turn) {
 
-        u8 previousDirection = movable->direction;
+        u8 currentDirection = movable->direction;
         u8 newDirection = movable->turn;
 
-        if (((previousDirection & UP) && (newDirection & DOWN)) ||
-            ((previousDirection & DOWN) && (newDirection & UP)) ||
-            ((previousDirection & LEFT) && (newDirection & RIGHT)) ||
-            ((previousDirection & RIGHT) && (newDirection & LEFT))) {
+        if (currentDirection == newDirection) {
             return FALSE;
         }
 
+        if (((currentDirection & UP) && (newDirection & DOWN)) ||
+            ((currentDirection & DOWN) && (newDirection & UP)) ||
+            ((currentDirection & LEFT) && (newDirection & RIGHT)) ||
+            ((currentDirection & RIGHT) && (newDirection & LEFT))) {
+            return FALSE;
+        }
+
+        movable->directionPrev = currentDirection;
         movable->direction = newDirection;
         movable->turn = 0;
         movable->justTurned = TRUE;
@@ -121,8 +125,10 @@ static void updateGridPosAfterCrossingCrossed(GridMovable *movable) {
 
 static bool checkCollisions(GridMovable *movable) {
 
-    V2u16 tileCollisionPos = SCREEN_posToTile(movable->object.mapPos);
-    u16 tileCollisionAttrFG = MAP_getTile(mapGridFG, tileCollisionPos.x, tileCollisionPos.y);
+    V2u16 tileCollisionPos = SCREEN_posToTile(collisionPosition(movable));
+    // u16 tileCollisionAttrFG = MAP_getTile(mapGridFG, tileCollisionPos.x, tileCollisionPos.y);
+
+    u16 tileCollisionAttrFG = 0;
 
     // FG
     if (movable->direction & RIGHT) {

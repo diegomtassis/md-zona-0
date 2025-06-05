@@ -24,11 +24,7 @@ struct LightCycle {
 
 void CYCLE_init(LightCycle* lightCycle);
 
-void CYCLE_step(LightCycle* lightCycle);
-
-void CYCLE_crash(LightCycle* lightCycle);
-
-void CYCLE_setRenderInfo(LightCycle* lightCycle);
+void CYCLE_act(LightCycle* lightCycle, u8 turn, bool boost);
 
 void CYCLE_release(LightCycle* lightCycle);
 
