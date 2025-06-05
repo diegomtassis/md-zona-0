@@ -35,10 +35,17 @@ typedef struct {
     u8 direction;
     u16 gridPosDelta;
     V2s16 mapPrevCrossing;
-    u8 turn;
+    u8 turnTo;
     bool justTurned;
 
 } GridMovable;
+
+typedef struct {
+    V2s16 mapPos;
+    u8 direction;
+    u16 baseTile;
+    bool first;
+} TrailSegmentDefinition;
 
 void VEH_move(GridMovable *movable);
 

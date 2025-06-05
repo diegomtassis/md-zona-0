@@ -19,7 +19,7 @@ LightCycle lightCycle;
 static bool dir_pushed;
 static bool b_pushed;
 
-static u8 turn;
+static u8 turnTo;
 
 static void readPlayerInput();
 
@@ -29,7 +29,7 @@ void PLAYER_release() { CYCLE_release(&lightCycle); }
 void PLAYER_act() {
 
     readPlayerInput();
-    CYCLE_act(&lightCycle, turn, b_pushed);
+    CYCLE_act(&lightCycle, turnTo, b_pushed);
 }
 
 static void readPlayerInput() {
@@ -37,7 +37,7 @@ static void readPlayerInput() {
     u16 value = JOY_readJoypad(JOY_1);
     if (value & BUTTON_DIR) {
         if (!dir_pushed) {
-            turn = value & BUTTON_DIR;
+            turnTo = value & BUTTON_DIR;
         }
         dir_pushed = TRUE;
     } else {

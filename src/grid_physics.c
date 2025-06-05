@@ -80,10 +80,10 @@ static void handleCrossingCrossed(GridMovable *movable) {
 
 static bool turnIfRequested(GridMovable *movable) {
 
-    if (movable->turn) {
+    if (movable->turnTo) {
 
         u8 currentDirection = movable->direction;
-        u8 newDirection = movable->turn;
+        u8 newDirection = movable->turnTo;
 
         if (currentDirection == newDirection) {
             return FALSE;
@@ -96,9 +96,8 @@ static bool turnIfRequested(GridMovable *movable) {
             return FALSE;
         }
 
-        movable->directionPrev = currentDirection;
         movable->direction = newDirection;
-        movable->turn = 0;
+        movable->turnTo = 0;
         movable->justTurned = TRUE;
 
         return TRUE;

@@ -29,8 +29,8 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 1
-#define SPEED_FAST 8
+#define SPEED_SLOW 7
+#define SPEED_FAST 10
 
 #define BOOST 0x10
 
@@ -43,7 +43,8 @@ static void CYCLE_step(LightCycle *lightCycle);
 static void CYCLE_crash(LightCycle *lightCycle);
 static void CYCLE_setRenderInfo(LightCycle *lightCycle);
 
-static void addTrailSegment(GridMovable *movable);
+static void addTrailSegment(TrailSegmentDefinition *trailSegmentDef);
+static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
@@ -67,7 +68,7 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->movable.mapPrevCrossing.x = cycleMarker->x;
     lightCycle->movable.mapPrevCrossing.y = cycleMarker->y;
 
-    lightCycle->movable.turn = 0;
+    lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
 
     // Create the sprite. Position will be set by the camera.
@@ -78,14 +79,14 @@ void CYCLE_init(LightCycle *lightCycle) {
     setCycleRenderInfo(&lightCycle->movable, TRUE);
 }
 
-void CYCLE_act(LightCycle *lightCycle, u8 turn, bool boost) {
+void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
 
     if (lightCycle->movable.object.health & DEREZZED) {
         return;
     }
 
     lightCycle->movable.speed = boost ? SPEED_FAST : SPEED_SLOW;
-    lightCycle->movable.turn = turn;
+    lightCycle->movable.turnTo = turnTo;
     lightCycle->movable.object.justBegunDerezzing = FALSE;
     lightCycle->movable.object.viewIsDirty = FALSE;
 
@@ -104,9 +105,8 @@ void CYCLE_act(LightCycle *lightCycle, u8 turn, bool boost) {
     if (lightCycle->movable.object.viewIsDirty) {
         // kprintf("P1: ACT");
         CYCLE_setRenderInfo(lightCycle);
-        if (!lightCycle->movable.justTurned) {
-            addTrailSegment(&lightCycle->movable);
-        }
+        addTrailSegment(&lightCycle->trailDef);
+        lightCycle->trailDef = figureOutTrailSegment(&lightCycle->movable);
     }
 }
 
@@ -203,43 +203,66 @@ static void setSpriteAnim(GridMovable *movable) {
     }
 }
 
-static void addTrailSegment(GridMovable *movable) {
+static void addTrailSegment(TrailSegmentDefinition *trailSegmentDef) {
 
-    V2u16 spriteTilePos = SCREEN_posToTile(movable->object.spritePosInMap);
+    V2u16 cycleTilePos = SCREEN_posToTile(trailSegmentDef->mapPos);
+    u8 trailDirection = trailSegmentDef->direction;
 
-    if (movable->gridPosDelta < 50) {
-        if (movable->direction & DOWN) {
+    if (trailSegmentDef->first) {
+        if (trailDirection & DOWN) {
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
-                             spriteTilePos.x + 3, spriteTilePos.y);
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
-                             spriteTilePos.x + 3, spriteTilePos.y + 1);
+                             cycleTilePos.x - 1, cycleTilePos.y);
 
-        } else if (movable->direction & UP) {
-            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
-            //                  spriteTilePos.x + 1, spriteTilePos.y + 1);
-            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
-            //                  spriteTilePos.x + 1, spriteTilePos.y + 2);
+        } else if (trailDirection & UP) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
+                             cycleTilePos.x, cycleTilePos.y - 2);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
+                             cycleTilePos.x, cycleTilePos.y - 1);
 
-        } else if (movable->direction & LEFT) {
+        } else if (trailDirection & LEFT) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3),
+                             cycleTilePos.x - 1, cycleTilePos.y - 2);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
 
-        } else if (movable->direction & RIGHT) {
+        } else if (trailDirection & RIGHT) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2),
+                             cycleTilePos.x, cycleTilePos.y - 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6),
+                             cycleTilePos.x, cycleTilePos.y);
         }
     } else {
-        if (movable->direction & DOWN) {
-            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
-                             spriteTilePos.x + 3, spriteTilePos.y);
+        if (trailDirection & DOWN) {
             VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
-                             spriteTilePos.x + 3, spriteTilePos.y - 1);
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
+                             cycleTilePos.x - 1, cycleTilePos.y);
 
-        } else if (movable->direction & UP) {
-            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
-            //                  spriteTilePos.x + 1, spriteTilePos.y + 1);
-            // VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
-            //                  spriteTilePos.x + 1, spriteTilePos.y + 2);
+        } else if (trailDirection & UP) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
+                             cycleTilePos.x, cycleTilePos.y - 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
+                             cycleTilePos.x, cycleTilePos.y);
 
-        } else if (movable->direction & LEFT) {
+        } else if (trailDirection & LEFT) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6),
+                             cycleTilePos.x - 1, cycleTilePos.y);
 
-        } else if (movable->direction & RIGHT) {
+        } else if (trailDirection & RIGHT) {
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3),
+                             cycleTilePos.x, cycleTilePos.y - 1);
+            VDP_setTileMapXY(VDP_BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7),
+                             cycleTilePos.x, cycleTilePos.y);
         }
     }
+}
+
+static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable) {
+
+    return (TrailSegmentDefinition){
+        .direction = movable->direction, .first = movable->gridPosDelta < 50, .mapPos = movable->object.mapPos};
 }

@@ -4,7 +4,6 @@
  * Author: diegomtassis
  */
 
-
 #ifndef INC_LIGHTCYCLE_H_
 #define INC_LIGHTCYCLE_H_
 
@@ -20,12 +19,13 @@ struct LightCycle {
     bool boost;
     bool airborne;
     bool immunity;
+    TrailSegmentDefinition trailDef;
 };
 
-void CYCLE_init(LightCycle* lightCycle);
+void CYCLE_init(LightCycle *lightCycle);
 
-void CYCLE_act(LightCycle* lightCycle, u8 turn, bool boost);
+void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost);
 
-void CYCLE_release(LightCycle* lightCycle);
+void CYCLE_release(LightCycle *lightCycle);
 
 #endif /* INC_LIGHTCYCLE_H_ */
