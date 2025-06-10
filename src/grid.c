@@ -10,7 +10,7 @@
 #include "gfx_grid.h"
 
 Map *mapGridBG;
-// Map *mapGridFG;
+Map *mapGridFG;
 
 u16 trailsVramBaseTile;
 
@@ -30,24 +30,17 @@ u16 GRID_load(u16 vram_base, const MapDefinition *mapDefinitionBG, const MapDefi
     trailsVramBaseTile = idx_tile_fg_grid;
     VDP_loadTileSet(&tileset_trails, idx_tile_fg_grid, DMA);
     vram_idx += tileset_trails.numTile;
-    // mapGridFG = MAP_create(mapDefinitionFG, BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_fg_grid));
-
-    VDP_fillTileMapRect(BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_fg_grid + 36), 0, 0, 128, 128);
-
-    VDP_setScrollingMode(HSCROLL_PLANE, VSCROLL_PLANE);
+    mapGridFG = MAP_create(mapDefinitionFG, BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_fg_grid));
 
     return vram_idx;
 }
 
 void GRID_scroll(V2s16 point, bool redraw) {
     MAP_scrollToEx(mapGridBG, point.x, point.y, redraw);
-    // MAP_scrollToEx(mapGridFG, point.x, point.y, redraw);
-
-    VDP_setHorizontalScroll(BG_A, -point.x);
-    VDP_setVerticalScroll(BG_A, point.y);
+    MAP_scrollToEx(mapGridFG, point.x, point.y, redraw);
 }
 
 void GRID_release() {
     MEM_free(mapGridBG);
-    // MEM_free(mapGridFG);
+    MEM_free(mapGridFG);
 }

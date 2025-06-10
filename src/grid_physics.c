@@ -89,8 +89,7 @@ static bool turnIfRequested(GridMovable *movable) {
             return FALSE;
         }
 
-        if (((currentDirection & UP) && (newDirection & DOWN)) ||
-            ((currentDirection & DOWN) && (newDirection & UP)) ||
+        if (((currentDirection & UP) && (newDirection & DOWN)) || ((currentDirection & DOWN) && (newDirection & UP)) ||
             ((currentDirection & LEFT) && (newDirection & RIGHT)) ||
             ((currentDirection & RIGHT) && (newDirection & LEFT))) {
             return FALSE;
@@ -127,7 +126,11 @@ static bool checkCollisions(GridMovable *movable) {
     V2u16 tileCollisionPos = SCREEN_posToTile(collisionPosition(movable));
     // u16 tileCollisionAttrFG = MAP_getTile(mapGridFG, tileCollisionPos.x, tileCollisionPos.y);
 
+    // u16 tilePlanAddressFG = VDP_getPlaneAddress(BG_A, tileCollisionPos.x, tileCollisionPos.y);
     u16 tileCollisionAttrFG = 0;
+
+    // kprintf("TILE collision: :%d", tileCollisionAttrFG);
+
 
     // FG
     if (movable->direction & RIGHT) {
