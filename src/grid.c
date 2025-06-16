@@ -9,10 +9,15 @@
 #include "fwk/vdp_utils.h"
 #include "gfx_grid.h"
 
+#include "grid_physics.h"
+#include "screen.h"
+
 Map *mapGridBG;
 Map *mapGridFG;
 
 u16 trailsVramBaseTile;
+
+static TrailSegmentDefinition pendingTrailSegmentDef;
 
 u16 GRID_load(u16 vram_base, const MapDefinition *mapDefinitionBG, const MapDefinition *mapDefinitionFG) {
 
@@ -43,4 +48,70 @@ void GRID_scroll(V2s16 point, bool redraw) {
 void GRID_release() {
     MEM_free(mapGridBG);
     MEM_free(mapGridFG);
+}
+
+void GRID_addSegment(TrailSegmentDefinition *trailSegmentDef) { pendingTrailSegmentDef = *trailSegmentDef; }
+
+void GRID_updateSegments() {
+
+    TrailSegmentDefinition *trailSegmentDef = &pendingTrailSegmentDef;
+
+    V2u16 cycleTilePos = SCREEN_posToTile(trailSegmentDef->mapPos);
+    u8 trailDirection = trailSegmentDef->direction;
+
+    VDPPlane plane = BG_A;
+
+    u16 trailsVramBaseTile = trailSegmentDef->baseTile;
+
+    if (trailSegmentDef->first) {
+        if (trailDirection & DOWN) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
+                             cycleTilePos.x - 1, cycleTilePos.y);
+
+        } else if (trailDirection & UP) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0), cycleTilePos.x,
+                             cycleTilePos.y - 2);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4), cycleTilePos.x,
+                             cycleTilePos.y - 1);
+
+        } else if (trailDirection & LEFT) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3),
+                             cycleTilePos.x - 1, cycleTilePos.y - 2);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+
+        } else if (trailDirection & RIGHT) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2), cycleTilePos.x,
+                             cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6), cycleTilePos.x,
+                             cycleTilePos.y);
+        }
+    } else {
+        if (trailDirection & DOWN) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
+                             cycleTilePos.x - 1, cycleTilePos.y);
+
+        } else if (trailDirection & UP) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1), cycleTilePos.x,
+                             cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5), cycleTilePos.x,
+                             cycleTilePos.y);
+
+        } else if (trailDirection & LEFT) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2),
+                             cycleTilePos.x - 1, cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6),
+                             cycleTilePos.x - 1, cycleTilePos.y);
+
+        } else if (trailDirection & RIGHT) {
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3), cycleTilePos.x,
+                             cycleTilePos.y - 1);
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7), cycleTilePos.x,
+                             cycleTilePos.y);
+        }
+    }
 }

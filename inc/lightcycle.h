@@ -11,6 +11,7 @@
 
 #include "elements.h"
 #include "grid_physics.h"
+#include "grid.h"
 
 typedef struct LightCycle LightCycle;
 
@@ -19,7 +20,8 @@ struct LightCycle {
     bool boost;
     bool airborne;
     bool immunity;
-    TrailSegmentDefinition trailDef;
+    TrailSegmentDefinition trailDef_tZero;
+    TrailSegmentDefinition trailDef_tMinus;
 };
 
 void CYCLE_init(LightCycle *lightCycle);

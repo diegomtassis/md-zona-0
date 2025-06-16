@@ -40,13 +40,6 @@ typedef struct {
 
 } GridMovable;
 
-typedef struct {
-    V2s16 mapPos;
-    u8 direction;
-    u16 baseTile;
-    bool first;
-} TrailSegmentDefinition;
-
 void VEH_move(GridMovable *movable);
 
 #endif /* INC_GRID_PHYSICS_H_ */

@@ -84,8 +84,20 @@ static bool runLevel(u16 vramIdx) {
 
     bool mission_accomplished = FALSE;
     bool derezzed = FALSE;
+    bool camUpdateInPreviousFrame = FALSE;
+
     while (!mission_accomplished && !derezzed) {
         if (!paused) {
+
+            if (camUpdateInPreviousFrame) {
+                /* Drawing the trails segments which have been just added by the lightcycles could in theory be done
+                 * just right after they have been added, but sometimes previous map scroll may have not finished, in
+                 * which case a jitter effect is shown. For this reason drawing the trails segments is done in the next
+                 * frame after they are added. */
+                GRID_updateSegments();
+                camUpdateInPreviousFrame = FALSE;
+            }
+
             PLAYER_act();
 
             if (lightCycle.movable.object.justBegunDerezzing) {
@@ -94,6 +106,7 @@ static bool runLevel(u16 vramIdx) {
 
             if (lightCycle.movable.object.viewIsDirty) {
                 CAM_update();
+                camUpdateInPreviousFrame = TRUE;
             }
 
             SPR_update();

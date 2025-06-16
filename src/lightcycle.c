@@ -34,16 +34,16 @@
 
 #define BOOST 0x10
 
-static void setCycleRenderInfo(LightCycle *lightCycle, bool force);
+static void step(LightCycle *lightCycle);
+static void crash(LightCycle *lightCycle);
+static void setRenderInfo(LightCycle *lightCycle);
+
+static void setMovingRenderInfo(LightCycle *lightCycle, bool force);
 static void setCycleSpritePositionInMap(LightCycle *lightCycle);
 static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(LightCycle *lightCycle);
 
-static void CYCLE_step(LightCycle *lightCycle);
-static void CYCLE_crash(LightCycle *lightCycle);
-static void CYCLE_setRenderInfo(LightCycle *lightCycle);
 
-static void addTrailSegment(TrailSegmentDefinition *trailSegmentDef);
 static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
@@ -71,12 +71,14 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
 
+    lightCycle->trailDef_tZero = figureOutTrailSegment(&lightCycle->movable);
+
     // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
                                                       0, 0,                     //
                                                       TILE_ATTR(PAL2, TRUE, FALSE, FALSE));
 
-    setCycleRenderInfo(lightCycle, TRUE);
+    setMovingRenderInfo(lightCycle, TRUE);
 }
 
 void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
@@ -92,9 +94,9 @@ void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
     lightCycle->movable.object.viewIsDirty = FALSE;
 
     if (lightCycle->movable.object.health & ALIVE) {
-        CYCLE_step(lightCycle);
+        step(lightCycle);
         if (lightCycle->movable.object.justBegunDerezzing) {
-            CYCLE_crash(lightCycle);
+            crash(lightCycle);
         }
     } else {
         // Already DEREZZING
@@ -104,16 +106,16 @@ void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
     }
 
     if (lightCycle->movable.object.viewIsDirty) {
-        // kprintf("P1: ACT");
-        CYCLE_setRenderInfo(lightCycle);
-        addTrailSegment(&lightCycle->trailDef);
-        lightCycle->trailDef = figureOutTrailSegment(&lightCycle->movable);
+        setRenderInfo(lightCycle);
+        GRID_addSegment(&lightCycle->trailDef_tMinus);
+        lightCycle->trailDef_tMinus = lightCycle->trailDef_tZero;
+        lightCycle->trailDef_tZero = figureOutTrailSegment(&lightCycle->movable);
     }
 }
 
-void CYCLE_step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
+void step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
 
-void CYCLE_crash(LightCycle *lightCycle) {
+void crash(LightCycle *lightCycle) {
 
     lightCycle->movable.object.health = DEREZZING;
 
@@ -128,10 +130,10 @@ void CYCLE_crash(LightCycle *lightCycle) {
     lightCycle->movable.object.viewIsDirty = TRUE;
 }
 
-void CYCLE_setRenderInfo(LightCycle *lightCycle) {
+void setRenderInfo(LightCycle *lightCycle) {
 
     if (lightCycle->movable.object.health & ALIVE) {
-        setCycleRenderInfo(lightCycle, FALSE);
+        setMovingRenderInfo(lightCycle, FALSE);
         return;
     };
 
@@ -147,7 +149,7 @@ void CYCLE_release(LightCycle *lightCycle) {
     SPR_releaseSprite(lightCycle->movable.object.sprite);
 }
 
-static void setCycleRenderInfo(LightCycle *lightCycle, bool force) {
+static void setMovingRenderInfo(LightCycle *lightCycle, bool force) {
 
     setCycleSpritePositionInMap(lightCycle);
     if (lightCycle->movable.justTurned || force) {
@@ -213,68 +215,10 @@ static void setSpriteAnim(LightCycle *lightCycle) {
     }
 }
 
-static void addTrailSegment(TrailSegmentDefinition *trailSegmentDef) {
-
-    V2u16 cycleTilePos = SCREEN_posToTile(trailSegmentDef->mapPos);
-    u8 trailDirection = trailSegmentDef->direction;
-
-    VDPPlane plane = BG_A;
-
-    if (trailSegmentDef->first) {
-        if (trailDirection & DOWN) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1),
-                             cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5),
-                             cycleTilePos.x - 1, cycleTilePos.y);
-
-        } else if (trailDirection & UP) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0), cycleTilePos.x,
-                             cycleTilePos.y - 2);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4), cycleTilePos.x,
-                             cycleTilePos.y - 1);
-
-        } else if (trailDirection & LEFT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3),
-                             cycleTilePos.x - 1, cycleTilePos.y - 2);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7),
-                             cycleTilePos.x - 1, cycleTilePos.y - 1);
-
-        } else if (trailDirection & RIGHT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2), cycleTilePos.x,
-                             cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6), cycleTilePos.x,
-                             cycleTilePos.y);
-        }
-    } else {
-        if (trailDirection & DOWN) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 0),
-                             cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 4),
-                             cycleTilePos.x - 1, cycleTilePos.y);
-
-        } else if (trailDirection & UP) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 1), cycleTilePos.x,
-                             cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 5), cycleTilePos.x,
-                             cycleTilePos.y);
-
-        } else if (trailDirection & LEFT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 2),
-                             cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 6),
-                             cycleTilePos.x - 1, cycleTilePos.y);
-
-        } else if (trailDirection & RIGHT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 3), cycleTilePos.x,
-                             cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, trailsVramBaseTile + 7), cycleTilePos.x,
-                             cycleTilePos.y);
-        }
-    }
-}
-
 static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable) {
 
-    return (TrailSegmentDefinition){
-        .direction = movable->direction, .first = movable->gridPosDelta < 50, .mapPos = movable->object.mapPos};
+    return (TrailSegmentDefinition){.direction = movable->direction,
+                                    .first = movable->gridPosDelta < 50,
+                                    .mapPos = movable->object.mapPos,
+                                    .baseTile = trailsVramBaseTile};
 }
