@@ -29,8 +29,8 @@
 #define ANIM_DOWN_FLIP_H 0
 
 #define SPEED_ZERO 0
-#define SPEED_SLOW 8
-#define SPEED_FAST 12
+#define SPEED_SLOW 4
+#define SPEED_FAST 6
 
 #define BOOST 0x10
 
@@ -70,6 +70,9 @@ void CYCLE_init(LightCycle *lightCycle) {
 
     lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
+
+    lightCycle->ribbon.baseTile = ribbonVramBaseTile;
+    DLL_init(&lightCycle->ribbon.segments);
 
     lightCycle->ribbonStep_tZero = figureOutRibbonStep(&lightCycle->movable);
 
@@ -147,6 +150,8 @@ void CYCLE_release(LightCycle *lightCycle) {
 
     // Release the sprite.
     SPR_releaseSprite(lightCycle->movable.object.sprite);
+
+    DLL_release(&lightCycle->ribbon.segments);
 }
 
 static void setMovingRenderInfo(LightCycle *lightCycle, bool force) {
@@ -220,5 +225,5 @@ static RibbonStep figureOutRibbonStep(GridMovable *movable) {
     return (RibbonStep){.direction = movable->direction,
                                     .first = movable->gridPosDelta < 50,
                                     .mapPos = movable->object.mapPos,
-                                    .baseTile = ribbonsVramBaseTile};
+                                    .baseTile = ribbonVramBaseTile};
 }

@@ -20,6 +20,7 @@ struct LightCycle {
     bool boost;
     bool airborne;
     bool immunity;
+    Ribbon ribbon;
     RibbonStep ribbonStep_tZero;
     RibbonStep ribbonStep_tMinus;
 };

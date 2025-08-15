@@ -9,18 +9,23 @@
 
 #include <genesis.h>
 
+#include "fwk/doubly_linked_list.h"
+
 extern Map *mapGridBG;
 extern Map *mapGridFG;
 
-extern u16 ribbonsVramBaseTile;
+extern u16 ribbonVramBaseTile;
 
 #define MAP_WIDTH 1008
 #define MAP_HEIGTH 560
 
 typedef struct {
-    u8 direction;
     u16 baseTile;
-    bool first;
+    DLL segments;
+} Ribbon;
+typedef struct {
+    u8 direction;
+    DLL steps;    
 } RibbonSegment;
 typedef struct {
     V2s16 mapPos;
