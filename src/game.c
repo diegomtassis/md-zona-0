@@ -90,11 +90,11 @@ static bool runLevel(u16 vramIdx) {
         if (!paused) {
 
             if (camUpdateInPreviousFrame) {
-                /* Drawing the trails segments which have been just added by the lightcycles could in theory be done
+                /* Drawing the ribbons which have been just added by the lightcycles could in theory be done
                  * just right after they have been added, but sometimes previous map scroll may have not finished, in
-                 * which case a jitter effect is shown. For this reason drawing the trails segments is done in the next
+                 * which case a jitter effect is shown. For this reason drawing the ribbons is done in the next
                  * frame after they are added. */
-                GRID_updateSegments();
+                GRID_updateRibbons();
                 camUpdateInPreviousFrame = FALSE;
             }
 

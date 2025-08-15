@@ -44,7 +44,7 @@ static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(LightCycle *lightCycle);
 
 
-static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable);
+static RibbonStepDefinition figureOutRibbonStep(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
@@ -71,7 +71,7 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
 
-    lightCycle->trailDef_tZero = figureOutTrailSegment(&lightCycle->movable);
+    lightCycle->ribbonStepDef_tZero = figureOutRibbonStep(&lightCycle->movable);
 
     // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
@@ -107,9 +107,9 @@ void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
 
     if (lightCycle->movable.object.viewIsDirty) {
         setRenderInfo(lightCycle);
-        GRID_addSegment(&lightCycle->trailDef_tMinus);
-        lightCycle->trailDef_tMinus = lightCycle->trailDef_tZero;
-        lightCycle->trailDef_tZero = figureOutTrailSegment(&lightCycle->movable);
+        GRID_addRibbonStep(&lightCycle->ribbonStepDef_tMinus);
+        lightCycle->ribbonStepDef_tMinus = lightCycle->ribbonStepDef_tZero;
+        lightCycle->ribbonStepDef_tZero = figureOutRibbonStep(&lightCycle->movable);
     }
 }
 
@@ -215,10 +215,10 @@ static void setSpriteAnim(LightCycle *lightCycle) {
     }
 }
 
-static TrailSegmentDefinition figureOutTrailSegment(GridMovable *movable) {
+static RibbonStepDefinition figureOutRibbonStep(GridMovable *movable) {
 
-    return (TrailSegmentDefinition){.direction = movable->direction,
+    return (RibbonStepDefinition){.direction = movable->direction,
                                     .first = movable->gridPosDelta < 50,
                                     .mapPos = movable->object.mapPos,
-                                    .baseTile = trailsVramBaseTile};
+                                    .baseTile = ribbonsVramBaseTile};
 }

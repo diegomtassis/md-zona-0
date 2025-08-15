@@ -12,7 +12,7 @@
 extern Map *mapGridBG;
 extern Map *mapGridFG;
 
-extern u16 trailsVramBaseTile;
+extern u16 ribbonsVramBaseTile;
 
 #define MAP_WIDTH 1008
 #define MAP_HEIGTH 560
@@ -21,13 +21,13 @@ typedef struct {
     u8 direction;
     u16 baseTile;
     bool first;
-} TrailSegmentDefinition;
+} RibbonStepDefinition;
 
 u16 GRID_load(u16 vramBase, const MapDefinition *mapDefinitionBG, const MapDefinition *mapDefinitionFG);
 void GRID_scroll(V2s16 point, bool redraw);
 void GRID_release();
 
-void GRID_addSegment(TrailSegmentDefinition *trailSegmentDef);
-void GRID_updateSegments();
+void GRID_addRibbonStep(RibbonStepDefinition *ribbonStepDef);
+void GRID_updateRibbons();
 
 #endif /* INC_GRID_H_ */

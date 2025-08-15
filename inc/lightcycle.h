@@ -20,8 +20,8 @@ struct LightCycle {
     bool boost;
     bool airborne;
     bool immunity;
-    TrailSegmentDefinition trailDef_tZero;
-    TrailSegmentDefinition trailDef_tMinus;
+    RibbonStepDefinition ribbonStepDef_tZero;
+    RibbonStepDefinition ribbonStepDef_tMinus;
 };
 
 void CYCLE_init(LightCycle *lightCycle);
