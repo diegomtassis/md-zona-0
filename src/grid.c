@@ -15,9 +15,9 @@
 Map *mapGridBG;
 Map *mapGridFG;
 
-u16 ribbonsVramBaseTile;
+u16 ribbonVramBaseTile;
 
-static RibbonStepDefinition pendingRibbonStepDef;
+static RibbonStep pendingRibbonStep;
 
 u16 GRID_load(u16 vram_base, const MapDefinition *mapDefinitionBG, const MapDefinition *mapDefinitionFG) {
 
@@ -32,7 +32,7 @@ u16 GRID_load(u16 vram_base, const MapDefinition *mapDefinitionBG, const MapDefi
     mapGridBG = MAP_create(mapDefinitionBG, BG_B, TILE_ATTR_FULL(PAL0, FALSE, FALSE, FALSE, idx_tile_bg_grid));
 
     u16 idx_tile_fg_grid = vram_idx;
-    ribbonsVramBaseTile = idx_tile_fg_grid;
+    ribbonVramBaseTile = idx_tile_fg_grid;
     VDP_loadTileSet(&tileset_ribbons, idx_tile_fg_grid, DMA);
     vram_idx += tileset_ribbons.numTile;
     mapGridFG = MAP_create(mapDefinitionFG, BG_A, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, idx_tile_fg_grid));
@@ -50,67 +50,67 @@ void GRID_release() {
     MEM_free(mapGridFG);
 }
 
-void GRID_addRibbonStep(RibbonStepDefinition *ribbonStepDef) { pendingRibbonStepDef = *ribbonStepDef; }
+void GRID_addRibbonStep(RibbonStep *ribbonStep) { pendingRibbonStep = *ribbonStep; }
 
 void GRID_updateRibbons() {
 
-    RibbonStepDefinition *ribbonStepDef = &pendingRibbonStepDef;
+    RibbonStep *ribbonStep = &pendingRibbonStep;
 
-    V2u16 cycleTilePos = SCREEN_posToTile(ribbonStepDef->mapPos);
-    u8 ribbonDirection = ribbonStepDef->direction;
+    V2u16 cycleTilePos = SCREEN_posToTile(ribbonStep->mapPos);
+    u8 ribbonDirection = ribbonStep->direction;
 
     VDPPlane plane = BG_A;
 
-    u16 ribbonsVramBaseTile = ribbonStepDef->baseTile;
+    u16 ribbonVramBaseTile = ribbonStep->baseTile;
 
-    if (ribbonStepDef->first) {
+    if (ribbonStep->first) {
         if (ribbonDirection & DOWN) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 1),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 1),
                              cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 5),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 5),
                              cycleTilePos.x - 1, cycleTilePos.y);
 
         } else if (ribbonDirection & UP) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 0), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 0), cycleTilePos.x,
                              cycleTilePos.y - 2);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 4), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 4), cycleTilePos.x,
                              cycleTilePos.y - 1);
 
         } else if (ribbonDirection & LEFT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 3),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 3),
                              cycleTilePos.x - 1, cycleTilePos.y - 2);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 7),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 7),
                              cycleTilePos.x - 1, cycleTilePos.y - 1);
 
         } else if (ribbonDirection & RIGHT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 2), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 2), cycleTilePos.x,
                              cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 6), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 6), cycleTilePos.x,
                              cycleTilePos.y);
         }
     } else {
         if (ribbonDirection & DOWN) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 0),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 0),
                              cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 4),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 4),
                              cycleTilePos.x - 1, cycleTilePos.y);
 
         } else if (ribbonDirection & UP) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 1), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 1), cycleTilePos.x,
                              cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 5), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 5), cycleTilePos.x,
                              cycleTilePos.y);
 
         } else if (ribbonDirection & LEFT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 2),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 2),
                              cycleTilePos.x - 1, cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 6),
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 6),
                              cycleTilePos.x - 1, cycleTilePos.y);
 
         } else if (ribbonDirection & RIGHT) {
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 3), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 3), cycleTilePos.x,
                              cycleTilePos.y - 1);
-            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonsVramBaseTile + 7), cycleTilePos.x,
+            VDP_setTileMapXY(plane, TILE_ATTR_FULL(PAL2, FALSE, FALSE, FALSE, ribbonVramBaseTile + 7), cycleTilePos.x,
                              cycleTilePos.y);
         }
     }

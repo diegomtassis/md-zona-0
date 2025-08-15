@@ -17,15 +17,13 @@ https://github.com/diegomtassis/md-zona0
 
 
 #### To be implemented
-* Light trails.
-* Boost.
+* Light ribbons.
 * Enemies.
 * Zones 13-0.
 * Sound.
 
 
 #### Implementation decissions
-* Avoid as much as possible dynamic memory allocation.
 
 
 #### SGDK

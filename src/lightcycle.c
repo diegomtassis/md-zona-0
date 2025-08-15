@@ -44,7 +44,7 @@ static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(LightCycle *lightCycle);
 
 
-static RibbonStepDefinition figureOutRibbonStep(GridMovable *movable);
+static RibbonStep figureOutRibbonStep(GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
@@ -71,7 +71,7 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
 
-    lightCycle->ribbonStepDef_tZero = figureOutRibbonStep(&lightCycle->movable);
+    lightCycle->ribbonStep_tZero = figureOutRibbonStep(&lightCycle->movable);
 
     // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
@@ -107,9 +107,9 @@ void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
 
     if (lightCycle->movable.object.viewIsDirty) {
         setRenderInfo(lightCycle);
-        GRID_addRibbonStep(&lightCycle->ribbonStepDef_tMinus);
-        lightCycle->ribbonStepDef_tMinus = lightCycle->ribbonStepDef_tZero;
-        lightCycle->ribbonStepDef_tZero = figureOutRibbonStep(&lightCycle->movable);
+        GRID_addRibbonStep(&lightCycle->ribbonStep_tMinus);
+        lightCycle->ribbonStep_tMinus = lightCycle->ribbonStep_tZero;
+        lightCycle->ribbonStep_tZero = figureOutRibbonStep(&lightCycle->movable);
     }
 }
 
@@ -215,9 +215,9 @@ static void setSpriteAnim(LightCycle *lightCycle) {
     }
 }
 
-static RibbonStepDefinition figureOutRibbonStep(GridMovable *movable) {
+static RibbonStep figureOutRibbonStep(GridMovable *movable) {
 
-    return (RibbonStepDefinition){.direction = movable->direction,
+    return (RibbonStep){.direction = movable->direction,
                                     .first = movable->gridPosDelta < 50,
                                     .mapPos = movable->object.mapPos,
                                     .baseTile = ribbonsVramBaseTile};
