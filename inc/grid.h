@@ -9,36 +9,23 @@
 
 #include <genesis.h>
 
-#include "fwk/doubly_linked_list.h"
+#include "ribbons.h"
 
 extern Map *mapGridBG;
 extern Map *mapGridFG;
 
-extern u16 ribbonVramBaseTile;
-
 #define MAP_WIDTH 1008
 #define MAP_HEIGTH 560
-
-typedef struct {
-    u16 baseTile;
-    DLL segments;
-} Ribbon;
-typedef struct {
-    u8 direction;
-    DLL steps;    
-} RibbonSegment;
-typedef struct {
-    V2s16 mapPos;
-    u8 direction;
-    u16 baseTile;
-    bool first;
-} RibbonStep;
 
 u16 GRID_load(u16 vramBase, const MapDefinition *mapDefinitionBG, const MapDefinition *mapDefinitionFG);
 void GRID_scroll(V2s16 point, bool redraw);
 void GRID_release();
 
-void GRID_addRibbonStep(RibbonStep *ribbonStep);
-void GRID_updateRibbons();
+void GRID_trackRibbonStep(RibbonStep *ribbonStep);
+void GRID_renderNewRibbonsSteps();
+
+void GRID_trackRibbon(Ribbon *ribbon);
+void GRID_removeRibbon(Ribbon *ribbon);
+
 
 #endif /* INC_GRID_H_ */

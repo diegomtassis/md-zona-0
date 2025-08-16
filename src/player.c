@@ -8,10 +8,6 @@
 
 #include <genesis.h>
 
-#include "gfx_lightcycles.h"
-
-#include "grid_physics.h"
-
 Player player;
 
 LightCycle lightCycle;

@@ -9,10 +9,6 @@
 #include "grid.h"
 #include "screen.h"
 
-#include "fwk/physics.h"
-
-#include <kdebug.h>
-
 #define MASK_TILE_NUMBER 0x3FF
 
 static void moveForward(GridMovable *movable, u16 h_gap, u16 v_gap);

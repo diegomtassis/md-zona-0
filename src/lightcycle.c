@@ -6,11 +6,8 @@
 
 #include "lightcycle.h"
 
-#include <kdebug.h>
-
-#include "camera.h"
 #include "grid.h"
-#include "screen.h"
+#include "ribbons.h"
 
 #include "gfx_grid.h"
 #include "gfx_lightcycles.h"
@@ -43,8 +40,7 @@ static void setCycleSpritePositionInMap(LightCycle *lightCycle);
 static void setExplosionSpritePositionInMap(GridMovable *movable);
 static void setSpriteAnim(LightCycle *lightCycle);
 
-
-static RibbonStep figureOutRibbonStep(GridMovable *movable);
+static RibbonStep *createRibbonStep(RibbonSegment *segment, GridMovable *movable);
 
 void CYCLE_init(LightCycle *lightCycle) {
 
@@ -71,10 +67,11 @@ void CYCLE_init(LightCycle *lightCycle) {
     lightCycle->movable.turnTo = 0;
     lightCycle->movable.justTurned = FALSE;
 
-    lightCycle->ribbon.baseTile = ribbonVramBaseTile;
-    DLL_init(&lightCycle->ribbon.segments);
-
-    lightCycle->ribbonStep_tZero = figureOutRibbonStep(&lightCycle->movable);
+    RIBBONS_initRibbon(&lightCycle->ribbon, JETWALL_RED, lightCycle->movable.direction,
+                       lightCycle->movable.object.mapPos);
+    GRID_trackRibbon(&lightCycle->ribbon);
+    RibbonSegment *currentSegment = (RibbonSegment *)lightCycle->ribbon.segments.first->e;
+    createRibbonStep(currentSegment, &lightCycle->movable);
 
     // Create the sprite. Position will be set by the camera.
     lightCycle->movable.object.sprite = SPR_addSprite(&sprite_lightcycle_flynn, //
@@ -110,13 +107,20 @@ void CYCLE_act(LightCycle *lightCycle, u8 turnTo, bool boost) {
 
     if (lightCycle->movable.object.viewIsDirty) {
         setRenderInfo(lightCycle);
-        GRID_addRibbonStep(&lightCycle->ribbonStep_tMinus);
-        lightCycle->ribbonStep_tMinus = lightCycle->ribbonStep_tZero;
-        lightCycle->ribbonStep_tZero = figureOutRibbonStep(&lightCycle->movable);
+
+        GRID_trackRibbonStep(lightCycle->ribbon.stepTMinus);
+        lightCycle->ribbon.stepTMinus = lightCycle->ribbon.stepTZero;
+        lightCycle->ribbon.stepTZero =
+            createRibbonStep((RibbonSegment *)lightCycle->ribbon.segments.last->e, &lightCycle->movable);
     }
 }
 
-void step(LightCycle *lightCycle) { VEH_move(&lightCycle->movable); }
+void step(LightCycle *lightCycle) {
+    VEH_move(&lightCycle->movable);
+    if (lightCycle->movable.justTurned) {
+        RIBBONS_beginSegment(&lightCycle->ribbon, lightCycle->movable.direction, lightCycle->movable.object.mapPos);
+    }
+}
 
 void crash(LightCycle *lightCycle) {
 
@@ -151,7 +155,7 @@ void CYCLE_release(LightCycle *lightCycle) {
     // Release the sprite.
     SPR_releaseSprite(lightCycle->movable.object.sprite);
 
-    DLL_release(&lightCycle->ribbon.segments);
+    RIBBONS_clearRibbon(&lightCycle->ribbon);
 }
 
 static void setMovingRenderInfo(LightCycle *lightCycle, bool force) {
@@ -220,10 +224,8 @@ static void setSpriteAnim(LightCycle *lightCycle) {
     }
 }
 
-static RibbonStep figureOutRibbonStep(GridMovable *movable) {
+static RibbonStep *createRibbonStep(RibbonSegment *segment, GridMovable *movable) {
 
-    return (RibbonStep){.direction = movable->direction,
-                                    .first = movable->gridPosDelta < 50,
-                                    .mapPos = movable->object.mapPos,
-                                    .baseTile = ribbonVramBaseTile};
+    return RIBBONS_createRibbonStep(segment, movable->object.mapPos,
+                                    movable->gridPosDelta < 50); // first
 }

@@ -7,12 +7,9 @@
 #include "camera.h"
 
 #include "elements.h"
-#include "fwk/physics.h"
 
 #include "grid.h"
 #include "screen.h"
-
-#include <kdebug.h>
 
 #define MIN_PADDING_H 32
 #define MIN_PADDING_V 24

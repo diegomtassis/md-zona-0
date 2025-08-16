@@ -9,8 +9,6 @@
 #include <genesis.h>
 
 #include "camera.h"
-#include "config.h"
-#include "fwk/commons.h"
 #include "fwk/vdp_utils.h"
 #include "gfx_grid.h"
 #include "gfx_lightcycles.h"
@@ -94,7 +92,7 @@ static bool runLevel(u16 vramIdx) {
                  * just right after they have been added, but sometimes previous map scroll may have not finished, in
                  * which case a jitter effect is shown. For this reason drawing the ribbons is done in the next
                  * frame after they are added. */
-                GRID_updateRibbons();
+                GRID_renderNewRibbonsSteps();
                 camUpdateInPreviousFrame = FALSE;
             }
 

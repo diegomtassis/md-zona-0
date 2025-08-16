@@ -10,8 +10,8 @@
 #include "genesis.h"
 
 #include "elements.h"
-#include "grid_physics.h"
 #include "grid.h"
+#include "grid_physics.h"
 
 typedef struct LightCycle LightCycle;
 
@@ -21,8 +21,6 @@ struct LightCycle {
     bool airborne;
     bool immunity;
     Ribbon ribbon;
-    RibbonStep ribbonStep_tZero;
-    RibbonStep ribbonStep_tMinus;
 };
 
 void CYCLE_init(LightCycle *lightCycle);

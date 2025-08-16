@@ -5,11 +5,11 @@
  *      Author: diegomtassis
  */
 
-#include "../../inc/fwk/doubly_linked_list.h"
+#include "fwk/doubly_linked_list.h"
 
 #include <genesis.h>
 
-#include "../../inc/fwk/commons.h"
+#include "fwk/commons.h"
 
 void DLL_init(DLL* list) {
 
